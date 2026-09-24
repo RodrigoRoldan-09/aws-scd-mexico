@@ -1,0 +1,2 @@
+
+export { generateVolunteerPDF } from "./speaker";

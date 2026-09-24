@@ -1,0 +1,903 @@
+"use client";
+
+import { useMemo, useRef, useState } from "react";
+import { useLocale } from "next-intl";
+import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
+import { Turnstile, type TurnstileHandle } from "@/components/ui/turnstile";
+import { SearchSelect, type SelectOption } from "@/components/forms/search-select";
+import { PhoneInput } from "@/components/forms/phone-input";
+import { ObfuscatedEmail } from "@/components/ui/obfuscated-email";
+import { useHydrated } from "@/hooks/use-hydrated";
+import {
+  DOC_TYPES,
+  ENTITY_TYPES,
+  FREE_TEXT_MAX,
+  ROLES,
+  ROLE_GROUPS,
+  countryCodeOf,
+  labelOf,
+  type Locale,
+} from "@/data/attendee-form";
+import {
+  AVAILABILITY,
+  DIETARY,
+  INTEREST_AREAS,
+  MOTIVATION_MAX,
+  PREVIOUS_EXPERIENCE,
+  SHIRT_SIZES,
+  VOLUNTEER_TEXT_MAX,
+  interestAreasLabelOf,
+  type Option,
+} from "@/data/volunteer-form";
+import { EVENT } from "@/lib/constants";
+import {
+  cleanWhitespace,
+  findCountry,
+  normalizeDocument,
+  normalizeEmail,
+  normalizePhone,
+} from "@/lib/normalize";
+import { cn } from "@/lib/utils";
+import type { SummaryRow } from "@/components/forms/success-screen";
+import { copyFor } from "./_copy";
+
+const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+
+/**
+ * Formulario de voluntarios. Estático, como el de asistentes: de estas
+ * respuestas salen la lista de impresión, el pedido de camisetas, el de
+ * alimentación y los certificados. Lo único que viene del panel es la lista de
+ * Student Builder Groups.
+ */
+
+export type VolunteerValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  phoneCountry: string;
+  documentType: string;
+  documentNumber: string;
+  role: string;
+  roleOther: string;
+  entityType: string;
+  entityName: string;
+  sbg: string;
+  sbgOther: string;
+  availability: string;
+  interestAreas: string[];
+  previousExperience: string;
+  motivation: string;
+  shirtSize: string;
+  dietary: string;
+  dietaryOther: string;
+  emergencyName: string;
+  emergencyPhone: string;
+  emergencyCountry: string;
+};
+
+const COUNTRY = countryCodeOf(EVENT.country);
+
+const EMPTY: VolunteerValues = {
+  firstName: "", lastName: "", email: "", phone: "", phoneCountry: "CL",
+  documentType: "", documentNumber: "",
+  role: "", roleOther: "", entityType: "", entityName: "",
+  sbg: "", sbgOther: "",
+  availability: "", interestAreas: [], previousExperience: "", motivation: "",
+  shirtSize: "", dietary: "", dietaryOther: "",
+  emergencyName: "", emergencyPhone: "", emergencyCountry: "CL",
+};
+
+/**
+ * Fila de dos campos que se alinean entre sí: con `subgrid` las dos columnas
+ * comparten las mismas cuatro filas (etiqueta, pista, control y error).
+ */
+function Row({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto_auto] sm:gap-y-0">
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Un campo: etiqueta, pista, control y error.
+ *
+ * El espaciado va en márgenes y no en `gap` justamente para poder entrar en el
+ * `subgrid` de `Row`: los huecos vacíos —el de la pista cuando no hay, el del
+ * error cuando no hay— no deben ocupar nada.
+ */
+function Field({
+  label, hint, error, required, htmlFor, children,
+}: {
+  label: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  htmlFor?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col sm:row-span-4 sm:grid sm:grid-rows-subgrid">
+      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-hack-ink">
+        {label} {required && <span className="text-hack-deep">*</span>}
+      </label>
+      {hint ? (
+        <p className="m-0 mt-1 font-mono text-xs text-hack-ink/55">{hint}</p>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      <div className="mt-2">{children}</div>
+      {error ? (
+        <p className="m-0 mt-1.5 font-mono text-xs text-[#7f1d1d]">{error}</p>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+    </div>
+  );
+}
+
+const inputCls =
+  "w-full border-2 border-hack-ink/35 bg-white/55 px-4 py-3 font-mono text-sm text-hack-ink " +
+  "placeholder:text-hack-ink/40 outline-none transition-all " +
+  "focus:-translate-y-px focus:border-hack-ink focus:bg-white " +
+  "focus:shadow-[3px_3px_0_0_rgba(0,0,0,0.3)]";
+
+/** Botonera de una sola opción. La elegida va en negro, como en el resto. */
+function Choice({
+  options, value, onChange, cols = 2, locale,
+}: {
+  options: Option[];
+  value: string;
+  onChange: (v: string) => void;
+  cols?: 2 | 3;
+  locale: Locale;
+}) {
+  return (
+    <div className={cn("grid gap-3", cols === 3 ? "grid-cols-3" : "grid-cols-2")}>
+      {options.map((o) => (
+        <button
+          key={o.value}
+          type="button"
+          onClick={() => onChange(o.value)}
+          className={cn(
+            "border-2 px-3 py-3.5 font-mono text-sm font-bold transition-all",
+            value === o.value
+              ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
+              : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+          )}
+        >
+          {labelOf(o, locale)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Separador de bloque, con el mismo letrero de puntos del resto del sitio. */
+function Bloque({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="border-t-2 border-hack-ink/20 pt-6">
+      <p className="m-0 dot-matrix text-base leading-none text-hack-ink/60">{children}</p>
+    </div>
+  );
+}
+
+export function VoluntariosForm({
+  sbgs,
+  onSubmit,
+  onChange,
+}: {
+  /** Lista editable desde el panel, ya resuelta en el servidor. */
+  sbgs: Option[];
+  onSubmit: (values: Record<string, unknown>, captchaToken: string, resumen: SummaryRow[]) => Promise<void>;
+  onChange?: (v: VolunteerValues) => void;
+}) {
+  // El formulario sigue el idioma de la página, igual que el de asistentes.
+  const locale = (useLocale() === "en" ? "en" : "es") as Locale;
+  const t = copyFor(locale);
+
+  const [v, setV] = useState<VolunteerValues>(EMPTY);
+  const [acceptCoc, setAcceptCoc] = useState(false);
+  const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<string, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const captchaRef = useRef<TurnstileHandle>(null);
+  const captchaMounted = useHydrated() && !!siteKey;
+
+  const set = <K extends keyof VolunteerValues>(k: K, value: VolunteerValues[K]) => {
+    setV((prev) => {
+      const next = { ...prev, [k]: value };
+      onChange?.(next);
+      return next;
+    });
+    if (errors[k as string]) setErrors((e) => ({ ...e, [k as string]: undefined }));
+    if (formError) setFormError("");
+  };
+
+  const toggleArea = (code: string) => {
+    // "Donde más se necesite" es excluyente: marcarla junto a otras áreas no
+    // dice nada a la hora de armar los turnos.
+    const next = code === "any"
+      ? (v.interestAreas.includes("any") ? [] : ["any"])
+      : v.interestAreas.includes(code)
+        ? v.interestAreas.filter((a) => a !== code)
+        : [...v.interestAreas.filter((a) => a !== "any"), code];
+    set("interestAreas", next);
+  };
+
+  const docTypes = DOC_TYPES[COUNTRY];
+  const roles = ROLES[COUNTRY];
+  const entities = ENTITY_TYPES[COUNTRY];
+
+  const roleOptions: SelectOption[] = useMemo(
+    () => roles.map((r) => ({
+      value: r.value,
+      label: labelOf(r, locale),
+      group: labelOf(ROLE_GROUPS[r.group], locale),
+    })),
+    [roles, locale],
+  );
+  const entityOptions: SelectOption[] = useMemo(
+    () => entities.map((e) => ({ value: e.value, label: labelOf(e, locale) })),
+    [entities, locale],
+  );
+  const sbgOptions: SelectOption[] = useMemo(
+    () => sbgs.map((x) => ({ value: x.value, label: labelOf(x, locale) })),
+    [sbgs, locale],
+  );
+
+  const docRule = docTypes.find((d) => d.value === v.documentType)?.rule;
+  const docExample = docTypes.find((d) => d.value === v.documentType)?.example;
+
+  const needsRoleOther = v.role === "other";
+  const needsEntityName = !!v.entityType && v.entityType !== "none";
+  const needsSbgOther = v.sbg === "other";
+  const needsDietaryOther = v.dietary === "other";
+
+  const validate = (): boolean => {
+    const e: Record<string, string> = {};
+    if (!cleanWhitespace(v.firstName)) e.firstName = t.e_firstName;
+    if (!cleanWhitespace(v.lastName)) e.lastName = t.e_lastName;
+
+    const mail = normalizeEmail(v.email);
+    if (!mail.ok) e.email = mail.reason ?? t.e_email;
+
+    const tel = normalizePhone(v.phone, findCountry(v.phoneCountry));
+    if (!tel.ok) e.phone = tel.reason;
+
+    // El documento no es opcional acá: el voluntariado es presencial y el
+    // equipo entra a la sede antes que el público.
+    if (!v.documentType) e.documentType = t.e_docType;
+    else {
+      const rule = docTypes.find((d) => d.value === v.documentType)!.rule;
+      const doc = normalizeDocument(v.documentNumber, rule);
+      if (!doc.ok) e.documentNumber = doc.reason;
+    }
+
+    if (!v.role) e.role = t.e_role;
+    if (needsRoleOther && !cleanWhitespace(v.roleOther)) e.roleOther = t.e_roleOther;
+    if (!v.entityType) e.entityType = t.e_entityType;
+    if (needsEntityName && !cleanWhitespace(v.entityName)) e.entityName = t.e_entityName;
+    if (!v.sbg) e.sbg = t.e_sbg;
+    if (needsSbgOther && !cleanWhitespace(v.sbgOther)) e.sbgOther = t.e_sbgOther;
+
+    if (!v.availability) e.availability = t.e_availability;
+    if (!v.interestAreas.length) e.interestAreas = t.e_areas;
+    if (!v.previousExperience) e.previousExperience = t.e_experience;
+
+    if (!v.shirtSize) e.shirtSize = t.e_shirt;
+    if (!v.dietary) e.dietary = t.e_dietary;
+    if (needsDietaryOther && !cleanWhitespace(v.dietaryOther)) {
+      e.dietaryOther = t.e_dietaryOther;
+    }
+    if (!cleanWhitespace(v.emergencyName)) e.emergencyName = t.e_emergency;
+    const emTel = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
+    if (!emTel.ok) e.emergencyPhone = emTel.reason;
+
+    if (!acceptCoc) e.coc = t.e_coc;
+    if (!acceptPrivacy) e.privacy = t.e_privacy;
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  /** Lo que se envía: códigos ya normalizados, no etiquetas. */
+  const build = (): Record<string, unknown> => {
+    const doc = docRule ? normalizeDocument(v.documentNumber, docRule) : null;
+    const tel = normalizePhone(v.phone, findCountry(v.phoneCountry));
+    const emTel = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
+    return {
+      firstName: cleanWhitespace(v.firstName),
+      lastName: cleanWhitespace(v.lastName),
+      email: normalizeEmail(v.email).value,
+      // Los teléfonos viajan con indicativo, en un solo campo: es como se
+      // marcan y como los va a copiar quien coordine el día del evento.
+      phone: tel.ok ? tel.value : "",
+      documentType: v.documentType,
+      documentNumber: doc?.ok ? doc.value : v.documentNumber,
+      role: v.role,
+      roleOther: needsRoleOther ? cleanWhitespace(v.roleOther) : "",
+      entityType: v.entityType,
+      entityName: needsEntityName ? cleanWhitespace(v.entityName) : "",
+      // El SBG viaja con su nombre: la lista es editable desde el panel, así
+      // que no hay catálogo fijo contra el que traducir un código.
+      sbg: needsSbgOther ? cleanWhitespace(v.sbgOther) : v.sbg,
+      availability: v.availability,
+      interestAreas: v.interestAreas,
+      previousExperience: v.previousExperience,
+      motivation: cleanWhitespace(v.motivation),
+      shirtSize: v.shirtSize,
+      dietary: v.dietary,
+      dietaryOther: needsDietaryOther ? cleanWhitespace(v.dietaryOther) : "",
+      emergencyName: cleanWhitespace(v.emergencyName),
+      emergencyPhone: emTel.ok ? emTel.value : "",
+      acceptCoc: "true",
+      acceptPrivacy: "true",
+    };
+  };
+
+  const send = async () => {
+    setSubmitting(true);
+    setFormError("");
+    try {
+      await onSubmit(build(), captchaToken, summaryRows);
+    } catch (err) {
+      setFormError((err as Error).message);
+      setCaptchaToken("");
+      captchaRef.current?.reset();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    // Se envía de una; el repaso vive en la pantalla de gracias.
+    void send();
+  };
+
+  const docLabel = (() => {
+    const d = docTypes.find((x) => x.value === v.documentType);
+    return d ? labelOf(d, locale) : "";
+  })();
+  const telefono = normalizePhone(v.phone, findCountry(v.phoneCountry));
+  const telEmergencia = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
+
+  const opt = (lista: Option[], code: string) => {
+    const o = lista.find((x) => x.value === code);
+    return o ? labelOf(o, locale) : "";
+  };
+
+  const summaryRows: SummaryRow[] = [
+    { label: t.r_name, value: `${v.firstName} ${v.lastName}`.trim() },
+    { label: t.r_email, value: v.email },
+    { label: t.r_phone, value: telefono.ok ? telefono.value : v.phone },
+    { label: t.r_doc, value: `${docLabel} ${v.documentNumber}`.trim() },
+    {
+      label: t.r_entity,
+      value: v.entityName || opt(entities, v.entityType),
+    },
+    { label: t.r_sbg, value: needsSbgOther ? v.sbgOther : v.sbg === "none" ? t.r_none : v.sbg },
+    { label: t.r_availability, value: opt(AVAILABILITY, v.availability) },
+    { label: t.r_areas, value: interestAreasLabelOf(v.interestAreas, locale) },
+    { label: t.r_shirt, value: opt(SHIRT_SIZES, v.shirtSize) },
+    {
+      label: t.r_dietary,
+      value: needsDietaryOther ? v.dietaryOther : opt(DIETARY, v.dietary),
+    },
+    {
+      label: t.r_emergency,
+      value: `${v.emergencyName} · ${telEmergencia.ok ? telEmergencia.value : v.emergencyPhone}`.trim(),
+    },
+  ];
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+        {/* ── Quién eres ── */}
+        <Row>
+          <Field label={t.firstName} required htmlFor="v-name" error={errors.firstName}>
+            <input
+              id="v-name"
+              value={v.firstName}
+              onChange={(e) => set("firstName", e.target.value)}
+              placeholder={t.firstName_ph}
+              maxLength={60}
+              className={cn(inputCls, errors.firstName && "border-[#7f1d1d]")}
+            />
+          </Field>
+          <Field label={t.lastName} required htmlFor="v-last" error={errors.lastName}>
+            <input
+              id="v-last"
+              value={v.lastName}
+              onChange={(e) => set("lastName", e.target.value)}
+              placeholder={t.lastName_ph}
+              maxLength={60}
+              className={cn(inputCls, errors.lastName && "border-[#7f1d1d]")}
+            />
+          </Field>
+        </Row>
+
+        <Field
+          label={t.email}
+          required
+          htmlFor="v-mail"
+          error={errors.email}
+          hint={t.email_hint}
+        >
+          <input
+            id="v-mail"
+            type="email"
+            inputMode="email"
+            value={v.email}
+            onChange={(e) => set("email", e.target.value)}
+            onBlur={() => {
+              if (!v.email.trim()) return;
+              const r = normalizeEmail(v.email);
+              setErrors((x) => ({ ...x, email: r.ok ? undefined : r.reason }));
+            }}
+            placeholder={t.email_ph}
+            className={cn(inputCls, errors.email && "border-[#7f1d1d]")}
+          />
+        </Field>
+
+        {/* El teléfono va con indicativo, como en el formulario de speakers. */}
+        <PhoneInput
+          label={t.phone}
+          required
+          countryCode={v.phoneCountry}
+          onCountryChange={(code) => set("phoneCountry", code)}
+          value={v.phone}
+          onChange={(local) => set("phone", local)}
+          error={errors.phone}
+        />
+
+        <Row>
+          <Field label={t.docType} required htmlFor="v-doct" error={errors.documentType}>
+            <SearchSelect
+              id="v-doct"
+              options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
+              value={v.documentType}
+              onChange={(val) => set("documentType", val)}
+              placeholder={t.select}
+              searchPlaceholder={t.searchType}
+              invalid={!!errors.documentType}
+            />
+          </Field>
+          <Field
+            label={t.docNumber}
+            required
+            htmlFor="v-docn"
+            error={errors.documentNumber}
+            hint={t.docNumber_hint}
+          >
+            <input
+              id="v-docn"
+              value={v.documentNumber}
+              onChange={(e) => set("documentNumber", e.target.value)}
+              onBlur={() => {
+                if (!docRule || !v.documentNumber.trim()) return;
+                const r = normalizeDocument(v.documentNumber, docRule);
+                setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
+                if (r.ok) set("documentNumber", r.value);
+              }}
+              disabled={!v.documentType}
+              placeholder={docExample ?? ""}
+              maxLength={24}
+              className={cn(
+                inputCls,
+                errors.documentNumber && "border-[#7f1d1d]",
+                !v.documentType && "cursor-not-allowed opacity-50",
+              )}
+            />
+          </Field>
+        </Row>
+
+        {/* ── De dónde vienes ── */}
+        <Field label={t.role} required htmlFor="v-role" error={errors.role}>
+          <SearchSelect
+            id="v-role"
+            options={roleOptions}
+            value={v.role}
+            onChange={(val) => set("role", val)}
+            placeholder={t.role_ph}
+            searchPlaceholder={t.searchRole}
+            invalid={!!errors.role}
+          />
+        </Field>
+
+        <AnimatePresence initial={false}>
+          {needsRoleOther && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <Field label={t.which} required htmlFor="v-roleo" error={errors.roleOther}>
+                <input
+                  id="v-roleo"
+                  value={v.roleOther}
+                  onChange={(e) => set("roleOther", e.target.value)}
+                  placeholder={t.which_ph}
+                  maxLength={FREE_TEXT_MAX}
+                  className={cn(inputCls, errors.roleOther && "border-[#7f1d1d]")}
+                />
+              </Field>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Field label={t.entity} required htmlFor="v-ent" error={errors.entityType}>
+          <SearchSelect
+            id="v-ent"
+            options={entityOptions}
+            value={v.entityType}
+            onChange={(val) => set("entityType", val)}
+            placeholder={t.entity_ph}
+            searchPlaceholder={t.search}
+            invalid={!!errors.entityType}
+          />
+        </Field>
+
+        <AnimatePresence initial={false}>
+          {needsEntityName && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <Field
+                label={`Nombre de tu ${entities.find((x) => x.value === v.entityType)?.label.toLowerCase() ?? "entidad"}`}
+                required
+                htmlFor="v-entn"
+                error={errors.entityName}
+              >
+                <input
+                  id="v-entn"
+                  value={v.entityName}
+                  onChange={(e) => set("entityName", e.target.value)}
+                  placeholder={t.entityName_ph}
+                  maxLength={FREE_TEXT_MAX}
+                  className={cn(inputCls, errors.entityName && "border-[#7f1d1d]")}
+                />
+              </Field>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Field
+          label={t.sbg}
+          required
+          htmlFor="v-sbg"
+          error={errors.sbg}
+        >
+          <SearchSelect
+            id="v-sbg"
+            options={sbgOptions}
+            value={v.sbg}
+            onChange={(val) => set("sbg", val)}
+            placeholder={t.select}
+            searchPlaceholder={t.searchSbg}
+            invalid={!!errors.sbg}
+          />
+        </Field>
+
+        <AnimatePresence initial={false}>
+          {needsSbgOther && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <Field label={t.which} required htmlFor="v-sbgo" error={errors.sbgOther}>
+                <input
+                  id="v-sbgo"
+                  value={v.sbgOther}
+                  onChange={(e) => set("sbgOther", e.target.value)}
+                  placeholder={t.sbgOther_ph}
+                  maxLength={VOLUNTEER_TEXT_MAX}
+                  className={cn(inputCls, errors.sbgOther && "border-[#7f1d1d]")}
+                />
+              </Field>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── El día del evento ── */}
+        <Bloque>{t.blockDay}</Bloque>
+
+        <Field label={t.availability} required error={errors.availability}>
+          <Choice
+            options={AVAILABILITY}
+            locale={locale}
+            value={v.availability}
+            onChange={(val) => set("availability", val)}
+            cols={3}
+          />
+        </Field>
+
+        <Field
+          label={t.areas}
+          required
+          error={errors.interestAreas}
+          hint={t.areas_hint}
+        >
+          <div className="grid gap-3 sm:grid-cols-2">
+            {INTEREST_AREAS.map((a) => {
+              const on = v.interestAreas.includes(a.value);
+              return (
+                <button
+                  key={a.value}
+                  type="button"
+                  onClick={() => toggleArea(a.value)}
+                  className={cn(
+                    "flex items-center gap-3 border-2 px-4 py-3 text-left font-mono text-sm font-bold transition-all",
+                    on
+                      ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
+                      : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex h-4 w-4 shrink-0 items-center justify-center border-2",
+                      on ? "border-hack-block" : "border-hack-ink/40",
+                    )}
+                  >
+                    {on && (
+                      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="#F2A6F0" strokeWidth="5">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    )}
+                  </span>
+                  {labelOf(a, locale)}
+                </button>
+              );
+            })}
+          </div>
+        </Field>
+
+        <Field label={t.experience} required error={errors.previousExperience}>
+          <Choice
+            options={PREVIOUS_EXPERIENCE}
+            locale={locale}
+            value={v.previousExperience}
+            onChange={(val) => set("previousExperience", val)}
+            cols={3}
+          />
+        </Field>
+
+        <Field
+          label={t.motivation}
+          htmlFor="v-motiv"
+          hint={t.motivation_hint}
+        >
+          <textarea
+            id="v-motiv"
+            value={v.motivation}
+            onChange={(e) => set("motivation", e.target.value)}
+            placeholder={t.motivation_ph}
+            maxLength={MOTIVATION_MAX}
+            rows={4}
+            className={cn(inputCls, "resize-y")}
+          />
+        </Field>
+
+        {/* ── Logística ── */}
+        <Bloque>{t.blockReady}</Bloque>
+
+        <Field
+          label={t.shirt}
+          required
+          error={errors.shirtSize}
+          hint={t.shirt_hint}
+        >
+          <Choice
+            options={SHIRT_SIZES}
+            locale={locale}
+            value={v.shirtSize}
+            onChange={(val) => set("shirtSize", val)}
+            cols={3}
+          />
+        </Field>
+
+        <Field
+          label={t.dietary}
+          required
+          error={errors.dietary}
+          hint={t.dietary_hint}
+        >
+          <div className="grid gap-3 sm:grid-cols-3">
+            {DIETARY.map((d) => (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() => set("dietary", d.value)}
+                className={cn(
+                  "border-2 px-3 py-3 font-mono text-sm font-bold transition-all",
+                  v.dietary === d.value
+                    ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
+                    : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                )}
+              >
+                {labelOf(d, locale)}
+              </button>
+            ))}
+          </div>
+        </Field>
+
+        <AnimatePresence initial={false}>
+          {needsDietaryOther && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <Field label={t.which} required htmlFor="v-dieto" error={errors.dietaryOther}>
+                <input
+                  id="v-dieto"
+                  value={v.dietaryOther}
+                  onChange={(e) => set("dietaryOther", e.target.value)}
+                  placeholder={t.dietaryOther_ph}
+                  maxLength={VOLUNTEER_TEXT_MAX}
+                  className={cn(inputCls, errors.dietaryOther && "border-[#7f1d1d]")}
+                />
+              </Field>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Field
+          label={t.emergency}
+          required
+          htmlFor="v-emn"
+          error={errors.emergencyName}
+          hint={t.emergency_hint}
+        >
+          <input
+            id="v-emn"
+            value={v.emergencyName}
+            onChange={(e) => set("emergencyName", e.target.value)}
+placeholder={t.emergency_ph}
+            maxLength={80}
+            className={cn(inputCls, errors.emergencyName && "border-[#7f1d1d]")}
+          />
+        </Field>
+
+        <PhoneInput
+          label={t.emergencyPhone}
+          required
+          countryCode={v.emergencyCountry}
+          onCountryChange={(code) => set("emergencyCountry", code)}
+          value={v.emergencyPhone}
+          onChange={(local) => set("emergencyPhone", local)}
+          error={errors.emergencyPhone}
+        />
+
+        {/* ── Consentimientos ── */}
+        <div className="flex flex-col gap-3 border-t-2 border-hack-ink/20 pt-6">
+          {(
+            [
+              ["coc", acceptCoc, setAcceptCoc, t.coc_text, t.coc_link, "/codigo-conducta"],
+              ["privacy", acceptPrivacy, setAcceptPrivacy, t.privacy_text, t.privacy_link, "/privacidad"],
+            ] as const
+          ).map(([key, checked, setter, text, linkText, href]) => (
+            <div key={key} className="flex flex-col gap-1">
+              <label className="flex cursor-pointer items-start gap-3">
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={checked}
+                  onClick={() => {
+                    setter(!checked);
+                    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
+                  }}
+                  className={cn(
+                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-all",
+                    checked ? "border-hack-ink bg-hack-ink" : "border-hack-ink/40 bg-white/55",
+                    errors[key] && "border-[#7f1d1d]",
+                  )}
+                >
+                  {checked && (
+                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#F2A6F0" strokeWidth="4">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  )}
+                </button>
+                <span className="font-mono text-xs leading-relaxed text-hack-ink/85">
+                  {text}
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold underline underline-offset-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {linkText}
+                  </a>
+                  . <span className="text-hack-deep">*</span>
+                </span>
+              </label>
+              {errors[key] && (
+                <p className="m-0 pl-8 font-mono text-xs text-[#7f1d1d]">{errors[key]}</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Quién se equivocó de formulario.
+            Las dos confusiones son reales y de ida y vuelta: quien sólo quiere
+            asistir y llegó acá, y quien ya se registró de asistente y ahora
+            quiere sumarse al equipo. Ese segundo caso no se arregla solo — no
+            se puede estar en las dos listas — así que en vez de dejarlo
+            postularse y que le rebote, se le dice a quién escribir. */}
+        <div className="flex flex-col gap-2 border-2 border-hack-ink/30 bg-white/30 px-4 py-3.5">
+          <p className="m-0 font-mono text-xs leading-relaxed text-hack-ink/80">
+            {t.notice1a}
+            <strong className="font-bold">{t.notice1b}</strong>
+            {t.notice1c}
+            <Link href="/registro" className="font-bold underline underline-offset-4">
+              {t.notice1link}
+            </Link>
+            .
+          </p>
+          <p className="m-0 font-mono text-xs leading-relaxed text-hack-ink/80">
+            {t.notice2a}
+            <ObfuscatedEmail
+              box="contacto"
+              subject="Quiero pasar de asistente a voluntario"
+              className="font-bold underline underline-offset-4"
+            />
+            {t.notice2b}
+          </p>
+        </div>
+
+        {siteKey && (
+          <div className="flex items-center justify-center">
+            {captchaMounted ? (
+              <Turnstile
+                ref={captchaRef}
+                siteKey={siteKey}
+                theme="light"
+                appearance="interaction-only"
+                onVerify={setCaptchaToken}
+                onExpire={() => setCaptchaToken("")}
+                onError={() => setCaptchaToken("")}
+              />
+            ) : null}
+          </div>
+        )}
+
+        {formError && (
+          <p className="m-0 border-2 border-[#7f1d1d] bg-[#7f1d1d]/10 px-4 py-3 font-mono text-sm text-[#7f1d1d]">
+            {formError}
+          </p>
+        )}
+
+        {siteKey && !captchaToken && !formError && (
+          <p className="m-0 text-center font-mono text-xs text-hack-ink/50">
+            {t.captcha}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting || (!!siteKey && !captchaToken)}
+          className="btn-hard w-full px-6 py-4 font-mono text-sm"
+        >
+          {submitting ? t.sending : t.submit}
+        </button>
+    </form>
+  );
+}
