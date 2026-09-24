@@ -1,20 +1,23 @@
 import { cn } from "@/lib/utils";
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
+  clickable?: boolean;
 }
 
-export function Card({ children, className, hover = false }: CardProps) {
+export function Card({ children, className, hover = false, clickable = false, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-glass-border bg-glass p-6 backdrop-blur-xl",
-        hover &&
-          "transition-all duration-300 hover:translate-y-[-2px] hover:border-glass-border-hover hover:shadow-lg hover:shadow-aws-orange/5",
+        "rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-5 sm:p-6 transition-all duration-300",
+        (hover || clickable) && "hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(97,59,184,0.25)]",
+        hover && !clickable && "hover:border-[#613BB8]",
+        clickable && "cursor-pointer hover:border-[#C143BC]",
         className
       )}
+      {...props}
     >
       {children}
     </div>

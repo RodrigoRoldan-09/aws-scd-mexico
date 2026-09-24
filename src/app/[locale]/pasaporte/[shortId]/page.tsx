@@ -37,8 +37,8 @@ const ANIM_CSS = `
   50%     { box-shadow:0 0 18px rgba(52,211,153,.7); }
 }
 @keyframes text-glow {
-  0%,100% { text-shadow:0 0 20px rgba(242,166,240,.3); }
-  50%     { text-shadow:0 0 45px rgba(242,166,240,.75); }
+  0%,100% { text-shadow:0 0 20px rgba(193,67,188,.3); }
+  50%     { text-shadow:0 0 45px rgba(193,67,188,.75); }
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 `;
@@ -130,9 +130,9 @@ const ROLE_LABEL: Record<string, string> = {
 };
 const ROLE_STYLE: Record<string, { bg: string; text: string; border: string }> = {
   attendee:  { bg: "rgba(14,165,233,.12)",  text: "#7dd3fc", border: "rgba(14,165,233,.3)"  },
-  speaker:   { bg: "rgba(242,166,240,.12)",   text: "#F2A6F0", border: "rgba(242,166,240,.45)"  },
+  speaker:   { bg: "rgba(193,67,188,.12)",  text: "#C143BC", border: "rgba(193,67,188,.45)" },
   volunteer: { bg: "rgba(52,211,153,.12)",  text: "#6ee7b7", border: "rgba(52,211,153,.3)"  },
-  organizer: { bg: "rgba(167,139,250,.12)", text: "#c4b5fd", border: "rgba(167,139,250,.3)" },
+  organizer: { bg: "rgba(97,59,184,.15)",  text: "#a78bfa", border: "rgba(97,59,184,.4)"  },
 };
 
 interface PassportSocial {
@@ -156,7 +156,7 @@ function Perf() {
   return (
     <div style={{ display: "flex", gap: 3, padding: "2px 18px", margin: "2px 0" }}>
       {Array.from({ length: 48 }).map((_, i) => (
-        <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", backgroundColor: "rgba(242,166,240,0.14)", flexShrink: 0 }} />
+        <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", backgroundColor: "rgba(193,67,188,0.14)", flexShrink: 0 }} />
       ))}
     </div>
   );
@@ -178,7 +178,7 @@ function StampItem({ sponsor, collected, index }: { sponsor: Sponsor; collected:
         // eslint-disable-next-line @next/next/no-img-element
         <img src={sponsor.logoUrl} alt={sponsor.sponsorName} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
       ) : (
-        <span style={{ fontFamily: "monospace", fontSize: 8, color: "#6b7280", textAlign: "center", lineHeight: 1.2 }}>
+        <span style={{ fontFamily: "monospace", fontSize: 8, color: "#8B84A0", textAlign: "center", lineHeight: 1.2 }}>
           {sponsor.sponsorName}
         </span>
       )}
@@ -216,8 +216,8 @@ function PinDigits({ digits, onChange, hasError, disabled }: {
             width: 52, height: 56, textAlign: "center",
             fontFamily: "monospace", fontSize: 22, fontWeight: 700,
             color: "#f9fafb", borderRadius: 14,
-            border: hasError ? "1.5px solid rgba(239,68,68,.5)" : d ? "1.5px solid rgba(242,166,240,.7)" : "1.5px solid rgba(255,255,255,.12)",
-            background: hasError ? "rgba(239,68,68,.05)" : d ? "rgba(242,166,240,.06)" : "rgba(255,255,255,.04)",
+            border: hasError ? "1.5px solid rgba(239,68,68,.5)" : d ? "1.5px solid rgba(193,67,188,.7)" : "1.5px solid #2C2550",
+            background: hasError ? "rgba(239,68,68,.05)" : d ? "rgba(193,67,188,.08)" : "#1E1838",
             outline: "none", transition: "all .2s",
             opacity: disabled ? .4 : 1, cursor: disabled ? "not-allowed" : "text",
           }}
@@ -432,10 +432,10 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
   if (loading) return (
     <>
       <style>{ANIM_CSS}</style>
-      <div style={{ minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0A0A0F" }}>
+      <div style={{ minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0E0E1A" }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ width: 44, height: 44, borderRadius: "50%", border: "2px solid transparent", borderTopColor: "#F2A6F0", animation: "spin 1s linear infinite", margin: "0 auto 14px" }} />
-          <p style={{ fontFamily: "monospace", fontSize: 9, letterSpacing: "0.3em", color: "#252530", textTransform: "uppercase" }}>Cargando pasaporte</p>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", border: "2px solid transparent", borderTopColor: "#C143BC", animation: "spin 1s linear infinite", margin: "0 auto 14px" }} />
+          <p style={{ fontFamily: "monospace", fontSize: 9, letterSpacing: "0.3em", color: "#8B84A0", textTransform: "uppercase" }}>Cargando pasaporte</p>
         </div>
       </div>
     </>
@@ -444,10 +444,10 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
   if (notFound) return (
     <>
       <style>{ANIM_CSS}</style>
-      <div style={{ minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0A0A0F" }}>
+      <div style={{ minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0E0E1A" }}>
         <div style={{ textAlign: "center", padding: "0 24px" }}>
           <p style={{ fontFamily: "monospace", fontSize: 16, fontWeight: 700, color: "#f9fafb", marginBottom: 8 }}>Pasaporte no encontrado</p>
-          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#4b5563" }}>Verifica el código QR de tu escarapela.</p>
+          <p style={{ fontFamily: "monospace", fontSize: 11, color: "#8B84A0" }}>Verifica el código QR de tu escarapela.</p>
         </div>
       </div>
     </>
@@ -474,14 +474,14 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
       <style>{ANIM_CSS}</style>
 
       {/* ═══ PAGE SHELL ═══ */}
-      <div style={{ minHeight: "100svh", background: "#0A0A0F", overflowX: "hidden", paddingBottom: 64 }}>
+      <div style={{ minHeight: "100svh", background: "#0E0E1A", overflowX: "hidden", paddingBottom: 64 }}>
 
         {/* Ambient glow — accent top */}
-        <div style={{ position: "fixed", top: "12%", left: "50%", width: 520, height: 420, pointerEvents: "none", background: "radial-gradient(ellipse at center, rgba(242,166,240,.065) 0%, transparent 68%)", animation: "breathe 5s ease-in-out infinite" }} />
+        <div style={{ position: "fixed", top: "12%", left: "50%", width: 520, height: 420, pointerEvents: "none", background: "radial-gradient(ellipse at center, rgba(193,67,188,.07) 0%, transparent 68%)", animation: "breathe 5s ease-in-out infinite" }} />
         {/* Ambient glow — purple bottom-right */}
-        <div style={{ position: "fixed", bottom: "8%", right: "-8%", width: 380, height: 300, pointerEvents: "none", background: "radial-gradient(ellipse at center, rgba(193,67,188,.04) 0%, transparent 68%)" }} />
+        <div style={{ position: "fixed", bottom: "8%", right: "-8%", width: 380, height: 300, pointerEvents: "none", background: "radial-gradient(ellipse at center, rgba(97,59,184,.08) 0%, transparent 68%)" }} />
         {/* Dot grid */}
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", backgroundImage: "radial-gradient(circle, rgba(242,166,240,.04) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", backgroundImage: "radial-gradient(circle, rgba(193,67,188,.04) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
         {/* ═══ CARD AREA ═══ */}
         <div style={{ maxWidth: 420, margin: "0 auto", padding: "28px 16px 0", animation: "fade-up .55s ease forwards" }}>
@@ -489,14 +489,14 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
           {/* ── HOLOGRAPHIC BORDER ── */}
           <div style={{
             padding: "1.5px", borderRadius: 26,
-            background: "linear-gradient(135deg, #F2A6F0 0%, #FCD34D 25%, #C143BC 50%, #34d399 75%, #F2A6F0 100%)",
+            background: "linear-gradient(135deg, #C143BC 0%, #D85A30 25%, #613BB8 50%, #34d399 75%, #C143BC 100%)",
             backgroundSize: "300% 300%",
             animation: "gradient-border 4s ease infinite",
-            boxShadow: "0 32px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(242,166,240,.08)",
+            boxShadow: "0 32px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(193,67,188,.15)",
           }}>
 
             {/* ── INNER CARD ── */}
-            <div style={{ borderRadius: 25, background: "linear-gradient(160deg, #0A0A0F 0%, #16161F 55%, #0A0A0F 100%)", overflow: "hidden", position: "relative" }}>
+            <div style={{ borderRadius: 25, background: "linear-gradient(160deg, #0E0E1A 0%, #1E1838 55%, #0E0E1A 100%)", overflow: "hidden", position: "relative" }}>
 
               {/* === PIN OVERLAY — centered in card, light blur on background === */}
               {showPinSection && !isOwner && (
@@ -506,7 +506,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                     onClick={() => setShowPinSection(false)}
                     style={{
                       position: "absolute", inset: 0, zIndex: 15,
-                      background: "rgba(8,10,15,0.55)",
+                      background: "rgba(14,14,26,0.65)",
                       backdropFilter: "blur(3px)",
                       WebkitBackdropFilter: "blur(3px)",
                       borderRadius: 25,
@@ -519,14 +519,14 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                     transform: "translate(-50%, -50%)",
                     zIndex: 20,
                     width: "calc(100% - 48px)",
-                    background: "linear-gradient(160deg, #0A0A0F 0%, #16161F 100%)",
+                    background: "linear-gradient(160deg, #0E0E1A 0%, #1E1838 100%)",
                     borderRadius: 20,
-                    border: "1px solid rgba(242,166,240,.22)",
+                    border: "1px solid rgba(193,67,188,.22)",
                     boxShadow: "0 16px 48px rgba(0,0,0,.7)",
                     padding: "22px 20px 24px",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#F2A6F0" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#C143BC" }}>
                         <Fingerprint style={{ width: 15, height: 15 }} />
                         <span style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
                           {pinBlocked ? "Acceso bloqueado" : "PIN de propietario"}
@@ -534,7 +534,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                       </div>
                       <button
                         onClick={() => setShowPinSection(false)}
-                        style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", display: "flex", padding: 4 }}
+                        style={{ background: "none", border: "none", color: "#8B84A0", cursor: "pointer", display: "flex", padding: 4 }}
                       >
                         <X style={{ width: 14, height: 14 }} />
                       </button>
@@ -548,10 +548,10 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                       )}
                       {verifyingPin ? (
                         <div style={{ display: "flex", justifyContent: "center", padding: "2px 0" }}>
-                          <Loader2 style={{ width: 18, height: 18, color: "#F2A6F0", animation: "spin 1s linear infinite" }} />
+                          <Loader2 style={{ width: 18, height: 18, color: "#C143BC", animation: "spin 1s linear infinite" }} />
                         </div>
                       ) : (
-                        <p style={{ fontFamily: "monospace", fontSize: 9, color: "#16161F", margin: 0, textAlign: "center" }}>
+                        <p style={{ fontFamily: "monospace", fontSize: 9, color: "#8B84A0", margin: 0, textAlign: "center" }}>
                           {pinBlocked ? "Demasiados intentos, espera un momento" : "Se desbloquea automáticamente al completar el PIN"}
                         </p>
                       )}
@@ -593,13 +593,13 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
               <div style={{ display: "flex", justifyContent: "center", paddingTop: 4, paddingBottom: 18 }}>
                 <div style={{ position: "relative", display: "inline-flex" }}>
                   {/* Outer pulse */}
-                  <div style={{ position: "absolute", inset: -10, borderRadius: "50%", border: "1px solid rgba(242,166,240,.2)", animation: "pulse-ring 2.8s ease-out infinite" }} />
+                  <div style={{ position: "absolute", inset: -10, borderRadius: "50%", border: "1px solid rgba(193,67,188,.2)", animation: "pulse-ring 2.8s ease-out infinite" }} />
                   {/* Middle pulse (offset) */}
-                  <div style={{ position: "absolute", inset: -5, borderRadius: "50%", border: "1px solid rgba(242,166,240,.12)", animation: "pulse-ring 2.8s ease-out .9s infinite" }} />
+                  <div style={{ position: "absolute", inset: -5, borderRadius: "50%", border: "1px solid rgba(193,67,188,.12)", animation: "pulse-ring 2.8s ease-out .9s infinite" }} />
                   {/* Gradient ring */}
                   <div style={{
                     width: 112, height: 112, borderRadius: "50%", padding: 3,
-                    background: "linear-gradient(135deg, #F2A6F0, #FCD34D, #F2A6F0)",
+                    background: "linear-gradient(135deg, #C143BC, #D85A30, #613BB8)",
                     backgroundSize: "200% 200%",
                     animation: "gradient-border 3s ease infinite",
                   }}>
@@ -611,15 +611,15 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
 
               {/* === NAME === */}
               <div style={{ textAlign: "center", padding: "0 20px 8px" }}>
-                <p style={{ fontSize: "clamp(30px,8.5vw,44px)", fontWeight: 900, color: "#f9fafb", letterSpacing: "-0.025em", lineHeight: .92, textTransform: "uppercase", margin: 0 }}>
+                <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(30px,8.5vw,44px)", fontWeight: 900, color: "#f9fafb", letterSpacing: "-0.025em", lineHeight: .92, textTransform: "uppercase", margin: 0 }}>
                   {passport.firstName}
                 </p>
-                <p style={{ fontSize: "clamp(30px,8.5vw,44px)", fontWeight: 900, color: "#F2A6F0", letterSpacing: "-0.025em", lineHeight: .92, textTransform: "uppercase", margin: "1px 0 0", animation: "text-glow 3s ease-in-out infinite" }}>
+                <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(30px,8.5vw,44px)", fontWeight: 900, color: "#C143BC", letterSpacing: "-0.025em", lineHeight: .92, textTransform: "uppercase", margin: "1px 0 0", animation: "text-glow 3s ease-in-out infinite" }}>
                   {passport.lastName}
                 </p>
 
                 {(passport.jobTitle || passport.company) && (
-                  <p style={{ fontFamily: "monospace", fontSize: 11, color: "#4b5563", marginTop: 11, lineHeight: 1.5, margin: "11px 0 0" }}>
+                  <p style={{ fontFamily: "monospace", fontSize: 11, color: "#8B84A0", marginTop: 11, lineHeight: 1.5, margin: "11px 0 0" }}>
                     {[passport.jobTitle, passport.company].filter(Boolean).join(" · ")}
                   </p>
                 )}
@@ -642,7 +642,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
               {/* === SOCIAL (visitantes: solo lectura) === */}
               {!isOwner && (
                 <div style={{ padding: "14px 18px" }}>
-                  <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.35em", color: "#252530", textTransform: "uppercase", margin: "0 0 10px" }}>
+                  <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.35em", color: "#8B84A0", textTransform: "uppercase", margin: "0 0 10px" }}>
                     Conectar
                   </p>
                   {activeSocials.length > 0 ? (
@@ -663,7 +663,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                       ))}
                     </div>
                   ) : (
-                    <p style={{ fontFamily: "monospace", fontSize: 11, color: "#16161F", textAlign: "center", padding: "6px 0" }}>
+                    <p style={{ fontFamily: "monospace", fontSize: 11, color: "#8B84A0", textAlign: "center", padding: "6px 0" }}>
                       Sin redes configuradas aún.
                     </p>
                   )}
@@ -674,18 +674,18 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
               {isOwner && (
                 <>
                   <Perf />
-                  <div style={{ padding: "14px 18px", background: "rgba(242,166,240,.025)" }}>
+                  <div style={{ padding: "14px 18px", background: "rgba(193,67,188,.025)" }}>
                     {/* Header con toggle Editar / Ver */}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                      <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.3em", color: "rgba(242,166,240,.65)", textTransform: "uppercase", margin: 0 }}>
+                      <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.3em", color: "rgba(193,67,188,.75)", textTransform: "uppercase", margin: 0 }}>
                         Mis redes sociales
                       </p>
                       {!editingSocial ? (
-                        <button onClick={() => setEditingSocial(true)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: "1px solid rgba(242,166,240,.3)", background: "rgba(242,166,240,.08)", fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#F2A6F0", cursor: "pointer" }}>
+                        <button onClick={() => setEditingSocial(true)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: "1px solid rgba(193,67,188,.3)", background: "rgba(193,67,188,.08)", fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#C143BC", cursor: "pointer" }}>
                           <Pencil style={{ width: 11, height: 11 }} /> Editar
                         </button>
                       ) : (
-                        <button onClick={() => setEditingSocial(false)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: "1px solid rgba(255,255,255,.1)", background: "rgba(255,255,255,.04)", fontFamily: "monospace", fontSize: 10, color: "#6b7280", cursor: "pointer" }}>
+                        <button onClick={() => setEditingSocial(false)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: "1px solid rgba(255,255,255,.1)", background: "rgba(255,255,255,.04)", fontFamily: "monospace", fontSize: 10, color: "#8B84A0", cursor: "pointer" }}>
                           <Eye style={{ width: 11, height: 11 }} /> Ver
                         </button>
                       )}
@@ -693,7 +693,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
 
                     {/* Banner: cambios pendientes de confirmar por correo */}
                     {pendingFields.length > 0 && (
-                      <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 10, background: "rgba(242,166,240,.08)", border: "1px solid rgba(242,166,240,.28)" }}>
+                      <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 10, background: "rgba(193,67,188,.08)", border: "1px solid rgba(193,67,188,.28)" }}>
                         <p style={{ fontFamily: "monospace", fontSize: 10, color: "#FCD34D", margin: 0, lineHeight: 1.55 }}>
                           Por seguridad, tus cambios en <strong>{pendingFields.join(", ")}</strong> quedaron pendientes.
                           {pendingEmail ? <> Te enviamos un correo a <strong>{pendingEmail}</strong> para confirmarlos.</> : " Revisa tu correo para confirmarlos."}
@@ -717,7 +717,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                           const val = socialDraft[plat.id] ?? "";
                           return val.trim() ? (
                             <a key={plat.id} href={plat.urlFn(val)} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 10, background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.07)", textDecoration: "none", transition: "border-color .15s" }}
-                              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(242,166,240,.3)"; }}
+                              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(193,67,188,.3)"; }}
                               onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,.07)"; }}>
                               <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: plat.bg, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>{plat.icon}</div>
                               <span style={{ fontFamily: "monospace", fontSize: 11, color: "#9ca3af", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{plat.atSign ? "@" : ""}{val}</span>
@@ -725,7 +725,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                           ) : (
                             <div key={plat.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 10, opacity: .3 }}>
                               <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: plat.bg, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>{plat.icon}</div>
-                              <span style={{ fontFamily: "monospace", fontSize: 11, color: "#252530" }}>—</span>
+                              <span style={{ fontFamily: "monospace", fontSize: 11, color: "#8B84A0" }}>—</span>
                             </div>
                           );
                         })}
@@ -746,14 +746,14 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                                 </>
                               ) : (
                                 <>
-                                  <span style={{ flex: 1, fontFamily: "monospace", fontSize: 11, color: "#4b5563" }}>{plat.label}</span>
-                                  <button onClick={() => openAddSocial(plat.id)} style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(242,166,240,.3)", background: "rgba(242,166,240,.08)", fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#F2A6F0", cursor: "pointer", flexShrink: 0 }}>+ Agregar</button>
+                                  <span style={{ flex: 1, fontFamily: "monospace", fontSize: 11, color: "#8B84A0" }}>{plat.label}</span>
+                                  <button onClick={() => openAddSocial(plat.id)} style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(193,67,188,.3)", background: "rgba(193,67,188,.08)", fontFamily: "monospace", fontSize: 10, fontWeight: 700, color: "#C143BC", cursor: "pointer", flexShrink: 0 }}>+ Agregar</button>
                                 </>
                               )}
                             </div>
                           );
                         })}
-                        <button onClick={() => { void handleSaveSocial(); }} disabled={savingSocial} style={{ marginTop: 4, padding: "10px 0", borderRadius: 12, border: "none", background: "#F2A6F0", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0A0A0F", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, opacity: savingSocial ? .6 : 1, transition: "opacity .2s" }}>
+                        <button onClick={() => { void handleSaveSocial(); }} disabled={savingSocial} style={{ marginTop: 4, padding: "10px 0", borderRadius: 12, border: "none", background: "#D85A30", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#ffffff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 0 15px rgba(216,90,48,.35)", opacity: savingSocial ? .6 : 1, transition: "opacity .2s, box-shadow .2s" }}>
                           {savingSocial ? <Loader2 style={{ width: 14, height: 14, animation: "spin 1s linear infinite" }} /> : socialSaved ? <><Check style={{ width: 14, height: 14 }} />Guardado</> : "Guardar cambios"}
                         </button>
                       </div>
@@ -766,10 +766,10 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
               {isOwner && totalSponsors > 0 && (
                 <>
                   <Perf />
-                  <div style={{ padding: "14px 18px", background: "rgba(242,166,240,.025)" }}>
+                  <div style={{ padding: "14px 18px", background: "rgba(193,67,188,.025)" }}>
                     <button
                       onClick={() => { setShowStampModal(true); setStampDigits(["","","",""]); setStampResult(null); }}
-                      style={{ width: "100%", padding: "11px 0", borderRadius: 12, border: "1px solid rgba(242,166,240,.3)", background: "rgba(242,166,240,.08)", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#F2A6F0", cursor: "pointer", letterSpacing: "0.08em" }}
+                      style={{ width: "100%", padding: "11px 0", borderRadius: 12, border: "1px solid rgba(193,67,188,.3)", background: "rgba(193,67,188,.08)", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#C143BC", cursor: "pointer", letterSpacing: "0.08em" }}
                     >
                       Canjear sello
                     </button>
@@ -783,13 +783,13 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                   <Perf />
                   <div style={{ padding: "14px 18px" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                      <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.35em", color: "#252530", textTransform: "uppercase", margin: 0 }}>Sellos</p>
-                      <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#F2A6F0" }}>
-                        {totalCollected}<span style={{ color: "#16161F", fontWeight: 400 }}> / {totalSponsors}</span>
+                      <p style={{ fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.35em", color: "#8B84A0", textTransform: "uppercase", margin: 0 }}>Sellos</p>
+                      <span style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#C143BC" }}>
+                        {totalCollected}<span style={{ color: "#8B84A0", fontWeight: 400 }}> / {totalSponsors}</span>
                       </span>
                     </div>
                     <div style={{ height: 3, borderRadius: 3, background: "rgba(255,255,255,.05)", marginBottom: 14, overflow: "hidden" }}>
-                      <div style={{ height: "100%", borderRadius: 3, width: `${progressPct}%`, background: "linear-gradient(90deg, #F2A6F0, #FCD34D)", boxShadow: "0 0 8px rgba(242,166,240,.4)", transition: "width .8s ease" }} />
+                      <div style={{ height: "100%", borderRadius: 3, width: `${progressPct}%`, background: "linear-gradient(90deg, #C143BC, #613BB8)", boxShadow: "0 0 8px rgba(193,67,188,.4)", transition: "width .8s ease" }} />
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10 }}>
                       {sponsors.map((sp, i) => <StampItem key={sp._id} sponsor={sp} collected={collectedIds.has(sp._id)} index={i} />)}
@@ -799,8 +799,8 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
               )}
 
               {/* === MRZ ZONE === */}
-              <div style={{ borderTop:"1px solid rgba(242,166,240,.07)", padding:"11px 20px 13px", background:"rgba(0,0,0,.25)", textAlign:"center" }}>
-                <p style={{ fontFamily:"'Courier New',monospace", fontSize:8, letterSpacing:"0.08em", color:"rgba(242,166,240,.16)", lineHeight:1.9, wordBreak:"break-all", margin:0, userSelect:"none" }}>
+              <div style={{ borderTop:"1px solid rgba(193,67,188,.07)", padding:"11px 20px 13px", background:"rgba(0,0,0,.25)", textAlign:"center" }}>
+                <p style={{ fontFamily:"'Courier New',monospace", fontSize:8, letterSpacing:"0.08em", color:"rgba(193,67,188,.25)", lineHeight:1.9, wordBreak:"break-all", margin:0, userSelect:"none" }}>
                   {mrz1}<br />{mrz2}
                 </p>
               </div>
@@ -827,12 +827,12 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
       {/* ═══ STAMP MODAL ═══ */}
       {showStampModal && (
         <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,.65)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "0 24px" }}>
-          <div style={{ width: "100%", maxWidth: 340, borderRadius: 22, overflow: "hidden", background: "linear-gradient(160deg, #0A0A0F, #16161F)", border: "1px solid rgba(242,166,240,.2)", boxShadow: "0 24px 64px rgba(0,0,0,.8)" }}>
-            <div style={{ height: 2, background: "linear-gradient(90deg,#F2A6F0,#FCD34D,#F2A6F0)", backgroundSize: "200% 200%", animation: "gradient-border 3s ease infinite" }} />
+          <div style={{ width: "100%", maxWidth: 340, borderRadius: 22, overflow: "hidden", background: "linear-gradient(160deg, #0E0E1A, #1E1838)", border: "1px solid rgba(193,67,188,.25)", boxShadow: "0 24px 64px rgba(0,0,0,.8)" }}>
+            <div style={{ height: 2, background: "linear-gradient(90deg,#C143BC,#613BB8,#C143BC)", backgroundSize: "200% 200%", animation: "gradient-border 3s ease infinite" }} />
             <div style={{ padding: "22px 22px 26px" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                <p style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#F2A6F0", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Canjear sello</p>
-                <button onClick={() => { setShowStampModal(false); setStampDigits(["","","",""]); setStampResult(null); }} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", display: "flex", padding: 4 }}>
+                <p style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, color: "#C143BC", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Canjear sello</p>
+                <button onClick={() => { setShowStampModal(false); setStampDigits(["","","",""]); setStampResult(null); }} style={{ background: "none", border: "none", color: "#8B84A0", cursor: "pointer", display: "flex", padding: 4 }}>
                   <X style={{ width: 14, height: 14 }} />
                 </button>
               </div>
@@ -844,25 +844,25 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                     {stampResult.msg}
                   </p>
                   {!stampResult.ok && (
-                    <p style={{ fontFamily: "monospace", fontSize: 10, color: "#4b5563", marginTop: 10 }}>Intenta otro PIN</p>
+                    <p style={{ fontFamily: "monospace", fontSize: 10, color: "#8B84A0", marginTop: 10 }}>Intenta otro PIN</p>
                   )}
                 </div>
               ) : stamping ? (
                 /* Loading state */
                 <div style={{ display: "flex", justifyContent: "center", padding: "16px 0" }}>
-                  <Loader2 style={{ width: 28, height: 28, color: "#F2A6F0", animation: "spin 1s linear infinite" }} />
+                  <Loader2 style={{ width: 28, height: 28, color: "#C143BC", animation: "spin 1s linear infinite" }} />
                 </div>
               ) : (
                 /* PIN entry — auto-submits on 4 digits */
                 <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-                  <p style={{ fontFamily: "monospace", fontSize: 10, color: "#4b5563", textAlign: "center", margin: 0 }}>
+                  <p style={{ fontFamily: "monospace", fontSize: 10, color: "#8B84A0", textAlign: "center", margin: 0 }}>
                     Ingresa el PIN del sponsor para reclamar tu sello
                   </p>
                   <PinDigits
                     digits={stampDigits}
                     onChange={(d) => { setStampDigits(d); setStampResult(null); }}
                   />
-                  <p style={{ fontFamily: "monospace", fontSize: 9, color: "#16161F", margin: 0 }}>
+                  <p style={{ fontFamily: "monospace", fontSize: 9, color: "#8B84A0", margin: 0 }}>
                     Se envía automáticamente al completar los 4 dígitos
                   </p>
                 </div>
@@ -877,25 +877,25 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
         const plat = SOCIAL_PLATFORMS.find((p) => p.id === addingPlatform)!;
         const modeBtn = (active: boolean): React.CSSProperties => ({
           flex: 1, padding: "9px 0", borderRadius: 10, cursor: "pointer",
-          border: active ? "1px solid rgba(242,166,240,.5)" : "1px solid rgba(255,255,255,.1)",
-          background: active ? "rgba(242,166,240,.12)" : "rgba(255,255,255,.03)",
-          color: active ? "#F2A6F0" : "#6b7280",
+          border: active ? "1px solid rgba(193,67,188,.5)" : "1px solid rgba(255,255,255,.1)",
+          background: active ? "rgba(193,67,188,.15)" : "rgba(255,255,255,.03)",
+          color: active ? "#C143BC" : "#8B84A0",
           fontFamily: "monospace", fontSize: 11, fontWeight: 700,
         });
         return (
           <div style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,.65)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)", padding: "0 24px" }}>
-            <div style={{ width: "100%", maxWidth: 360, borderRadius: 22, overflow: "hidden", background: "linear-gradient(160deg, #0A0A0F, #16161F)", border: "1px solid rgba(242,166,240,.2)", boxShadow: "0 24px 64px rgba(0,0,0,.8)" }}>
-              <div style={{ height: 2, background: "linear-gradient(90deg,#F2A6F0,#FCD34D,#F2A6F0)" }} />
+            <div style={{ width: "100%", maxWidth: 360, borderRadius: 22, overflow: "hidden", background: "linear-gradient(160deg, #0E0E1A, #1E1838)", border: "1px solid rgba(193,67,188,.25)", boxShadow: "0 24px 64px rgba(0,0,0,.8)" }}>
+              <div style={{ height: 2, background: "linear-gradient(90deg,#C143BC,#613BB8,#C143BC)" }} />
               <div style={{ padding: "20px 20px 24px" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                     <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: plat.bg, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>{plat.icon}</div>
                     <p style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#f9fafb", margin: 0 }}>{plat.label}</p>
                   </div>
-                  <button onClick={() => setAddingPlatform(null)} style={{ background: "none", border: "none", color: "#4b5563", cursor: "pointer", display: "flex", padding: 4 }}><X style={{ width: 14, height: 14 }} /></button>
+                  <button onClick={() => setAddingPlatform(null)} style={{ background: "none", border: "none", color: "#8B84A0", cursor: "pointer", display: "flex", padding: 4 }}><X style={{ width: 14, height: 14 }} /></button>
                 </div>
 
-                <p style={{ fontFamily: "monospace", fontSize: 10, color: "#6b7280", margin: "0 0 10px" }}>¿Cómo quieres agregarla?</p>
+                <p style={{ fontFamily: "monospace", fontSize: 10, color: "#8B84A0", margin: "0 0 10px" }}>¿Cómo quieres agregarla?</p>
                 <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
                   <button onClick={() => { setAddMode("username"); setAddError(null); }} style={modeBtn(addMode === "username")}>Usuario</button>
                   <button onClick={() => { setAddMode("link"); setAddError(null); }} style={modeBtn(addMode === "link")}>Enlace directo</button>
@@ -903,8 +903,8 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
 
                 {addMode === "username" ? (
                   <>
-                    <div style={{ display: "flex", alignItems: "center", borderRadius: 10, border: "1px solid rgba(255,255,255,.1)", background: "rgba(255,255,255,.04)", overflow: "hidden" }}>
-                      {plat.atSign && <span style={{ padding: "9px 0 9px 12px", fontFamily: "monospace", fontSize: 12, color: "#F2A6F0", fontWeight: 700 }}>@</span>}
+                    <div style={{ display: "flex", alignItems: "center", borderRadius: 10, border: "1px solid #2C2550", background: "#1E1838", overflow: "hidden" }}>
+                      {plat.atSign && <span style={{ padding: "9px 0 9px 12px", fontFamily: "monospace", fontSize: 12, color: "#C143BC", fontWeight: 700 }}>@</span>}
                       <input
                         autoFocus value={addInput}
                         onChange={(e) => { setAddInput(e.target.value); setAddError(null); }}
@@ -913,7 +913,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                         style={{ flex: 1, padding: plat.atSign ? "9px 12px 9px 4px" : "9px 12px", border: "none", background: "transparent", fontFamily: "monospace", fontSize: 12, color: "#e5e7eb", outline: "none" }}
                       />
                     </div>
-                    <p style={{ fontFamily: "monospace", fontSize: 9, color: "#252530", margin: "7px 0 0" }}>
+                    <p style={{ fontFamily: "monospace", fontSize: 9, color: "#8B84A0", margin: "7px 0 0" }}>
                       Quedará: {plat.prefix}{plat.atSign ? "" : ""}{addInput.trim() ? cleanUsername(addInput) ?? "…" : (plat.placeholder)}
                     </p>
                   </>
@@ -924,9 +924,9 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                       onChange={(e) => { setAddInput(e.target.value); setAddError(null); }}
                       onKeyDown={(e) => { if (e.key === "Enter") submitAddSocial(); }}
                       placeholder={plat.urlFn("tu-usuario")}
-                      style={{ width: "100%", padding: "9px 12px", borderRadius: 10, border: "1px solid rgba(255,255,255,.1)", background: "rgba(255,255,255,.04)", fontFamily: "monospace", fontSize: 11, color: "#e5e7eb", outline: "none" }}
+                      style={{ width: "100%", padding: "9px 12px", borderRadius: 10, border: "1px solid #2C2550", background: "#1E1838", fontFamily: "monospace", fontSize: 11, color: "#e5e7eb", outline: "none" }}
                     />
-                    <p style={{ fontFamily: "monospace", fontSize: 9, color: "#252530", margin: "7px 0 0" }}>Pega el enlace de tu perfil de {plat.label}.</p>
+                    <p style={{ fontFamily: "monospace", fontSize: 9, color: "#8B84A0", margin: "7px 0 0" }}>Pega el enlace de tu perfil de {plat.label}.</p>
                   </>
                 )}
 
@@ -935,7 +935,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
                 <button
                   onClick={submitAddSocial}
                   disabled={!addInput.trim()}
-                  style={{ width: "100%", marginTop: 16, padding: "11px 0", borderRadius: 12, border: "none", background: "#F2A6F0", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0A0A0F", cursor: "pointer", opacity: addInput.trim() ? 1 : .4, transition: "opacity .2s" }}
+                  style={{ width: "100%", marginTop: 16, padding: "11px 0", borderRadius: 12, border: "none", background: "#D85A30", fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#ffffff", cursor: "pointer", opacity: addInput.trim() ? 1 : .4, transition: "opacity .2s, box-shadow .2s", boxShadow: "0 0 15px rgba(216,90,48,.35)" }}
                 >
                   {addMode === "link" ? "Validar y agregar" : "Agregar"}
                 </button>

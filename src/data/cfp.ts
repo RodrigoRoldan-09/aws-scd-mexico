@@ -1,5 +1,5 @@
 /**
- * Call for Speakers — AWS Student Community Day México 2026.
+ * Call for Speakers — AWS Student Community Day México-CDMX 2026.
  * Horas de la Ciudad de México (UTC-6); los ISO llevan el offset explícito
  * para no depender de la zona horaria del navegador. Los textos con la fecha
  * escrita están en i18n ("CFP") y en el correo de confirmación.
@@ -9,9 +9,8 @@
 export const CFP_DEADLINE = "2026-10-09T23:59:00-06:00";
 
 /**
- * Si se aceptan postulaciones de sesión online. En `false` el formulario
- * deshabilita la opción «Online» y la API rechaza esos envíos. No afecta al
- * Track Online de asistentes.
+ * Modalidad de ponencias. Establecido en `false` porque todas las sesiones
+ * son 100% presenciales en IPN-Casco Santo Tomas.
  */
 export const CFP_ONLINE_SPEAKERS = false;
 

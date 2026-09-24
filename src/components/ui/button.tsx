@@ -5,20 +5,29 @@ import { forwardRef } from "react";
 // pills ni de glows.
 const variantStyles = {
   primary:
-    "bg-aws-orange text-surface-900 font-bold shadow-[4px_4px_0_0_var(--color-hack-dim)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-hack-dim)] active:translate-x-0 active:translate-y-0 active:shadow-none",
+    "bg-[#422B78] text-[#E6E4DA] hover:bg-[#613BB8] active:bg-[#422B78]",
+  conversion:
+    "bg-[#D85A30] text-[#0E0E1A] font-bold hover:shadow-[0_0_20px_rgba(216,90,48,0.20)] active:opacity-90",
   secondary:
-    "border-2 border-aws-orange text-aws-orange hover:bg-aws-orange hover:text-surface-900",
-  ghost: "border-2 border-surface-600 text-surface-100 hover:border-aws-orange hover:text-aws-orange",
+    "bg-[#613BB8] text-[#E6E4DA] hover:bg-[#7B3FA6] active:bg-[#613BB8]",
+  "ghost-accent":
+    "bg-transparent text-[#C143BC] hover:text-[#E6E4DA] hover:bg-[#1E1838]/50 active:text-[#C143BC]",
+  "ghost-default":
+    "bg-transparent text-[#73726C] hover:text-[#B4B2A9] hover:bg-[#1E1838]/50 active:text-[#73726C]",
+  admin:
+    "bg-transparent border border-[#D85A30] text-[#D85A30] hover:bg-[#D85A30] hover:text-[#0E0E1A] active:bg-[#D85A30]/80",
+  // Alias de compatibilidad
+  ghost:
+    "bg-transparent text-[#73726C] hover:text-[#B4B2A9] hover:bg-[#1E1838]/50",
   danger:
-    "border-2 border-red-500 bg-red-500/15 text-red-300 hover:bg-red-500/25 hover:shadow-[4px_4px_0_0_rgba(239,68,68,0.4)]",
+    "border border-[#E24B4A] bg-[#E24B4A]/10 text-[#E24B4A] hover:bg-[#E24B4A]/25",
 };
 
-// 44px de alto minimo en todos los tamanos: es lo que hay que poder tocar con
-// el pulgar. El `sm` medida 36 y en el telefono se fallaba.
+// 44px de alto mínimo en todos los tamaños para área de toque táctil (§6.1, §6.2)
 const sizeStyles = {
   sm: "min-h-11 px-3.5 py-2 text-xs sm:text-sm",
-  md: "min-h-11 px-5 py-3 text-sm sm:px-6 sm:text-base",
-  lg: "min-h-12 px-6 py-4 text-base sm:px-8 sm:text-lg",
+  md: "min-h-11 px-5 py-2.5 text-sm sm:px-6 sm:text-base",
+  lg: "min-h-12 px-6 py-3.5 text-base sm:px-8 sm:text-lg",
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -32,7 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap text-center font-mono transition-all duration-200",
+          "inline-flex items-center justify-center whitespace-nowrap text-center font-mono rounded-[6px] transition-all duration-200",
           "disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
           variantStyles[variant],
           sizeStyles[size],

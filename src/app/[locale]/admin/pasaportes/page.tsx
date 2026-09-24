@@ -247,7 +247,7 @@ function GenerateTab() {
           })}
         </div>
         <button onClick={syncAll}
-          className="mt-1 w-full bg-aws-orange px-5 py-3 font-mono text-sm font-bold text-surface-900 hover:shadow-[0_0_20px_rgba(242,166,240,0.3)] transition-all">
+          className="mt-1 w-full bg-aws-orange px-5 py-3 font-mono text-sm font-bold text-surface-900 hover:shadow-[0_0_20px_rgba(193,67,188,0.3)] transition-all">
           Sincronizar todos (noche anterior al evento)
         </button>
       </div>

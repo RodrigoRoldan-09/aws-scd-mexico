@@ -56,7 +56,7 @@ export default function ReportesPage() {
               <p className="flex-1 font-mono text-xs leading-relaxed text-surface-400">{r.desc}</p>
               <a
                 href={r.href}
-                className="mt-4 inline-flex items-center justify-center gap-2 bg-aws-orange px-4 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_16px_rgba(242,166,240,0.4)]"
+                className="mt-4 inline-flex items-center justify-center gap-2 bg-aws-orange px-4 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_16px_rgba(193,67,188,0.4)]"
               >
                 <Download className="h-4 w-4" /> Descargar Excel
               </a>

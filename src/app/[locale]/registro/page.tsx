@@ -25,12 +25,12 @@ export default async function RegistroPage({ params }: Props) {
       Form.findOne({ formType: "attendee" }).select("isOpen").lean<{ isOpen?: boolean }>(),
       Form.findOne({ formType: "volunteer" }).select("isOpen").lean<{ isOpen?: boolean }>(),
     ]);
-    isOpen = !!form?.isOpen;
-    volunteersOpen = !!volunteerForm?.isOpen;
+    isOpen = form ? !!form.isOpen : (process.env.NODE_ENV === "development");
+    volunteersOpen = volunteerForm ? !!volunteerForm.isOpen : (process.env.NODE_ENV === "development");
   } catch {
-    // Si la base no responde, se muestra cerrado: es preferible a un formulario
-    // que va a fallar al enviar.
-    isOpen = false;
+    // En desarrollo local, se abre para visualización inmediata si la BD no está disponible
+    isOpen = process.env.NODE_ENV === "development";
+    volunteersOpen = false;
   }
 
   return (

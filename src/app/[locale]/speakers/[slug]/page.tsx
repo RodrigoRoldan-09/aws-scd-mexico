@@ -15,12 +15,12 @@ interface PageProps {
 }
 
 const TRACK_COLORS: Record<string, string> = {
-  cloud: "text-aws-orange border-aws-orange/30 bg-aws-orange/10",
+  cloud: "text-[#C143BC] border-[#C143BC]/30 bg-[#C143BC]/10",
   devops: "text-sky-400 border-sky-400/30 bg-sky-400/10",
   "ai-ml": "text-purple-400 border-purple-400/30 bg-purple-400/10",
   security: "text-red-400 border-red-400/30 bg-red-400/10",
   "soft-skills": "text-green-400 border-green-400/30 bg-green-400/10",
-  general: "text-aws-orange border-aws-orange/30 bg-aws-orange/10",
+  general: "text-[#C143BC] border-[#C143BC]/30 bg-[#C143BC]/10",
 };
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -56,41 +56,41 @@ function SpeakerCard({
     <div className="flex flex-col items-center gap-4 lg:items-start">
       {photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={photo} alt={name} className="h-56 w-56 rounded-2xl border-2 border-aws-orange/40 object-cover lg:h-60 lg:w-60" />
+        <img src={photo} alt={name} className="h-56 w-56 rounded-2xl border-2 border-[#C143BC]/40 object-cover lg:h-60 lg:w-60" />
       ) : (
-        <div className="flex h-56 w-56 items-center justify-center rounded-2xl border-2 border-aws-orange/40 bg-surface-800 lg:h-60 lg:w-60">
-          <span className="font-mono text-5xl font-bold text-aws-orange">{initials}</span>
+        <div className="flex h-56 w-56 items-center justify-center rounded-2xl border-2 border-[#C143BC]/40 bg-[#1E1838] lg:h-60 lg:w-60">
+          <span className="font-mono text-5xl font-bold text-[#C143BC]">{initials}</span>
         </div>
       )}
       <div className="text-center lg:text-left">
-        <p className="font-mono text-xl font-bold text-surface-50">{name}</p>
-        {tagline && <p className="mt-0.5 font-mono text-sm text-surface-400">{tagline}</p>}
+        <p className="font-display text-xl font-bold text-[#E6E4DA]">{name}</p>
+        {tagline && <p className="mt-0.5 font-mono text-sm text-[#E6E4DA]/60">{tagline}</p>}
       </div>
-      {bio && <p className="font-mono text-sm leading-relaxed text-surface-300 text-center lg:text-left">{bio}</p>}
+      {bio && <p className="font-mono text-sm leading-relaxed text-[#E6E4DA]/70 text-center lg:text-left">{bio}</p>}
       {(social?.linkedin || social?.twitter || social?.instagram || social?.github || social?.website) && (
         <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
           {social.linkedin && (
-            <a href={toAbsoluteUrl(social.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-glass-border bg-surface-800 px-3 py-1.5 font-mono text-xs text-surface-300 transition-colors hover:border-aws-orange/40 hover:text-aws-orange">
+            <a href={toAbsoluteUrl(social.linkedin)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-[#E6E4DA]/70 transition-colors hover:border-[#C143BC]/50 hover:text-[#C143BC]">
               <LinkedInIcon className="h-3.5 w-3.5" /> LinkedIn
             </a>
           )}
           {social.twitter && (
-            <a href={toAbsoluteUrl(social.twitter)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-glass-border bg-surface-800 px-3 py-1.5 font-mono text-xs text-surface-300 transition-colors hover:border-aws-orange/40 hover:text-aws-orange">
+            <a href={toAbsoluteUrl(social.twitter)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-[#E6E4DA]/70 transition-colors hover:border-[#C143BC]/50 hover:text-[#C143BC]">
               <XTwitterIcon className="h-3.5 w-3.5" /> X / Twitter
             </a>
           )}
           {social.instagram && (
-            <a href={toAbsoluteUrl(social.instagram)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-glass-border bg-surface-800 px-3 py-1.5 font-mono text-xs text-surface-300 transition-colors hover:border-aws-orange/40 hover:text-aws-orange">
+            <a href={toAbsoluteUrl(social.instagram)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-[#E6E4DA]/70 transition-colors hover:border-[#C143BC]/50 hover:text-[#C143BC]">
               <InstagramIcon className="h-3.5 w-3.5" /> Instagram
             </a>
           )}
           {social.github && (
-            <a href={toAbsoluteUrl(social.github)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-glass-border bg-surface-800 px-3 py-1.5 font-mono text-xs text-surface-300 transition-colors hover:border-aws-orange/40 hover:text-aws-orange">
+            <a href={toAbsoluteUrl(social.github)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-[#E6E4DA]/70 transition-colors hover:border-[#C143BC]/50 hover:text-[#C143BC]">
               <Code2 className="h-3.5 w-3.5" /> GitHub
             </a>
           )}
           {social.website && (
-            <a href={toAbsoluteUrl(social.website)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-glass-border bg-surface-800 px-3 py-1.5 font-mono text-xs text-surface-300 transition-colors hover:border-aws-orange/40 hover:text-aws-orange">
+            <a href={toAbsoluteUrl(social.website)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-lg border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-[#E6E4DA]/70 transition-colors hover:border-[#C143BC]/50 hover:text-[#C143BC]">
               <Globe className="h-3.5 w-3.5" /> Web
             </a>
           )}
@@ -164,12 +164,12 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
   const cardUrl = `${appUrl}/api/og/speaker/${slug}`;
 
   return (
-    <main className="min-h-screen bg-surface-950 px-6 py-24">
+    <main className="min-h-screen bg-[#0E0E1A] px-6 py-24">
       <div className="mx-auto max-w-5xl">
         {/* Back */}
         <Link
           href={locale === "en" ? "/en/directorio" : "/directorio"}
-          className="mb-8 inline-flex items-center gap-2 font-mono text-sm text-surface-400 transition-colors hover:text-surface-100"
+          className="mb-8 inline-flex items-center gap-2 font-mono text-sm text-[#E6E4DA]/60 transition-colors hover:text-[#E6E4DA]"
         >
           <ArrowLeft className="h-4 w-4" />
           Directorio de speakers
@@ -189,7 +189,7 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
             />
 
             {/* Track badge */}
-            <span className={`inline-flex self-center rounded-none border px-3 py-1 font-mono text-xs font-semibold lg:self-start ${trackColor}`}>
+            <span className={`inline-flex self-center rounded-[4px] border px-3 py-1 font-mono text-xs font-semibold lg:self-start ${trackColor}`}>
               {profile.track.replace(/-/g, " ").toUpperCase()}
             </span>
 
@@ -197,11 +197,11 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
             {hasCoSpeakers && (
               <div className="flex flex-col gap-6">
                 <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-glass-border" />
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-surface-500">
+                  <div className="h-px flex-1 bg-[#2C2550]" />
+                  <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#E6E4DA]/60">
                     {profile.coSpeakers.length === 1 ? "Co-speaker" : "Co-speakers"}
                   </span>
-                  <div className="h-px flex-1 bg-glass-border" />
+                  <div className="h-px flex-1 bg-[#2C2550]" />
                 </div>
                 {profile.coSpeakers.map((cs, i) => {
                   const csInitials = `${cs.firstName} ${cs.lastName}`.split(" ").slice(0, 2).map((w) => w[0] ?? "").join("").toUpperCase();
@@ -232,22 +232,22 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
           {/* Right column */}
           <article className="flex flex-col gap-8">
             {/* Talk */}
-            <section className="rounded-2xl border border-glass-border bg-glass p-6 backdrop-blur-xl">
-              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-surface-500">Charla</p>
-              <h2 className="font-mono text-2xl font-bold text-surface-50 leading-snug">
+            <section className="rounded-2xl border border-[#2C2550] bg-[#1E1838] p-6">
+              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]/60">Charla</p>
+              <h2 className="font-display text-2xl font-bold text-[#E6E4DA] leading-snug">
                 {profile.talkTitle || "Próximamente"}
               </h2>
               {(profile.scheduledAt || sessionRoom) && (
                 <div className="mt-3 flex flex-wrap gap-4">
                   {profile.scheduledAt && (
-                    <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-aws-orange">
+                    <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-[#C143BC]">
                       <Clock className="h-4 w-4 shrink-0" />
                       {formatSessionTime(profile.scheduledAt)}
                       {sessionEndTime && <> – {sessionEndTime}</>}
                     </span>
                   )}
                   {sessionRoom && (
-                    <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-aws-orange">
+                    <span className="inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-[#C143BC]">
                       <MapPin className="h-4 w-4 shrink-0" />
                       {sessionRoom}
                     </span>
@@ -255,7 +255,7 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
                 </div>
               )}
               {profile.talkAbstract && (
-                <p className="mt-4 font-mono text-sm leading-relaxed text-surface-300">
+                <p className="mt-4 font-mono text-sm leading-relaxed text-[#E6E4DA]/70">
                   {profile.talkAbstract}
                 </p>
               )}
@@ -263,8 +263,8 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
 
             {/* Card preview */}
             <section>
-              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-surface-500">Tarjeta del evento</p>
-              <div className="overflow-hidden rounded-2xl border border-glass-border">
+              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]/60">Tarjeta del evento</p>
+              <div className="overflow-hidden rounded-2xl border border-[#2C2550]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={cardUrl}
@@ -272,7 +272,7 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
                   className="w-full"
                 />
               </div>
-              <p className="mt-2 font-mono text-xs text-surface-500">
+              <p className="mt-2 font-mono text-xs text-[#E6E4DA]/60">
                 Haz click en &quot;Compartir tarjeta&quot; para obtener el texto listo para cada red social
               </p>
             </section>

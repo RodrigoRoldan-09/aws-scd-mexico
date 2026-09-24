@@ -120,17 +120,17 @@ function Field({
 }) {
   return (
     <div className="flex flex-col sm:row-span-4 sm:grid sm:grid-rows-subgrid">
-      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-hack-ink">
-        {label} {required && <span className="text-hack-deep">*</span>}
+      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-[#E6E4DA]">
+        {label} {required && <span className="text-[#D85A30]">*</span>}
       </label>
       {hint ? (
-        <p className="m-0 mt-1 font-mono text-xs text-hack-ink/55">{hint}</p>
+        <p className="m-0 mt-1 font-mono text-xs text-[#B4B2A9]">{hint}</p>
       ) : (
         <span aria-hidden="true" />
       )}
       <div className="mt-2">{children}</div>
       {error ? (
-        <p className="m-0 mt-1.5 font-mono text-xs text-[#7f1d1d]">{error}</p>
+        <p className="m-0 mt-1.5 font-mono text-xs text-[#E24B4A]">{error}</p>
       ) : (
         <span aria-hidden="true" />
       )}
@@ -139,10 +139,9 @@ function Field({
 }
 
 const inputCls =
-  "w-full border-2 border-hack-ink/35 bg-white/55 px-4 py-3 font-mono text-sm text-hack-ink " +
-  "placeholder:text-hack-ink/40 outline-none transition-all " +
-  "focus:-translate-y-px focus:border-hack-ink focus:bg-white " +
-  "focus:shadow-[3px_3px_0_0_rgba(0,0,0,0.3)]";
+  "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
+  "placeholder:text-[#73726C] outline-none transition-all " +
+  "focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/30";
 
 /** Botonera de una sola opción. La elegida va en negro, como en el resto. */
 function Choice({
@@ -162,10 +161,10 @@ function Choice({
           type="button"
           onClick={() => onChange(o.value)}
           className={cn(
-            "border-2 px-3 py-3.5 font-mono text-sm font-bold transition-all",
+            "rounded-[6px] border px-3 py-3.5 font-mono text-sm font-bold transition-all",
             value === o.value
-              ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
-              : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+              ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
+              : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
           )}
         >
           {labelOf(o, locale)}
@@ -178,8 +177,8 @@ function Choice({
 /** Separador de bloque, con el mismo letrero de puntos del resto del sitio. */
 function Bloque({ children }: { children: React.ReactNode }) {
   return (
-    <div className="border-t-2 border-hack-ink/20 pt-6">
-      <p className="m-0 dot-matrix text-base leading-none text-hack-ink/60">{children}</p>
+    <div className="border-t border-[#2C2550] pt-6">
+      <p className="m-0 dot-matrix text-base leading-none text-[#B4B2A9]">{children}</p>
     </div>
   );
 }
@@ -641,20 +640,20 @@ export function VoluntariosForm({
                   type="button"
                   onClick={() => toggleArea(a.value)}
                   className={cn(
-                    "flex items-center gap-3 border-2 px-4 py-3 text-left font-mono text-sm font-bold transition-all",
+                    "flex items-center gap-3 rounded-[6px] border px-4 py-3 text-left font-mono text-sm font-bold transition-all",
                     on
-                      ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
-                      : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                      ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
+                      : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
                   )}
                 >
                   <span
                     className={cn(
-                      "flex h-4 w-4 shrink-0 items-center justify-center border-2",
-                      on ? "border-hack-block" : "border-hack-ink/40",
+                      "flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border",
+                      on ? "border-[#D85A30] bg-[#D85A30]" : "border-[#2C2550] bg-[#0E0E1A]",
                     )}
                   >
                     {on && (
-                      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="#F2A6F0" strokeWidth="5">
+                      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="#FFFFFF" strokeWidth="5">
                         <path d="M20 6 9 17l-5-5" />
                       </svg>
                     )}
@@ -725,8 +724,8 @@ export function VoluntariosForm({
                 className={cn(
                   "border-2 px-3 py-3 font-mono text-sm font-bold transition-all",
                   v.dietary === d.value
-                    ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
-                    : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                    ? "border-[#D85A30] bg-[#D85A30] text-white shadow-[0_0_14px_rgba(216,90,48,0.3)]"
+                    : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
                 )}
               >
                 {labelOf(d, locale)}
@@ -786,7 +785,7 @@ placeholder={t.emergency_ph}
         />
 
         {/* ── Consentimientos ── */}
-        <div className="flex flex-col gap-3 border-t-2 border-hack-ink/20 pt-6">
+        <div className="flex flex-col gap-3 border-t border-[#2C2550] pt-6">
           {(
             [
               ["coc", acceptCoc, setAcceptCoc, t.coc_text, t.coc_link, "/codigo-conducta"],
@@ -804,33 +803,33 @@ placeholder={t.emergency_ph}
                     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
                   }}
                   className={cn(
-                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-all",
-                    checked ? "border-hack-ink bg-hack-ink" : "border-hack-ink/40 bg-white/55",
-                    errors[key] && "border-[#7f1d1d]",
+                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border transition-all",
+                    checked ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]",
+                    errors[key] && "border-[#E24B4A]",
                   )}
                 >
                   {checked && (
-                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#F2A6F0" strokeWidth="4">
+                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#FFFFFF" strokeWidth="4">
                       <path d="M20 6 9 17l-5-5" />
                     </svg>
                   )}
                 </button>
-                <span className="font-mono text-xs leading-relaxed text-hack-ink/85">
+                <span className="font-mono text-xs leading-relaxed text-[#B4B2A9]">
                   {text}
                   <a
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold underline underline-offset-4"
+                    className="font-bold text-[#378ADD] underline underline-offset-4 hover:text-[#3DD6D0]"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {linkText}
                   </a>
-                  . <span className="text-hack-deep">*</span>
+                  . <span className="text-[#D85A30]">*</span>
                 </span>
               </label>
               {errors[key] && (
-                <p className="m-0 pl-8 font-mono text-xs text-[#7f1d1d]">{errors[key]}</p>
+                <p className="m-0 pl-8 font-mono text-xs text-[#E24B4A]">{errors[key]}</p>
               )}
             </div>
           ))}
@@ -842,22 +841,22 @@ placeholder={t.emergency_ph}
             quiere sumarse al equipo. Ese segundo caso no se arregla solo — no
             se puede estar en las dos listas — así que en vez de dejarlo
             postularse y que le rebote, se le dice a quién escribir. */}
-        <div className="flex flex-col gap-2 border-2 border-hack-ink/30 bg-white/30 px-4 py-3.5">
-          <p className="m-0 font-mono text-xs leading-relaxed text-hack-ink/80">
+        <div className="flex flex-col gap-2 rounded-[6px] border border-[#3DD6D0]/30 bg-[#3DD6D0]/10 px-4 py-3.5">
+          <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
             {t.notice1a}
-            <strong className="font-bold">{t.notice1b}</strong>
+            <strong className="font-bold text-[#3DD6D0]">{t.notice1b}</strong>
             {t.notice1c}
-            <Link href="/registro" className="font-bold underline underline-offset-4">
+            <Link href="/registro" className="font-bold text-[#3DD6D0] underline underline-offset-4 hover:brightness-110">
               {t.notice1link}
             </Link>
             .
           </p>
-          <p className="m-0 font-mono text-xs leading-relaxed text-hack-ink/80">
+          <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
             {t.notice2a}
             <ObfuscatedEmail
               box="contacto"
               subject="Quiero pasar de asistente a voluntario"
-              className="font-bold underline underline-offset-4"
+              className="font-bold text-[#3DD6D0] underline underline-offset-4 hover:brightness-110"
             />
             {t.notice2b}
           </p>
@@ -869,7 +868,7 @@ placeholder={t.emergency_ph}
               <Turnstile
                 ref={captchaRef}
                 siteKey={siteKey}
-                theme="light"
+                theme="dark"
                 appearance="interaction-only"
                 onVerify={setCaptchaToken}
                 onExpire={() => setCaptchaToken("")}
@@ -880,13 +879,13 @@ placeholder={t.emergency_ph}
         )}
 
         {formError && (
-          <p className="m-0 border-2 border-[#7f1d1d] bg-[#7f1d1d]/10 px-4 py-3 font-mono text-sm text-[#7f1d1d]">
+          <p className="m-0 rounded-[6px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">
             {formError}
           </p>
         )}
 
         {siteKey && !captchaToken && !formError && (
-          <p className="m-0 text-center font-mono text-xs text-hack-ink/50">
+          <p className="m-0 text-center font-mono text-xs text-[#73726C]">
             {t.captcha}
           </p>
         )}
@@ -894,7 +893,7 @@ placeholder={t.emergency_ph}
         <button
           type="submit"
           disabled={submitting || (!!siteKey && !captchaToken)}
-          className="btn-hard w-full px-6 py-4 font-mono text-sm"
+          className="w-full rounded-[6px] bg-[#D85A30] px-6 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
         >
           {submitting ? t.sending : t.submit}
         </button>

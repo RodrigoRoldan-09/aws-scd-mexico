@@ -15,12 +15,12 @@ export const dynamic = "force-dynamic";
 
 const W = 1080;
 const H = 1080;
-const ORANGE = "#F2A6F0";
-const BG = "#0A0A0F";
+const ORANGE = "#C143BC";
+const BG = "#0E0E1A";
 
 const TRACK_COLORS: Record<string, string> = {
-  cloud: "#F2A6F0", devops: "#4FC3F7", "ai-ml": "#CE93D8",
-  security: "#EF9A9A", "soft-skills": "#A5D6A7", general: "#F2A6F0",
+  cloud: "#C143BC", devops: "#3DD6D0", "ai-ml": "#C143BC",
+  security: "#E24B4A", "soft-skills": "#7B3FA6", general: "#C143BC",
 };
 
 function loadAsset(filePath: string, mime: string) {
@@ -88,7 +88,7 @@ async function fetchAsDataUrl(url: string): Promise<string> {
 
 async function generateQR(url: string): Promise<string> {
   return QRCode.toDataURL(url, {
-    color: { dark: "#F2A6F0", light: "#00000000" },
+    color: { dark: "#C143BC", light: "#00000000" },
     width: 220, margin: 1, errorCorrectionLevel: "M",
   });
 }

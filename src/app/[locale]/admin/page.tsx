@@ -55,7 +55,7 @@ interface Stats {
 }
 
 const COLORS = {
-  orange: "#F2A6F0",
+  orange: "#C143BC",
   blue: "#60a5fa",
   purple: "#7B3FA6",
   emerald: "#34d399",

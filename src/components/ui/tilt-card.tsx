@@ -47,10 +47,10 @@ export function TiltCard({ children, className }: TiltCardProps) {
       {children}
       {hovering && (
         <div
-          className="pointer-events-none absolute inset-0 rounded-xl opacity-10"
+          className="pointer-events-none absolute inset-0 rounded-[12px] opacity-10"
           style={{
             background:
-              "conic-gradient(from 180deg, transparent, rgba(242,166,240,0.3), transparent, rgba(242,166,240,0.2), transparent)",
+              "conic-gradient(from 180deg, transparent, rgba(193,67,188,0.3), transparent, rgba(193,67,188,0.2), transparent)",
           }}
         />
       )}

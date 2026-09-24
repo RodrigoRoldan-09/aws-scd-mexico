@@ -33,9 +33,9 @@ export default async function VoluntariosPage({ params }: Props) {
     isOpen = !!form?.isOpen;
     sbgSetting = setting?.value ?? "";
   } catch {
-    // Si la base no responde, se muestra cerrado: es preferible a un formulario
-    // que va a fallar al enviar.
-    isOpen = false;
+    // Si la base no responde, se muestra cerrado en prod: en desarrollo
+    // se deja abierto para poder probar la interfaz visual.
+    isOpen = process.env.NODE_ENV === "development";
   }
 
   const sbgs = parseSbgList(sbgSetting, DEFAULT_SBGS[countryCodeOf(EVENT.country)]);

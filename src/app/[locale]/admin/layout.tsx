@@ -42,7 +42,7 @@ function AdminGate({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface-900 px-5">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-aws-orange border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#D85A30] border-t-transparent" />
           <span className="dot-matrix text-lg leading-none text-surface-300">cargando</span>
         </div>
       </div>

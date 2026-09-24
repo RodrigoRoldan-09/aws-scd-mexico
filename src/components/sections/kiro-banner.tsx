@@ -17,8 +17,8 @@ export function KiroBanner() {
       <ScrollReveal>
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-kiro-purple/30 bg-[#0c0612]">
           {/* glows + dot grid */}
-          <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 120% at 80% 50%, rgba(242,166,240,0.32), transparent 62%)" }} />
-          <div aria-hidden className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(rgba(242,166,240,0.9) 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
+          <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 120% at 80% 50%, rgba(193,67,188,0.32), transparent 62%)" }} />
+          <div aria-hidden className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(rgba(193,67,188,0.9) 1px, transparent 1px)", backgroundSize: "26px 26px" }} />
           {/* roaming ghost */}
           <div aria-hidden className="pointer-events-none absolute top-6 left-0 hidden sm:block">
             <KiroGhost className="h-10 w-10 text-kiro-purple/20" style={{ animation: "kiro-roam 22s linear infinite" }} />
@@ -33,7 +33,7 @@ export function KiroBanner() {
                 {t("banner_desc")}
               </p>
               <Link href={localePath(locale, "/kiro")}
-                className="group mt-7 inline-flex items-center justify-center gap-2 rounded-none bg-kiro-purple px-8 py-3.5 text-base font-bold text-surface-900 transition-all hover:bg-kiro-purple-light hover:shadow-[0_0_38px_rgba(242,166,240,0.55)]">
+                className="group mt-7 inline-flex items-center justify-center gap-2 rounded-none bg-kiro-purple px-8 py-3.5 text-base font-bold text-surface-900 transition-all hover:bg-kiro-purple-light hover:shadow-[0_0_38px_rgba(193,67,188,0.55)]">
                 {t("cta_more")} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

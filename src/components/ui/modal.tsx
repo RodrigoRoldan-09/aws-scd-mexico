@@ -72,22 +72,22 @@ export function Modal({ open, onClose, title, children, className, size = "md" }
             exit={{ opacity: 0, y: 24 }}
             transition={{ type: "spring", damping: 26, stiffness: 320 }}
             className={cn(
-              "relative flex max-h-[92vh] w-full flex-col border-2 border-surface-500 bg-surface-800",
-              "shadow-[0_-8px_0_0_rgba(0,0,0,0.35)] sm:max-h-[88vh] sm:shadow-[8px_8px_0_0_rgba(0,0,0,0.55)]",
+              "relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-[12px] border border-[#2C2550] bg-[#1E1838]",
+              "shadow-[0_8px_32px_rgba(0,0,0,0.5)] sm:max-h-[88vh]",
               sizeStyles[size],
               className,
             )}
           >
             {title && (
-              <div className="flex shrink-0 items-center justify-between gap-3 border-b-2 border-surface-600 bg-surface-800 px-4 py-3 sm:px-5">
-                <h2 className="dot-matrix m-0 min-w-0 truncate text-lg leading-none text-surface-50 sm:text-xl">
+              <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#2C2550] bg-[#1E1838] px-4 py-3 sm:px-5">
+                <h2 className="font-display m-0 min-w-0 truncate text-lg font-bold leading-none text-[#E6E4DA] sm:text-xl">
                   {title}
                 </h2>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Cerrar"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-surface-600 text-surface-300 transition-colors hover:border-aws-orange hover:text-aws-orange"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-[#2C2550] text-[#73726C] transition-colors hover:border-[#C143BC] hover:text-[#C143BC]"
                 >
                   <X className="h-5 w-5" />
                 </button>

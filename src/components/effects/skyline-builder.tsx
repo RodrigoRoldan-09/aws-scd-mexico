@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 export function SkylineBuilder() {
   return (
-    <div className="relative w-full h-[120px] md:h-[180px]" aria-hidden="true">
+    <div className="pointer-events-none relative h-[120px] w-full opacity-[0.18] md:h-[180px]" aria-hidden="true">
       <svg
         viewBox="0 0 1440 180"
         fill="none"
@@ -14,9 +14,9 @@ export function SkylineBuilder() {
       >
         <defs>
           <linearGradient id="skyline-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#232F3E" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#F2A6F0" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#F2A6F0" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#422B78" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#613BB8" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#C143BC" stopOpacity="0.3" />
           </linearGradient>
         </defs>
         <motion.path

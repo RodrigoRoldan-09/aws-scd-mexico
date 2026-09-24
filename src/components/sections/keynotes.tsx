@@ -29,27 +29,27 @@ function KeynoteBody({ kn, size = "sm" }: { kn: Keynote; size?: "sm" | "lg" }) {
 
   return (
     <div className={`relative z-10 ${padding} flex flex-col justify-center gap-${size === "lg" ? "5" : "4"}`}>
-      <span className={`self-start font-mono font-bold tracking-[0.28em] uppercase text-aws-orange bg-aws-orange/10 border border-aws-orange/30 rounded-full ${size === "lg" ? "text-[11px] px-4 py-1.5" : "text-[10px] px-3 py-1"}`}>
+      <span className={`self-start font-mono font-bold tracking-[0.28em] uppercase text-[#C143BC] bg-[#C143BC]/10 border border-[#C143BC] rounded-[4px] ${size === "lg" ? "text-[11px] px-3.5 py-1.5" : "text-[10px] px-2.5 py-1"}`}>
         Keynote
       </span>
 
       <div>
-        <h3 className="font-mono font-bold leading-none tracking-tight text-surface-50 m-0"
+        <h3 className="font-display font-bold leading-none tracking-tight text-[#E6E4DA] m-0"
           style={{ fontSize: nameSize }}>
           {kn.firstName}<br />{kn.lastName}
         </h3>
         {(kn.role || kn.company) && (
-          <p className={`${roleText} m-0 flex flex-wrap items-center gap-2 mt-2`}>
+          <p className={`${roleText} font-mono m-0 flex flex-wrap items-center gap-2 mt-2`}>
             {kn.role && <span>{kn.role}</span>}
-            {kn.role && kn.company && <span className="text-aws-orange">·</span>}
+            {kn.role && kn.company && <span className="text-[#C143BC]">·</span>}
             {kn.company && <span>{kn.company}</span>}
           </p>
         )}
       </div>
 
       {kn.talkType && (
-        <div className="border-t border-surface-700/60 pt-4 flex flex-col gap-1.5">
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-surface-500">
+        <div className="border-t border-[#2C2550] pt-4 flex flex-col gap-1.5">
+          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#8B84A0]">
             {kn.talkType}
           </span>
           {kn.talkTitle && (
@@ -67,7 +67,7 @@ function KeynoteBody({ kn, size = "sm" }: { kn: Keynote; size?: "sm" | "lg" }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className={`self-start inline-flex items-center gap-1.5 text-surface-400 hover:text-aws-orange transition-colors font-mono tracking-wide ${size === "lg" ? "text-sm" : "text-xs"}`}
+            className={`self-start inline-flex items-center gap-1.5 text-surface-400 hover:text-[#C143BC] transition-colors font-mono tracking-wide ${size === "lg" ? "text-sm" : "text-xs"}`}
           >
             <LinkedinIcon className={size === "lg" ? "w-4 h-4" : "w-3.5 h-3.5"} />
             LinkedIn
@@ -77,7 +77,7 @@ function KeynoteBody({ kn, size = "sm" }: { kn: Keynote; size?: "sm" | "lg" }) {
           <Link
             href={`/speakers/${kn.profileSlug}`}
             onClick={(e) => e.stopPropagation()}
-            className={`self-start inline-flex items-center gap-1.5 font-mono font-semibold text-aws-orange border border-aws-orange/40 bg-aws-orange/8 rounded-full transition-all hover:bg-aws-orange hover:text-surface-900 ${size === "lg" ? "text-sm px-4 py-1.5" : "text-xs px-3 py-1"}`}
+            className={`self-start inline-flex items-center gap-1.5 font-mono font-semibold text-[#C143BC] border border-[#C143BC]/40 bg-[#C143BC]/10 rounded-[6px] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A] ${size === "lg" ? "text-sm px-4 py-1.5" : "text-xs px-3 py-1"}`}
           >
             Ver perfil completo
             <ArrowRight className={size === "lg" ? "w-4 h-4" : "w-3 h-3"} />
@@ -93,12 +93,12 @@ function HeadlinerCard({ kn }: { kn: Keynote }) {
   const router = useRouter();
   return (
     <div className="relative">
-      <div className="absolute inset-0 -m-6 rounded-3xl bg-aws-orange/[0.07] blur-2xl pointer-events-none" />
+      <div className="absolute inset-0 -m-6 rounded-3xl bg-[#613BB8]/[0.08] blur-2xl pointer-events-none" />
       <article
-        className={`relative grid grid-cols-1 md:grid-cols-[0.92fr_1.08fr] border border-surface-700 rounded-2xl overflow-hidden bg-surface-800/60 isolate transition-colors duration-300 ${kn.profileSlug ? "hover:border-aws-orange/50 cursor-pointer" : ""}`}
+        className={`relative grid grid-cols-1 md:grid-cols-[0.92fr_1.08fr] border border-[#2C2550] rounded-[16px] overflow-hidden bg-[#1E1838] isolate transition-all duration-300 ${kn.profileSlug ? "hover:border-[#C143BC]/60 hover:shadow-[0_0_30px_rgba(193,67,188,0.15)] cursor-pointer" : ""}`}
         onClick={() => kn.profileSlug && router.push(`/speakers/${kn.profileSlug}`)}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_0%_0%,rgba(242,166,240,0.07),transparent_45%)] pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_0%_0%,rgba(193,67,188,0.08),transparent_45%)] pointer-events-none z-0" />
 
         {kn.aws && (
           <div className="absolute top-4 right-4 z-20 pointer-events-none">
@@ -107,7 +107,7 @@ function HeadlinerCard({ kn }: { kn: Keynote }) {
           </div>
         )}
 
-        <div className="relative min-h-[320px] md:min-h-[460px] bg-surface-900">
+        <div className="relative min-h-[320px] md:min-h-[460px] bg-[#0E0E1A]">
           {kn.photo ? (
             <>
               <Image
@@ -118,13 +118,13 @@ function HeadlinerCard({ kn }: { kn: Keynote }) {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 hidden md:block" style={{
-                background: "linear-gradient(105deg, transparent 50%, #0c0d10 99%), linear-gradient(0deg, rgba(0,0,0,0.45), transparent 42%)"
+                background: "linear-gradient(105deg, transparent 50%, #1E1838 99%), linear-gradient(0deg, rgba(0,0,0,0.45), transparent 42%)"
               }} />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface-800/90 md:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1E1838]/90 md:hidden" />
             </>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-surface-700 to-surface-900 flex items-center justify-center">
-              <span className="font-mono font-bold text-surface-600 select-none" style={{ fontSize: "clamp(64px,10vw,120px)" }}>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2C2550] to-[#0E0E1A] flex items-center justify-center">
+              <span className="font-display font-bold text-[#8B84A0] select-none" style={{ fontSize: "clamp(64px,10vw,120px)" }}>
                 {kn.firstName[0]}{kn.lastName[0]}
               </span>
             </div>
@@ -142,9 +142,9 @@ function SecondaryCard({ kn }: { kn: Keynote }) {
   const router = useRouter();
   return (
     <div className="relative w-full h-full">
-      <div className="absolute inset-0 -m-3 rounded-3xl bg-aws-orange/[0.03] blur-xl pointer-events-none" />
+      <div className="absolute inset-0 -m-3 rounded-3xl bg-[#613BB8]/[0.05] blur-xl pointer-events-none" />
       <article
-        className={`relative grid grid-cols-1 md:grid-cols-[0.92fr_1.08fr] border border-surface-700 rounded-2xl overflow-hidden bg-surface-800/60 h-full isolate transition-colors duration-300 ${kn.profileSlug ? "hover:border-aws-orange/50 cursor-pointer" : ""}`}
+        className={`relative grid grid-cols-1 md:grid-cols-[0.92fr_1.08fr] border border-[#2C2550] rounded-[16px] overflow-hidden bg-[#1E1838] h-full isolate transition-all duration-300 ${kn.profileSlug ? "hover:border-[#C143BC]/60 hover:shadow-[0_0_30px_rgba(193,67,188,0.15)] cursor-pointer" : ""}`}
         onClick={() => kn.profileSlug && router.push(`/speakers/${kn.profileSlug}`)}
       >
         {kn.aws && (
@@ -155,7 +155,7 @@ function SecondaryCard({ kn }: { kn: Keynote }) {
         )}
 
         {/* Photo — same height as headliner */}
-        <div className="relative min-h-[320px] md:min-h-[460px] bg-surface-900">
+        <div className="relative min-h-[320px] md:min-h-[460px] bg-[#0E0E1A]">
           {kn.photo ? (
             <>
               <Image
@@ -166,13 +166,13 @@ function SecondaryCard({ kn }: { kn: Keynote }) {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 hidden md:block" style={{
-                background: "linear-gradient(105deg, transparent 50%, #0c0d10 99%), linear-gradient(0deg, rgba(0,0,0,0.4), transparent 40%)"
+                background: "linear-gradient(105deg, transparent 50%, #1E1838 99%), linear-gradient(0deg, rgba(0,0,0,0.4), transparent 40%)"
               }} />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface-800/90 md:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1E1838]/90 md:hidden" />
             </>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-surface-700 to-surface-900 flex items-center justify-center">
-              <span className="font-mono font-bold text-surface-600 select-none" style={{ fontSize: "clamp(48px,7vw,88px)" }}>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2C2550] to-[#0E0E1A] flex items-center justify-center">
+              <span className="font-display font-bold text-[#8B84A0] select-none" style={{ fontSize: "clamp(48px,7vw,88px)" }}>
                 {kn.firstName[0]}{kn.lastName[0]}
               </span>
             </div>
@@ -201,12 +201,12 @@ export function Keynotes() {
 
         <ScrollReveal delay={0.1}>
           <div className="flex flex-col items-start gap-4">
-            <p className="text-surface-400 text-sm md:text-base leading-relaxed max-w-[34ch] m-0">
+            <p className="text-surface-400 font-mono text-sm md:text-base leading-relaxed max-w-[34ch] m-0">
               {t("speakers_cta_desc")}
             </p>
             <Link
               href={localePath(locale, "/directorio")}
-              className="inline-flex items-center gap-2 font-mono text-sm font-semibold text-aws-orange border border-aws-orange/40 bg-aws-orange/8 px-5 py-2.5 rounded-none transition-all duration-300 hover:bg-aws-orange hover:text-surface-900 hover:border-aws-orange group"
+              className="inline-flex items-center gap-2 font-mono text-sm font-semibold text-[#C143BC] border border-[#C143BC]/40 bg-[#C143BC]/10 px-5 py-2.5 rounded-[6px] transition-all duration-300 hover:bg-[#C143BC] hover:text-[#0E0E1A] hover:border-[#C143BC] group"
             >
               {t("speakers_cta_btn")}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

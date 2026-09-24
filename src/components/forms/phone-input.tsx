@@ -159,7 +159,7 @@ export function PhoneInput({
           className={cn(
             "w-full border-2 bg-white/55 px-4 py-3 font-mono text-sm tabular-nums text-hack-ink outline-none transition-colors",
             "placeholder:text-hack-ink/40 focus:border-hack-ink",
-            error ? "border-[#7f1d1d]" : "border-hack-ink/25",
+            error ? "border-error" : "border-hack-ink/25",
           )}
         />
 

@@ -143,7 +143,7 @@ export function SearchSelect({
         className={cn(
           "flex w-full items-center justify-between gap-2 border-2 bg-white/55 px-4 py-3 text-left font-mono text-sm transition-all",
           "hover:border-hack-ink focus:border-hack-ink focus:outline-none",
-          invalid ? "border-[#7f1d1d]" : "border-hack-ink/35",
+          invalid ? "border-error" : "border-hack-ink/35",
           selected ? "text-hack-ink" : "text-hack-ink/45",
         )}
       >

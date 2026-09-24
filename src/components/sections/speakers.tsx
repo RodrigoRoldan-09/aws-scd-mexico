@@ -53,7 +53,7 @@ export interface PublicProfile {
 }
 
 export const TRACK_COLORS: Record<string, string> = {
-  cloud:         "text-aws-orange border-aws-orange/40 bg-aws-orange/10",
+  cloud:         "text-[#C143BC] border-[#C143BC]/40 bg-[#C143BC]/10",
   devops:        "text-sky-400 border-sky-400/40 bg-sky-400/10",
   "ai-ml":       "text-purple-400 border-purple-400/40 bg-purple-400/10",
   security:      "text-red-400 border-red-400/40 bg-red-400/10",
@@ -96,14 +96,13 @@ function IconGithub({ className }: { className?: string }) {
 }
 
 const btnClass =
-  "flex h-8 w-8 items-center justify-center rounded-full border border-glass-border bg-surface-800 text-surface-400 transition-all hover:border-aws-orange/40 hover:text-aws-orange hover:shadow-[0_0_12px_rgba(242,166,240,0.2)]";
+  "flex h-8 w-8 items-center justify-center rounded-full border border-[#2C2550] bg-[#1E1838] text-surface-400 transition-all hover:border-[#C143BC]/40 hover:text-[#C143BC] hover:shadow-[0_0_12px_rgba(193,67,188,0.25)]";
 
 // ── Speaker card — organizer style ───────────────────────────────────────────
 
 export function SpeakerCard({ profile, locale }: { profile: PublicProfile; locale: string }) {
   const href = localePath(locale, `/speakers/${profile.slug}`);
   const initials = profile.name.split(" ").slice(0, 2).map((w) => w[0] ?? "").join("").toUpperCase();
-  const hasSocial = !!(profile.social?.linkedin || profile.social?.twitter || profile.social?.github || profile.social?.website);
 
   return (
     <motion.div
@@ -112,14 +111,14 @@ export function SpeakerCard({ profile, locale }: { profile: PublicProfile; local
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       {/* Glow */}
-      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-b from-aws-orange/20 via-aws-orange/5 to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute -inset-1 rounded-[24px] bg-gradient-to-b from-[#C143BC]/15 via-[#613BB8]/10 to-transparent opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
 
       {/* Card — flex-col so info section fills remaining height */}
-      <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-glass-border bg-glass backdrop-blur-xl transition-all duration-500 group-hover:border-glass-border-hover group-hover:shadow-[0_0_40px_rgba(242,166,240,0.12)]">
+      <div className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-[#2C2550] bg-[#1E1838] transition-all duration-300 group-hover:border-[#C143BC]/60 group-hover:shadow-[0_0_30px_rgba(193,67,188,0.18)]">
 
         {/* Photo — fixed by aspect ratio, never grows */}
         <Link href={href} className="mx-6 mt-6 block shrink-0">
-          <div className="relative aspect-square overflow-hidden rounded-full">
+          <div className="relative aspect-square overflow-hidden rounded-full border border-[#2C2550]">
             {profile.photo ? (
               <Image
                 src={profile.photo}
@@ -129,11 +128,11 @@ export function SpeakerCard({ profile, locale }: { profile: PublicProfile; local
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-800 to-surface-700">
-                <span className="font-mono text-4xl font-bold text-aws-orange/50">{initials}</span>
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2C2550] to-[#0E0E1A]">
+                <span className="font-display text-4xl font-bold text-[#C143BC]/50">{initials}</span>
               </div>
             )}
-            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-glass to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#1E1838] to-transparent" />
           </div>
         </Link>
 
@@ -141,8 +140,8 @@ export function SpeakerCard({ profile, locale }: { profile: PublicProfile; local
         <div className="relative flex flex-1 flex-col px-5 pb-5 pt-3 text-center">
           {/* Name + tagline */}
           <Link href={href} className="block shrink-0">
-            <h3 className="font-mono text-base font-bold leading-tight text-surface-50 md:text-lg">{profile.name}</h3>
-            <p className="mt-1 font-mono text-xs font-semibold text-aws-orange line-clamp-2 leading-snug md:text-sm">
+            <h3 className="font-display text-base font-bold leading-tight text-[#E6E4DA] md:text-lg">{profile.name}</h3>
+            <p className="mt-1 font-mono text-xs font-semibold text-[#C143BC] line-clamp-2 leading-snug md:text-sm">
               {profile.tagline || profile.role}
             </p>
           </Link>
@@ -157,11 +156,11 @@ export function SpeakerCard({ profile, locale }: { profile: PublicProfile; local
                 className="max-h-[48px] w-auto max-w-[140px] object-contain opacity-60 transition-opacity duration-300 group-hover:opacity-100"
               />
             ) : profile.track ? (
-              <span className={`inline-flex rounded-none border px-3 py-1 font-mono text-xs font-semibold ${TRACK_COLORS[profile.track] ?? TRACK_COLORS.general}`}>
+              <span className={`inline-flex rounded-[4px] border px-3 py-1 font-mono text-xs font-semibold ${TRACK_COLORS[profile.track] ?? TRACK_COLORS.general}`}>
                 {TRACK_LABEL[profile.track] ?? profile.track}
               </span>
             ) : (
-              <div className="h-8 w-20 rounded-full border border-glass-border bg-surface-800/40" />
+              <div className="h-8 w-20 rounded-[4px] border border-[#2C2550] bg-[#0E0E1A]" />
             )}
           </Link>
 
@@ -236,7 +235,7 @@ export function SpeakersView({ profiles }: { profiles: PublicProfile[] }) {
           <div className="mt-6 flex justify-center">
             <Link
               href={localePath(locale, "/directorio")}
-              className="inline-flex items-center gap-2 rounded-none border border-aws-orange/40 bg-aws-orange/10 px-6 py-3 font-mono text-sm font-semibold text-aws-orange transition-all hover:bg-aws-orange hover:text-surface-900"
+              className="inline-flex items-center gap-2 rounded-[6px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-6 py-3 font-mono text-sm font-semibold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
             >
               <Users className="h-4 w-4" />
               Ir al directorio de Speakers
@@ -275,7 +274,7 @@ export function SpeakersView({ profiles }: { profiles: PublicProfile[] }) {
             <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 href={localePath(locale, "/directorio")}
-                className="inline-flex items-center gap-2 rounded-none bg-aws-orange px-8 py-3.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_30px_rgba(242,166,240,0.4)] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-[6px] bg-[#613BB8] px-8 py-3.5 font-mono text-sm font-bold text-[#E6E4DA] transition-all hover:bg-[#422B78] hover:shadow-[0_0_20px_rgba(97,59,184,0.4)] active:scale-[0.98]"
               >
                 <Users className="h-4 w-4" />
                 {profiles.length > 0 ? `Ver los ${profiles.length} speakers` : "Ver directorio completo"}
@@ -284,7 +283,7 @@ export function SpeakersView({ profiles }: { profiles: PublicProfile[] }) {
               {showSpeakerCta && (
                 <Link
                   href={localePath(locale, "/speakers")}
-                  className="inline-flex items-center gap-2 rounded-none border border-aws-orange/40 bg-aws-orange/10 px-6 py-3 font-mono text-sm font-semibold text-aws-orange transition-all hover:bg-aws-orange hover:text-surface-900"
+                  className="inline-flex items-center gap-2 rounded-[6px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-6 py-3 font-mono text-sm font-semibold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
                 >
                   <Mic2 className="h-4 w-4" /> {t("apply_speaker")}
                 </Link>

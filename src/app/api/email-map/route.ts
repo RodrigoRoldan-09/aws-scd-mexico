@@ -27,10 +27,10 @@ const DEFAULT_CENTER = `${lat},${lng}`;
  * `_kit.tsx` para que el mapa no se note pegado sobre el correo.
  */
 const STYLE = [
-  "feature:all|element:geometry|color:0x000000",
-  "feature:all|element:labels.text.fill|color:0x9A9AAE",
-  "feature:all|element:labels.text.stroke|color:0x000000",
-  "feature:road|element:geometry|color:0x2A2A38",
+  "feature:all|element:geometry|color:0x0E0E1A",
+  "feature:all|element:labels.text.fill|color:0xB4B2A9",
+  "feature:all|element:labels.text.stroke|color:0x0E0E1A",
+  "feature:road|element:geometry|color:0x1E1838",
   "feature:poi|element:labels|visibility:off",
 ];
 
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
     `&size=${w}x${h}` +
     `&scale=2` +
     `&maptype=roadmap` +
-    `&markers=${encodeURIComponent(`color:0xF2A6F0|${q || DEFAULT_CENTER}`)}` +
+    `&markers=${encodeURIComponent(`color:0xC143BC|${q || DEFAULT_CENTER}`)}` +
     STYLE.map((s) => `&style=${encodeURIComponent(s)}`).join("") +
     `&key=${key}`;
 

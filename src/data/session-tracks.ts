@@ -19,7 +19,7 @@ export const TRACKS: SessionTrack[] = [
   { value: "devops", label: "DevOps & Platform", color: "border-emerald/50 bg-emerald/15 text-emerald" },
   { value: "security", label: "Security", color: "border-red-500/50 bg-red-500/15 text-red-300" },
   { value: "data", label: "Data & Analytics", color: "border-sky-400/50 bg-sky-400/15 text-sky-300" },
-  { value: "ai-ml", label: "AI / ML", color: "border-aws-orange/50 bg-aws-orange/15 text-aws-orange" },
+  { value: "ai-ml", label: "AI / ML", color: "border-[#C143BC]/50 bg-[#C143BC]/15 text-[#C143BC]" },
   { value: "serverless", label: "Serverless", color: "border-amber-400/50 bg-amber-400/15 text-amber-300" },
   { value: "soft-skills", label: "Soft Skills", color: "border-pink-400/50 bg-pink-400/15 text-pink-300" },
 ];

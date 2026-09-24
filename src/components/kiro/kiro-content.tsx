@@ -47,8 +47,8 @@ export function KiroContent() {
 
       {/* ===== HERO ===== */}
       <section className="relative px-4 pt-32 pb-20 sm:px-6 sm:pt-36">
-        <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(242,166,240,0.30), transparent 65%)" }} />
-        <div aria-hidden className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(rgba(242,166,240,0.9) 1px, transparent 1px)", backgroundSize: "28px 28px", maskImage: "radial-gradient(ellipse 60% 55% at 50% 25%, black, transparent)" }} />
+        <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, rgba(193,67,188,0.30), transparent 65%)" }} />
+        <div aria-hidden className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(rgba(193,67,188,0.9) 1px, transparent 1px)", backgroundSize: "28px 28px", maskImage: "radial-gradient(ellipse 60% 55% at 50% 25%, black, transparent)" }} />
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <div className="flex justify-center">
@@ -79,7 +79,7 @@ export function KiroContent() {
 
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a href={KIRO_SITE} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-none bg-kiro-purple px-8 py-4 text-base font-bold text-surface-900 transition-all hover:bg-kiro-purple-light hover:shadow-[0_0_36px_rgba(242,166,240,0.55)]">
+              className="inline-flex items-center justify-center gap-2 rounded-none bg-kiro-purple px-8 py-4 text-base font-bold text-surface-900 transition-all hover:bg-kiro-purple-light hover:shadow-[0_0_36px_rgba(193,67,188,0.55)]">
               {t("hero_cta_site")} <ArrowUpRight className="h-4 w-4" />
             </a>
             <a href="#booth"

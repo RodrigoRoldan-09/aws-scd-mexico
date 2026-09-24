@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { Tone } from "./block-section";
 
-type Variant = "solid" | "outline";
+type Variant = "solid" | "outline" | "conversion";
 
 /**
  * Botón rectangular, sin radio, con subtítulo opcional dentro de la caja.
@@ -45,7 +45,7 @@ export function HardButton({
 
   const solid =
     tone === "block"
-      ? "bg-hack-ink text-hack-block shadow-[5px_5px_0_0_rgba(10,10,15,0.35)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_rgba(10,10,15,0.35)]"
+      ? "bg-hack-ink text-hack-block shadow-[5px_5px_0_0_rgba(14,14,26,0.45)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_rgba(14,14,26,0.45)]"
       : "bg-hack-primary text-hack-ink shadow-[5px_5px_0_0_var(--color-hack-dim)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_var(--color-hack-dim)]";
 
   const outline =
@@ -53,11 +53,14 @@ export function HardButton({
       ? "border-2 border-hack-ink text-hack-ink hover:bg-hack-ink hover:text-hack-block"
       : "border-2 border-hack-block text-hack-block hover:bg-hack-block hover:text-hack-ink";
 
+  const conversion =
+    "bg-[#D85A30] text-[#0E0E1A] font-bold shadow-[5px_5px_0_0_rgba(14,14,26,0.45)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_rgba(216,90,48,0.4)]";
+
   const off = "cursor-not-allowed opacity-50 shadow-none hover:translate-x-0 hover:translate-y-0";
 
   const cls = cn(
     base,
-    variant === "solid" ? solid : outline,
+    variant === "conversion" ? conversion : variant === "solid" ? solid : outline,
     pulse && !disabled && "animate-pulse-highlight",
     disabled && off,
     className,

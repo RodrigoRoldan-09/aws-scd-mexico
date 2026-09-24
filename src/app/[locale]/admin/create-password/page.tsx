@@ -12,7 +12,7 @@ export default function CreatePasswordPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-surface-900">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-aws-orange border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#D85A30] border-t-transparent" />
       </div>
     }>
       <CreatePasswordContent />
@@ -134,7 +134,7 @@ function CreatePasswordContent() {
           <p className="mt-2 font-mono text-sm leading-relaxed text-surface-400">{info.message}</p>
           <a
             href={info.href}
-            className="mt-6 inline-flex items-center bg-aws-orange px-6 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_20px_rgba(242,166,240,0.4)]"
+            className="mt-6 inline-flex items-center rounded-[6px] bg-[#D85A30] px-6 py-2.5 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90"
           >
             {info.cta}
           </a>
@@ -147,7 +147,7 @@ function CreatePasswordContent() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface-900 px-4">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-emerald/10 text-emerald">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[6px] border border-[#3DD6D0]/40 bg-[#3DD6D0]/10 text-[#3DD6D0]">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
@@ -179,7 +179,29 @@ function CreatePasswordContent() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 border-2 border-surface-600 bg-surface-800 p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="relative flex flex-col gap-4 rounded-[12px] p-6"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(216,90,48,0.22) 0%, rgba(66,43,120,0.55) 38%, rgba(123,63,166,0.40) 68%, rgba(97,59,184,0.38) 100%)",
+            border: "1px solid",
+            borderImage:
+              "linear-gradient(135deg, rgba(216,90,48,0.60) 0%, rgba(123,63,166,0.60) 50%, rgba(97,59,184,0.65) 100%) 1",
+            boxShadow:
+              "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(216,90,48,0.16), inset 0 1px 0 rgba(216,90,48,0.14), 0 0 24px rgba(97,59,184,0.20)",
+          }}
+        >
+          {/* Línea decorativa naranja→morado en la parte superior de la tarjeta */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-[2px] rounded-t-[12px]"
+            style={{
+              background:
+                "linear-gradient(90deg, #D85A30 0%, #7B3FA6 50%, #613BB8 100%)",
+              opacity: 0.85,
+            }}
+          />
           <Input
             label="Contraseña"
             type="password"
@@ -197,11 +219,11 @@ function CreatePasswordContent() {
             required
           />
           {error && (
-            <div className="border border-red-500/30 bg-red-500/10 px-4 py-2 font-mono text-sm text-red-400">
+            <div className="rounded-[6px] border border-red-500/30 bg-red-500/10 px-4 py-2 font-mono text-sm text-red-400">
               {error}
             </div>
           )}
-          <Button type="submit" disabled={loading} className="mt-2 w-full">
+          <Button type="submit" disabled={loading} className="mt-2 w-full !bg-[#D85A30] !text-white hover:!bg-[#D85A30]/90">
             {loading ? "Creando..." : "Crear Contraseña"}
           </Button>
         </form>

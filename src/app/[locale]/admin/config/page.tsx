@@ -245,7 +245,7 @@ export default function ConfigPage() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 bg-aws-orange px-5 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_20px_rgba(242,166,240,0.3)] disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-aws-orange px-5 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_20px_rgba(193,67,188,0.3)] disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             {saving ? "Guardando…" : "Guardar cambios"}

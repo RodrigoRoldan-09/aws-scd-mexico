@@ -88,17 +88,16 @@ export function LoginForm() {
   }, []);
 
   const fieldClass =
-    "w-full border-2 border-hack-ink/35 bg-white/55 px-4 py-3 font-mono text-sm text-hack-ink " +
-    "placeholder:text-hack-ink/40 outline-none transition-all " +
-    "focus:-translate-y-px focus:border-hack-ink focus:bg-white " +
-    "focus:shadow-[3px_3px_0_0_rgba(0,0,0,0.3)]";
+    "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
+    "placeholder:text-[#73726C] outline-none transition-all " +
+    "focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/30";
 
   return (
-    <main className="form-block flex min-h-screen flex-col bg-hack-block pt-20">
+    <main className="flex min-h-screen flex-col bg-[#0E0E1A] text-[#E6E4DA] pt-20">
       <div className="flex flex-1 items-center justify-center px-5 py-16">
         <div className="w-full max-w-[400px]">
           <div className="mb-8">
-            <DotHeading tone="block" variant="inverted">
+            <DotHeading flicker className="text-[#E6E4DA]">
               acceso
             </DotHeading>
           </div>
@@ -106,11 +105,30 @@ export function LoginForm() {
           <form
             suppressHydrationWarning
             onSubmit={handleSubmit}
-            className="flex flex-col gap-5 border-2 border-hack-ink bg-hack-block/40 p-6 shadow-[8px_8px_0_0_rgba(0,0,0,0.28)]"
+            className="relative flex flex-col gap-5 rounded-[12px] p-6"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(216,90,48,0.22) 0%, rgba(66,43,120,0.55) 38%, rgba(123,63,166,0.40) 68%, rgba(97,59,184,0.38) 100%)",
+              border: "1px solid",
+              borderImage:
+                "linear-gradient(135deg, rgba(216,90,48,0.60) 0%, rgba(123,63,166,0.60) 50%, rgba(97,59,184,0.65) 100%) 1",
+              boxShadow:
+                "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(216,90,48,0.16), inset 0 1px 0 rgba(216,90,48,0.14), 0 0 24px rgba(97,59,184,0.20)",
+            }}
           >
+            {/* Línea decorativa naranja→morado en la parte superior de la tarjeta */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-[2px] rounded-t-[12px]"
+              style={{
+                background:
+                  "linear-gradient(90deg, #D85A30 0%, #7B3FA6 50%, #613BB8 100%)",
+                opacity: 0.85,
+              }}
+            />
             <div className="flex flex-col gap-2">
-              <label htmlFor="login-email" className="font-mono text-sm font-semibold text-hack-ink">
-                Correo <span className="text-hack-deep">*</span>
+              <label htmlFor="login-email" className="font-mono text-sm font-semibold text-[#E6E4DA]">
+                Correo <span className="text-[#D85A30]">*</span>
               </label>
               <input
                 id="login-email"
@@ -132,18 +150,18 @@ export function LoginForm() {
                 required
                 aria-invalid={!!emailError}
                 aria-describedby={emailError ? "login-email-error" : undefined}
-                className={cn(fieldClass, emailError && "border-[#7f1d1d] bg-[#7f1d1d]/10")}
+                className={cn(fieldClass, emailError && "border-[#E24B4A] bg-[#E24B4A]/10")}
               />
               {emailError && (
-                <p id="login-email-error" className="m-0 font-mono text-xs text-[#7f1d1d]">
+                <p id="login-email-error" className="m-0 font-mono text-xs text-[#E24B4A]">
                   {emailError}
                 </p>
               )}
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="login-password" className="font-mono text-sm font-semibold text-hack-ink">
-                Contraseña <span className="text-hack-deep">*</span>
+              <label htmlFor="login-password" className="font-mono text-sm font-semibold text-[#E6E4DA]">
+                Contraseña <span className="text-[#D85A30]">*</span>
               </label>
               <div className="relative">
                 <input
@@ -166,7 +184,7 @@ export function LoginForm() {
                   // lector de pantalla anuncia el estado sin que la etiqueta baile.
                   aria-pressed={showPassword}
                   aria-label="Mostrar contraseña"
-                  className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center text-hack-ink/55 transition-colors hover:text-hack-ink"
+                  className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center text-[#B4B2A9] transition-colors hover:text-[#E6E4DA]"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -181,7 +199,7 @@ export function LoginForm() {
                 <Turnstile
                   ref={captchaRef}
                   siteKey={siteKey}
-                  theme="light"
+                  theme="dark"
                   appearance="interaction-only"
                   onVerify={handleCaptchaVerify}
                   onError={handleCaptchaError}
@@ -191,7 +209,7 @@ export function LoginForm() {
             </div>
 
             {error && (
-              <p className="m-0 border-2 border-[#7f1d1d] bg-[#7f1d1d]/10 px-4 py-3 font-mono text-sm text-[#7f1d1d]">
+              <p className="m-0 rounded-[6px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">
                 {error}
               </p>
             )}
@@ -199,7 +217,7 @@ export function LoginForm() {
             {siteKey && !captchaToken && !error && (
               // El widget es invisible, asi que sin esta linea el boton
               // apagado no tiene explicacion a la vista.
-              <p className="m-0 text-center font-mono text-xs text-hack-ink/50">
+              <p className="m-0 text-center font-mono text-xs text-[#73726C]">
                 {tf("captcha_checking")}
               </p>
             )}
@@ -207,7 +225,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="btn-hard w-full px-6 py-3.5 font-mono text-sm"
+              className="w-full rounded-[6px] bg-[#D85A30] px-6 py-3.5 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
             >
               {loading ? "Verificando…" : "Iniciar sesión"}
             </button>
@@ -215,15 +233,15 @@ export function LoginForm() {
         </div>
       </div>
 
-      {/* Cinta al pie, igual que en los formularios públicos */}
-      <div className="overflow-hidden border-t-2 border-hack-ink/25" aria-hidden="true">
+      {/* Cinta al pie */}
+      <div className="overflow-hidden border-t border-[#2C2550] bg-[#0E0E1A]" aria-hidden="true">
         <div className="flex w-max items-center" style={{ animation: "marquee 36s linear infinite" }}>
           {Array.from({ length: 12 }).map((_, i) => (
             <span
               key={i}
               className={cn(
                 "dot-matrix whitespace-nowrap px-6 py-2.5 text-base leading-none sm:text-lg",
-                i % 2 === 1 ? "bg-hack-ink text-hack-block" : "text-hack-ink",
+                i % 2 === 1 ? "bg-[#2C2550] text-[#E6E4DA]" : "text-[#B4B2A9]",
               )}
             >
               {EVENT.city} · {EVENT.year} · acceso

@@ -14,23 +14,23 @@ import { EVENT, SITE_HOST } from "@/lib/constants";
  */
 
 export const COLORS = {
-  /** Fondo de página: el color del bloque. */
-  block: "#F2A6F0",
+  /** Fondo de página: el color del bloque/superficie SBG. */
+  block: "#1E1838",
   /** Tinta. Todo el texto principal y las cajas duras. */
-  ink: "#0A0A0F",
-  /** Acento sobre el bloque; el acento no se lee sobre sí mismo. */
-  deep: "#5A1656",
+  ink: "#0E0E1A",
+  /** Acento fucsia oficial SBG. */
+  deep: "#C143BC",
   white: "#FFFFFF",
-  /** Gris para letra chica sobre blanco. */
-  muted: "#57534E",
+  /** Gris para letra chica. */
+  muted: "#73726C",
 
-  // Alias que conservan los PDF que aún no se rediseñaron.
-  orange: "#F2A6F0",
-  navy: "#0A0A0F",
+  // Alias compatibles para PDFs
+  orange: "#D85A30",
+  navy: "#0E0E1A",
   lightGray: "#F4F4F5",
-  text: "#0A0A0F",
-  softOrange: "#F2A6F0",
-  borderOrange: "#0A0A0F",
+  text: "#0E0E1A",
+  softOrange: "#C143BC",
+  borderOrange: "#0E0E1A",
 };
 
 export const PAGE_W = 420;

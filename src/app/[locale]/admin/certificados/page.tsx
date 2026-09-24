@@ -152,7 +152,7 @@ export default function CertificadosPage() {
         </button>
         {selected.size > 0 && (
           <button onClick={() => send(Array.from(selected))} disabled={sending}
-            className="inline-flex items-center gap-1.5 bg-aws-orange px-4 py-2 font-mono text-xs font-bold text-surface-900 hover:shadow-[0_0_16px_rgba(242,166,240,0.4)] disabled:opacity-50 transition-all">
+            className="inline-flex items-center gap-1.5 bg-aws-orange px-4 py-2 font-mono text-xs font-bold text-surface-900 hover:shadow-[0_0_16px_rgba(193,67,188,0.4)] disabled:opacity-50 transition-all">
             {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
             Enviar a {selected.size} seleccionados
           </button>

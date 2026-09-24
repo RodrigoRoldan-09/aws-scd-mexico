@@ -24,7 +24,7 @@ export function Tracks() {
           </h2>
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <p className="text-surface-300 leading-relaxed max-w-[38ch] m-0 text-base md:text-lg">
+          <p className="text-[#E6E4DA]/70 leading-relaxed max-w-[38ch] m-0 text-base md:text-lg">
             {t("section_lead")}
           </p>
         </ScrollReveal>
@@ -34,7 +34,7 @@ export function Tracks() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tracks.map((track, i) => (
           <ScrollReveal key={track.id} delay={i * 0.1} from="scale">
-            <article className="group relative overflow-hidden rounded-2xl border border-surface-700/60 transition-all duration-500 hover:-translate-y-1 hover:border-aws-orange/40 hover:shadow-[0_8px_40px_rgba(242,166,240,0.12)]">
+            <article className="group relative overflow-hidden rounded-2xl border border-[#2C2550] transition-all duration-500 hover:-translate-y-1 hover:border-[#C143BC]/50 hover:shadow-[0_8px_30px_rgba(193,67,188,0.25)]">
               <Image
                 src={track.image}
                 alt={t(track.titleKey)}

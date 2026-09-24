@@ -1,29 +1,27 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ShareButton } from "@/components/ui/share-modal";
 import { PublicProfile, TRACK_COLORS, TRACK_LABEL, coSpeakerAsProfile } from "@/components/sections/speakers";
 import { localePath } from "@/lib/utils";
 import { useEventConfig } from "@/components/providers/event-config-provider";
-import { keynotes, type Keynote } from "@/data/keynotes";
+import { keynotes } from "@/data/keynotes";
 import {
-  Search, X, MapPin, Globe, Mic2, Monitor,
-  ArrowRight, SlidersHorizontal, ChevronDown, ChevronUp,
-  Radio, Clock, ExternalLink, CalendarClock,
+  Search, X, MapPin, Mic2,
+  ArrowRight, SlidersHorizontal,
+  Radio, Clock,
 } from "lucide-react";
 
 import {
-  EVENT_DATE, DEFAULT_DUR_MS, useDebounce,
-  SESSION_LABEL, AG_SESSION_LABEL, LANG_LABEL, LEVEL_LABEL, LEVEL_COLORS,
+  DEFAULT_DUR_MS, useDebounce,
+  SESSION_LABEL, LANG_LABEL, LEVEL_LABEL,
   hhmmToMs, msToKey, normSessionType,
   type AgendaEventItem, type DirItem,
 } from "./_shared";
 import {
-  FilterSection, KeynoteDirectoryCard, LiveBadge, DirectoryCard, AgendaSessionCard,
+  FilterSection, KeynoteDirectoryCard, DirectoryCard, AgendaSessionCard,
 } from "./_components";
 import { SITE_URL } from "@/lib/constants";
 
@@ -42,7 +40,8 @@ function emptyFilters(): FilterState {
 
 function toggleSet(s: Set<string>, v: string): Set<string> {
   const next = new Set(s);
-  next.has(v) ? next.delete(v) : next.add(v);
+  if (next.has(v)) next.delete(v);
+  else next.add(v);
   return next;
 }
 
@@ -276,7 +275,7 @@ export default function DirectorioPage() {
       {activeFilterCount > 0 && (
         <button
           onClick={clearAll}
-          className="rounded-lg border border-glass-border px-3 py-2 font-mono text-xs text-surface-400 hover:border-red-400/40 hover:text-red-400 transition-colors"
+          className="rounded-[6px] border border-[#2C2550] bg-[#1E1838] px-3 py-2 font-mono text-xs text-surface-400 hover:border-red-400/40 hover:text-red-400 transition-colors"
         >
           Limpiar {activeFilterCount} filtro{activeFilterCount > 1 ? "s" : ""}
         </button>
@@ -285,23 +284,23 @@ export default function DirectorioPage() {
   );
 
   return (
-    <main className="min-h-screen bg-surface-900">
+    <main className="min-h-screen bg-[#0E0E1A]">
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b border-glass-border bg-surface-900">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(242,166,240,0.12),transparent)]" />
+      <div className="relative overflow-hidden border-b border-[#2C2550] bg-[#0E0E1A]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(193,67,188,0.12),transparent)]" />
 
         {/* pt-28: el navbar es fijo y mide 80px. */}
         <div className="relative mx-auto max-w-7xl px-6 pb-16 pt-28 text-center">
-          <p className="dot-matrix mb-3 text-sm text-hack-block">
+          <p className="font-mono mb-3 text-sm text-[#C143BC] uppercase tracking-widest">
             Directorio de Speakers
           </p>
-          <h1 className="font-display font-medium lowercase tracking-tighter text-surface-50 text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="font-display font-bold lowercase tracking-tighter text-[#E6E4DA] text-5xl md:text-6xl lg:text-7xl">
             Speakers 2026
           </h1>
 
           {fetched && (
-            <p className="mt-3 font-mono text-sm text-surface-400">
+            <p className="mt-3 font-mono text-sm text-[#8B84A0]">
               {profiles.length === 0
                 ? "Próximamente"
                 : (() => {
@@ -320,7 +319,7 @@ export default function DirectorioPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar speaker, charla, empresa, sala…"
-              className="w-full border-2 border-hack-block/30 bg-surface-800 py-3 pl-11 pr-10 font-mono text-sm text-surface-100 placeholder-surface-600 transition-colors focus:border-hack-block focus:outline-none"
+              className="w-full rounded-[6px] border border-[#2C2550] bg-[#1E1838] py-3 pl-11 pr-10 font-mono text-sm text-[#E6E4DA] placeholder-surface-500 transition-colors focus:border-[#C143BC] focus:shadow-[0_0_15px_rgba(193,67,188,0.25)] focus:outline-none"
             />
             {search && (
               <button
@@ -341,10 +340,10 @@ export default function DirectorioPage() {
                   <button
                     key={o.value}
                     onClick={() => setFilters((f) => ({ ...f, tracks: toggleSet(f.tracks, o.value) }))}
-                    className={`shrink-0 border-2 px-3 py-1.5 font-mono text-xs font-semibold transition-all ${
+                    className={`shrink-0 rounded-[4px] border px-3 py-1.5 font-mono text-xs font-semibold transition-all ${
                       active
-                        ? "border-aws-orange bg-aws-orange/15 text-aws-orange"
-                        : "border-glass-border bg-surface-800/60 text-surface-400 hover:border-surface-500 hover:text-surface-200"
+                        ? "border-[#C143BC] bg-[#C143BC]/15 text-[#C143BC]"
+                        : "border-[#2C2550] bg-[#1E1838] text-surface-400 hover:border-[#C143BC]/40 hover:text-surface-200"
                     }`}
                   >
                     {o.label}
@@ -355,7 +354,7 @@ export default function DirectorioPage() {
               {searchActive && (
                 <button
                   onClick={clearAll}
-                  className="shrink-0 border-2 border-surface-700 px-3 py-1.5 font-mono text-xs text-surface-400 transition-colors hover:border-hack-block hover:text-hack-block"
+                  className="shrink-0 rounded-[4px] border border-[#2C2550] bg-[#1E1838] px-3 py-1.5 font-mono text-xs text-surface-400 transition-colors hover:border-[#C143BC] hover:text-[#C143BC]"
                 >
                   Limpiar
                 </button>
@@ -417,12 +416,12 @@ export default function DirectorioPage() {
 
       {/* ── KEYNOTES (hidden while searching/filtering) ──────────────────────── */}
       {keynotes.length > 0 && !searchActive && (
-        <div className="border-b border-glass-border bg-surface-900/60">
+        <div className="border-b border-[#2C2550] bg-[#0E0E1A]">
           <div className="mx-auto max-w-7xl px-6 py-10">
-            <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-aws-orange">
+            <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-[#C143BC]">
               Invitados Especiales
             </p>
-            <h2 className="mb-6 font-mono text-xl font-bold text-surface-50">Keynotes</h2>
+            <h2 className="mb-6 font-display text-2xl font-bold text-[#E6E4DA]">Keynotes</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {keynotes.map((kn, i) => (
                 <KeynoteDirectoryCard key={i} kn={kn} />
@@ -441,21 +440,21 @@ export default function DirectorioPage() {
             onClick={() => setSidebarOpen((o) => !o)}
             className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 font-mono text-sm font-semibold transition-all ${
               activeFilterCount > 0
-                ? "border-aws-orange/40 bg-aws-orange/10 text-aws-orange"
-                : "border-glass-border bg-surface-800/60 text-surface-300 hover:border-surface-600"
+                ? "border-[#C143BC]/40 bg-[#C143BC]/10 text-[#C143BC]"
+                : "border-[#2C2550] bg-[#1E1838] text-[#E6E4DA]/80 hover:border-[#C143BC]/40"
             }`}
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filtros
             {activeFilterCount > 0 && (
-              <span className="rounded-none bg-aws-orange px-1.5 py-0.5 font-mono text-[10px] font-bold text-surface-900">
+              <span className="rounded-[2px] bg-[#C143BC] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#0E0E1A]">
                 {activeFilterCount}
               </span>
             )}
           </button>
 
           {filteredItems.length > 0 && (
-            <p className="font-mono text-sm text-surface-500">
+            <p className="font-mono text-sm text-[#E6E4DA]/60">
               {filteredItems.length} de {allItems.length}
             </p>
           )}
@@ -468,7 +467,7 @@ export default function DirectorioPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-6 overflow-hidden rounded-2xl border border-glass-border bg-glass p-5 lg:hidden"
+              className="mb-6 overflow-hidden rounded-2xl border border-[#2C2550] bg-[#1E1838] p-5 lg:hidden"
             >
               {sidebar}
             </motion.div>
@@ -481,9 +480,9 @@ export default function DirectorioPage() {
           <aside className="hidden w-56 shrink-0 lg:block">
             <div className="sticky top-24">
               <div className="mb-4 flex items-center justify-between">
-                <p className="font-mono text-xs font-semibold uppercase tracking-widest text-surface-500">Filtros</p>
+                <p className="font-mono text-xs font-semibold uppercase tracking-widest text-[#E6E4DA]/60">Filtros</p>
                 {activeFilterCount > 0 && (
-                  <span className="rounded-none bg-aws-orange px-1.5 py-0.5 font-mono text-[10px] font-bold text-surface-900">
+                  <span className="rounded-[2px] bg-[#C143BC] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#0E0E1A]">
                     {activeFilterCount}
                   </span>
                 )}
@@ -498,13 +497,13 @@ export default function DirectorioPage() {
             {/* Result count (desktop) */}
             {fetched && allItems.length > 0 && (
               <div className="mb-5 hidden items-center justify-between lg:flex">
-                <p className="font-mono text-sm text-surface-500">
+                <p className="font-mono text-sm text-[#E6E4DA]/60">
                   {filteredItems.length === allItems.length
                     ? `${allItems.length} sesiones`
                     : `${filteredItems.length} de ${allItems.length} sesiones`}
                 </p>
                 {searchActive && (
-                  <button onClick={clearAll} className="font-mono text-xs text-aws-orange hover:underline">
+                  <button onClick={clearAll} className="font-mono text-xs text-[#C143BC] hover:underline">
                     Limpiar filtros
                   </button>
                 )}
@@ -515,7 +514,7 @@ export default function DirectorioPage() {
             {!fetched && (
               <div className="flex flex-col gap-4">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-40 animate-pulse rounded-2xl border border-glass-border bg-glass" />
+                  <div key={i} className="h-40 animate-pulse rounded-2xl border border-[#2C2550] bg-[#1E1838]" />
                 ))}
               </div>
             )}
@@ -523,12 +522,12 @@ export default function DirectorioPage() {
             {/* Empty state */}
             {fetched && allItems.length === 0 && (
               <div className="py-24 text-center">
-                <p className="font-mono text-xl text-surface-300">Próximamente</p>
-                <p className={`mt-2 font-mono text-sm text-surface-500 ${showSpeakerCta ? "mb-8" : ""}`}>Los speakers confirmados aparecerán aquí</p>
+                <p className="font-mono text-xl text-[#E6E4DA]">Próximamente</p>
+                <p className={`mt-2 font-mono text-sm text-[#E6E4DA]/60 ${showSpeakerCta ? "mb-8" : ""}`}>Los speakers confirmados aparecerán aquí</p>
                 {showSpeakerCta && (
                   <Link
                     href={localePath(locale, "/speakers")}
-                    className="inline-flex items-center gap-2 rounded-none bg-aws-orange px-8 py-3.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_30px_rgba(242,166,240,0.4)]"
+                    className="inline-flex items-center gap-2 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-8 py-3.5 font-mono text-sm font-bold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
                   >
                     <Mic2 className="h-4 w-4" /> Postúlate como speaker
                   </Link>
@@ -544,8 +543,8 @@ export default function DirectorioPage() {
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   className="py-20 text-center"
                 >
-                  <p className="font-mono text-sm text-surface-500">Sin resultados para tu búsqueda</p>
-                  <button onClick={clearAll} className="mt-4 font-mono text-xs text-aws-orange hover:underline">
+                  <p className="font-mono text-sm text-[#E6E4DA]/60">Sin resultados para tu búsqueda</p>
+                  <button onClick={clearAll} className="mt-4 font-mono text-xs text-[#C143BC] hover:underline">
                     Limpiar filtros
                   </button>
                 </motion.div>
@@ -557,11 +556,11 @@ export default function DirectorioPage() {
                     <div key={title}>
                       {/* Session time divider */}
                       <div className="mb-5 flex items-center gap-4">
-                        <div className="h-px flex-1 bg-surface-700/60" />
-                        <p className="shrink-0 px-4 font-mono text-2xl font-bold text-aws-orange tracking-widest leading-none">
+                        <div className="h-px flex-1 bg-[#2C2550]" />
+                        <p className="shrink-0 px-4 font-display text-2xl font-bold text-[#C143BC] tracking-widest leading-none">
                           {title}
                         </p>
-                        <div className="h-px flex-1 bg-surface-700/60" />
+                        <div className="h-px flex-1 bg-[#2C2550]" />
                       </div>
                       <div className="flex flex-col gap-3">
                         {items.map((item, pi) => {
@@ -617,7 +616,7 @@ export default function DirectorioPage() {
               <div className="mt-12 flex justify-center">
                 <Link
                   href={localePath(locale, "/speakers")}
-                  className="inline-flex items-center gap-2 rounded-none border border-aws-orange/40 bg-aws-orange/10 px-6 py-3 font-mono text-sm font-semibold text-aws-orange transition-all hover:bg-aws-orange hover:text-surface-900"
+                  className="inline-flex items-center gap-2 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-6 py-3 font-mono text-sm font-semibold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
                 >
                   <Mic2 className="h-4 w-4" /> Postúlate como speaker
                 </Link>

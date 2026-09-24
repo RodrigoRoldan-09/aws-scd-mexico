@@ -1,53 +1,33 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { cn, basePath, localePath } from "@/lib/utils";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  ChevronDown,
+  Info,
+  Users,
+  Calendar,
+  Terminal,
+  Rocket,
+  HeartHandshake,
+  GraduationCap,
+  ShieldCheck,
+  FileText,
+} from "lucide-react";
+import { cn, localePath } from "@/lib/utils";
 import { useEventConfig } from "@/components/providers/event-config-provider";
-import { navItems } from "@/data/navigation";
 import { LanguageToggle } from "./language-toggle";
 import { MobileNav } from "./mobile-nav";
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
-
-function ScrambleLink({ text, href, kiro }: { text: string; href: string; kiro?: boolean }) {
-  const [display, setDisplay] = useState(text);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
-
-  const handleEnter = useCallback(() => {
-    let iteration = 0;
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setDisplay(
-        text.split("").map((char, i) => (i < iteration ? char : CHARS[Math.floor(Math.random() * CHARS.length)])).join("")
-      );
-      iteration += 1 / 2;
-      if (iteration >= text.length) {
-        clearInterval(intervalRef.current);
-        setDisplay(text);
-      }
-    }, 30);
-  }, [text]);
-
-  const handleLeave = () => {
-    clearInterval(intervalRef.current);
-    setDisplay(text);
-  };
-
-  return (
-    <a
-      href={href}
-      className={cn(
-        "font-mono text-sm text-surface-200 transition-colors",
-        kiro ? "hover:text-kiro-purple-light" : "hover:text-aws-orange"
-      )}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      {display}
-    </a>
-  );
+interface DropdownItem {
+  title: string;
+  description: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  fullWidth?: boolean;
 }
 
 export function Navbar() {
@@ -55,97 +35,325 @@ export function Navbar() {
   const { attendeeOpen } = useEventConfig();
   const locale = useLocale();
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const openingRef = useRef(false);
 
-  const handleOpenMenu = () => {
-    if (openingRef.current) return;
-    openingRef.current = true;
-    setMobileOpen(true);
-    setTimeout(() => { openingRef.current = false; }, 600);
-  };
+  const [activeDropdown, setActiveDropdown] = useState<"scd" | "sbg" | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   const home = localePath(locale);
   const isHome = pathname === home || pathname === home + "/";
-  const isKiro = pathname.includes("/kiro");
   const localeBase = locale === "es" ? "" : `/${locale}`;
+
   const resolveHref = (href: string) => {
     if (href.startsWith("/")) return localePath(locale, href);
     return isHome ? href : `${localeBase}/${href}`;
   };
 
-
+  // Cierra los dropdowns al hacer clic fuera
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 100);
-    window.addEventListener("scroll", handler, { passive: true });
-    handler();
-    return () => window.removeEventListener("scroll", handler);
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
+
+  // Ítems del Mega-Menú por grupo
+  const scdItems: DropdownItem[] = [
+    {
+      title: "Acerca de",
+      description: "El evento cloud para estudiantes",
+      href: resolveHref("#about"),
+      icon: Info,
+    },
+    {
+      title: "Speakers",
+      description: "Líderes y expertos de la industria",
+      href: localePath(locale, "/directorio"),
+      icon: Users,
+    },
+    {
+      title: "Agenda",
+      description: "Horarios y tracks presenciales at IPN",
+      href: resolveHref("#agenda"),
+      icon: Calendar,
+      fullWidth: true,
+    },
+  ];
+
+  const sbgItems: DropdownItem[] = [
+    {
+      title: "Workshops",
+      description: "Hands-on labs y arquitectura",
+      href: resolveHref("#tracks"),
+      icon: Terminal,
+    },
+    {
+      title: "Proyectos",
+      description: "Iniciativas open-source de estudiantes",
+      href: resolveHref("#about"),
+      icon: Rocket,
+    },
+    {
+      title: "Comunidad",
+      description: "Builders, mentores y networking",
+      href: resolveHref("#about"),
+      icon: HeartHandshake,
+    },
+    {
+      title: "Aula",
+      description: "Cursos y rutas de certificación",
+      href: resolveHref("#agenda"),
+      icon: GraduationCap,
+    },
+    {
+      title: "Equipo",
+      description: "Leads y voluntarios organizadores",
+      href: resolveHref("#organizers"),
+      icon: ShieldCheck,
+    },
+    {
+      title: "Blog",
+      description: "Artículos técnicos y experiencias",
+      href: resolveHref("#about"),
+      icon: FileText,
+    },
+  ];
 
   return (
     <>
-      <header
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 border-b-2 bg-surface-900 transition-colors duration-300",
-          scrolled ? "border-hack-block/40" : "border-hack-block/15",
-        )}
-      >
-        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-          <a href={resolveHref("#home")} className="mt-1 flex min-w-0 items-center gap-2">
-            <img
-              src={`${basePath}/images/logos/aws-logo.svg`}
-              alt="AWS"
-              loading="eager"
-              className="h-9 w-auto shrink-0"
+      <header className="sticky top-0 z-50 h-[54px] border-b border-[#2C2550] bg-[#0E0E1A]/95 shadow-[0_2px_12px_rgba(0,0,0,0.4)] backdrop-blur-md">
+        <nav
+          ref={navRef}
+          aria-label="Principal"
+          className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6"
+        >
+          {/* Logo SBG oficial (izquierda) */}
+          <a
+            href={resolveHref("#home")}
+            className="group flex items-center gap-2.5 outline-none"
+            aria-label="AWS Student Builder Group IPN CDMX"
+          >
+            <Image
+              src="/images/logos/logo-sbg-cdmx.png"
+              alt="AWS Student Builder Group IPN CDMX"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain rounded-[6px]"
             />
-            {/* En pantallas muy angostas el lockup se reduce a la marca: lo que
-                no puede pasar es que empuje al botón de menú fuera del borde. */}
-            <div className="hidden min-w-0 leading-tight xs:block">
-              <p className="truncate font-mono text-xs font-semibold tracking-wide text-surface-50">Student</p>
-              <p className="truncate font-mono text-xs font-semibold tracking-wide text-surface-50">Community Day</p>
-              <p className="truncate font-mono text-[10px] tracking-widest text-hack-block">México 2026</p>
+            <div className="flex flex-col text-left">
+              <span className="font-display text-[11px] font-bold leading-tight text-[#E6E4DA]">
+                AWS Student Builder Group
+              </span>
+              <span className="font-mono text-[9px] uppercase tracking-wider text-[#C143BC] leading-tight">
+                IPN CDMX
+              </span>
             </div>
           </a>
 
-          <div className="hidden items-center gap-6 lg:flex">
-            {navItems.map((item) => (
-              <ScrambleLink key={item.href} text={t(item.labelKey)} href={resolveHref(item.href)} kiro={isKiro} />
-            ))}
+          {/* Navegación Desktop agrupada (Mega-Menu) */}
+          <div className="hidden items-center gap-1.5 md:flex">
+            {/* Inicio (standalone) */}
+            <a
+              href={resolveHref("#home")}
+              className="rounded-[6px] px-2.5 py-1 font-mono text-xs text-[#B4B2A9] transition-colors hover:text-[#E6E4DA]"
+            >
+              {t("home")}
+            </a>
+
+            {/* SCD Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveDropdown(activeDropdown === "scd" ? null : "scd")
+                }
+                aria-expanded={activeDropdown === "scd"}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-[6px] border px-2.5 py-1 font-mono text-xs transition-colors",
+                  activeDropdown === "scd"
+                    ? "border-[#C143BC] bg-[#1E1838] text-[#E6E4DA]"
+                    : "border-transparent text-[#B4B2A9] hover:text-[#E6E4DA]"
+                )}
+              >
+                <span>SCD</span>
+                <ChevronDown
+                  className={cn(
+                    "h-3.5 w-3.5 transition-transform duration-200",
+                    activeDropdown === "scd"
+                      ? "rotate-180 text-[#C143BC]"
+                      : "text-[#73726C]"
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+
+              <AnimatePresence>
+                {activeDropdown === "scd" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute left-0 top-[calc(100%+8px)] z-50 w-[520px] rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                  >
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {scdItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <a
+                            key={item.title}
+                            href={item.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className={cn(
+                              "group flex items-start gap-2.5 rounded-[8px] border border-[#2C2550] bg-[#0E0E1A] p-2.5 text-left transition-colors hover:border-[#613BB8]",
+                              item.fullWidth && "col-span-2"
+                            )}
+                          >
+                            <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E] text-[#C143BC] transition-transform group-hover:scale-105">
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="flex min-w-0 flex-col">
+                              <span className="font-display text-xs font-bold leading-tight text-[#E6E4DA] group-hover:text-white">
+                                {item.title}
+                              </span>
+                              <span className="font-mono text-[11px] leading-snug text-[#73726C] group-hover:text-[#B4B2A9]">
+                                {item.description}
+                              </span>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* SBG Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveDropdown(activeDropdown === "sbg" ? null : "sbg")
+                }
+                aria-expanded={activeDropdown === "sbg"}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-[6px] border px-2.5 py-1 font-mono text-xs transition-colors",
+                  activeDropdown === "sbg"
+                    ? "border-[#C143BC] bg-[#1E1838] text-[#E6E4DA]"
+                    : "border-transparent text-[#B4B2A9] hover:text-[#E6E4DA]"
+                )}
+              >
+                <span>SBG</span>
+                <ChevronDown
+                  className={cn(
+                    "h-3.5 w-3.5 transition-transform duration-200",
+                    activeDropdown === "sbg"
+                      ? "rotate-180 text-[#C143BC]"
+                      : "text-[#73726C]"
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+
+              <AnimatePresence>
+                {activeDropdown === "sbg" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute left-0 top-[calc(100%+8px)] z-50 w-[560px] rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                  >
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {sbgItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <a
+                            key={item.title}
+                            href={item.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className="group flex items-start gap-2.5 rounded-[8px] border border-[#2C2550] bg-[#0E0E1A] p-2.5 text-left transition-colors hover:border-[#613BB8]"
+                          >
+                            <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E] text-[#C143BC] transition-transform group-hover:scale-105">
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="flex min-w-0 flex-col">
+                              <span className="font-display text-xs font-bold leading-tight text-[#E6E4DA] group-hover:text-white">
+                                {item.title}
+                              </span>
+                              <span className="font-mono text-[11px] leading-snug text-[#73726C] group-hover:text-[#B4B2A9]">
+                                {item.description}
+                              </span>
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Contacto (standalone) */}
+            <a
+              href={resolveHref("#faq")}
+              className="rounded-[6px] px-2.5 py-1 font-mono text-xs text-[#B4B2A9] transition-colors hover:text-[#E6E4DA]"
+            >
+              Contacto
+            </a>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          {/* Acciones del Header (derecha) */}
+          <div className="flex shrink-0 items-center gap-2.5">
             <LanguageToggle />
-            {/* Con el registro cerrado deja de ser un enlace. */}
+
+            {/* Botón "Regístrate" variante primary */}
             {attendeeOpen ? (
               <a
                 href={localePath(locale, "/registro")}
-                className={cn(
-                  "hidden items-center bg-hack-block px-6 py-2.5 text-surface-900 transition-all duration-200 sm:inline-flex",
-                  "shadow-[4px_4px_0_0_var(--color-hack-dim)]",
-                  "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-hack-dim)]",
-                  "active:translate-x-0 active:translate-y-0 active:shadow-none",
-                )}
+                className="hidden h-9 items-center justify-center rounded-[6px] border border-transparent bg-[#422B78] px-4 py-2 font-mono text-xs font-bold text-[#E6E4DA] transition-colors hover:bg-[#613BB8] active:scale-[0.98] sm:inline-flex"
               >
-                <span className="dot-matrix text-sm leading-none">{t("register")}</span>
+                {t("register")}
               </a>
             ) : (
               <span
                 aria-disabled="true"
-                className="hidden cursor-not-allowed items-center border-2 border-hack-block/40 px-6 py-2 text-hack-block/50 sm:inline-flex"
+                className="hidden h-9 cursor-not-allowed items-center justify-center rounded-[6px] border border-[#2C2550] bg-transparent px-4 py-2 font-mono text-xs text-[#73726C] sm:inline-flex"
               >
-                <span className="dot-matrix text-sm leading-none">{t("register_closed")}</span>
+                {t("register_closed")}
               </span>
             )}
+
+            {/* Botón hamburguesa móvil */}
             <button
-              onClick={handleOpenMenu}
-              style={{ touchAction: "manipulation" }}
-              className="flex h-10 w-10 items-center justify-center border-2 border-hack-block text-hack-block transition-colors hover:bg-hack-block hover:text-hack-ink lg:hidden"
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-colors hover:border-[#613BB8] hover:text-[#C143BC] md:hidden"
               aria-label="Abrir menú"
             >
-              {/* Tres trazos rectos: mismo lenguaje que el aspa del menú */}
-              <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-                <path d="M4 7h16 M4 12h16 M4 17h16" stroke="currentColor" strokeWidth="2.4" />
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+              >
+                <path d="M4 7h16 M4 12h16 M4 17h16" />
               </svg>
             </button>
           </div>

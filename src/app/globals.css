@@ -27,62 +27,138 @@
 @theme inline {
   --breakpoint-xs: 380px;
 
-  /* === Acento único del sitio ===
-     Rosa-fucsia pastel derivado del #C143BC del design system del SBG IPN
-     CDMX, que queda como variante oscura (sombras, hover). Sobre el acento
-     SIEMPRE va tinta oscura. `aws-orange`, `emerald`, `gold` y `kiro-purple`
-     son alias heredados del mismo acento. */
-  --color-aws-orange: #F2A6F0;
-  --color-aws-orange-light: #F9D0F7;
-  --color-aws-orange-dark: #C143BC;
-  --color-aws-navy: #232F3E;
-  --color-aws-navy-light: #37475A;
+  /* === Tokens oficiales Design System SBG v1.0 (§11) === */
+  /* Colores de marca */
+  --color-primary: #422B78;
+  --color-secondary: #613BB8;
+  --color-tertiary: #7B3FA6;
+  --color-accent: #C143BC;
+  --color-magenta: #C026A1;
+  --color-conversion: #D85A30;
+  --color-cyan: #3DD6D0;
+  --color-link: #378ADD;
+  --color-error: #E24B4A;
 
-  --color-emerald: #F2A6F0;
-  --color-emerald-light: #F9D0F7;
-  --color-emerald-dark: #C143BC;
-  --color-gold: #F2A6F0;
-  --color-gold-light: #F9D0F7;
+  /* Fondos y superficies */
+  --bg-base: #0E0E1A;
+  --bg-surface: #1E1838;
+  --bg-surface-2: #2A1F5E;
+  --bg-overlay: #000000;
+  --bg-badge: #1a1040;
 
-  /* === Escala neutra (dark-first) === */
-  --color-surface-900: #000000;
-  --color-surface-800: #0A0A0F;
-  --color-surface-700: #16161F;
-  --color-surface-600: #252530;
-  --color-surface-500: #3A3A4A;
-  --color-surface-400: #6B6B80;
-  --color-surface-300: #8E8EA0;
-  --color-surface-200: #B0B0C0;
-  --color-surface-100: #E0E0EB;
-  --color-surface-50: #F5F5FA;
+  /* Utilidades semánticas Tailwind de color */
+  --color-bg-base: #0E0E1A;
+  --color-bg-surface: #1E1838;
+  --color-bg-surface-2: #2A1F5E;
+  --color-bg-overlay: #000000;
+  --color-bg-badge: #1a1040;
 
-  --color-glass: rgba(10,10,15, 0.6);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-glass-border-hover: rgba(242,166,240, 0.35);
+  /* Texto */
+  --text-primary: #E6E4DA;
+  --text-secondary: #B4B2A9;
+  --text-muted: #73726C;
 
-  /* === Bloques a sangre ===
-     `hack-block` es el fondo de los bloques de color (tinta oscura encima);
-     `hack-deep` es el acento que se usa SOBRE ese bloque. */
-  --color-hack-block: #F2A6F0;
-  --color-hack-block-deep: #C143BC;
-  --color-hack-deep: #5A1656;
-  --color-hack-primary: #F2A6F0;
-  --color-hack-secondary: #F9D0F7;
-  --color-hack-dim: #C143BC;
-  --color-hack-ink: #000000;
-  --color-hack-paper: #FFFFFF;
+  --color-text-primary: #E6E4DA;
+  --color-text-secondary: #B4B2A9;
+  --color-text-muted: #73726C;
 
-  --color-kiro-purple: #F2A6F0;
-  --color-kiro-purple-light: #F9D0F7;
-  --color-kiro-purple-dark: #C143BC;
+  /* Bordes */
+  --border-default: #2C2550;
+  --color-border-default: #2C2550;
 
-  /* El "sans" del sitio es la mono: una sola voz de texto. */
-  --font-sans: var(--font-jetbrains);
-  --font-mono: var(--font-jetbrains);
-  --font-display: var(--font-oxanium), var(--font-jetbrains), ui-monospace, monospace;
-  /* La forma de punto se pide con font-variation-settings (.dot-matrix) */
-  --font-dot: var(--font-handjet), var(--font-jetbrains), ui-monospace, monospace;
+  /* Tipografías */
+  --font-display: var(--font-pixelify), monospace;
+  --font-body: var(--font-share-tech), monospace;
+  --font-mono: var(--font-share-tech), monospace;
+  --font-sans: var(--font-share-tech), monospace;
+
+  /* Alias de fuentes legacy */
+  --font-jetbrains: var(--font-share-tech), monospace;
+  --font-oxanium: var(--font-pixelify), monospace;
+  --font-handjet: var(--font-pixelify), monospace;
+  --font-dot: var(--font-pixelify), monospace;
   --font-kiro: "AWS Diatype Rounded Semi Mono", "AWS Diatype", ui-rounded, "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radios */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Sombras y glows */
+  --glow-accent: 0 0 0 3px rgba(193, 67, 188, 0.20);
+  --glow-primary: 0 0 20px rgba(97, 59, 184, 0.25);
+  --glow-conversion: 0 0 20px rgba(216, 90, 48, 0.20);
+  --glow-hub: radial-gradient(circle, #C143BC 0%, #422B78 45%, transparent 70%);
+  --glow-logo: radial-gradient(circle, #C143BC 0%, #422B78 45%, transparent 70%);
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-sticky: 0 2px 12px rgba(0, 0, 0, 0.4);
+
+  /* Espaciado base 8px (§4.1) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Layout (§4.2, §6.5) */
+  --container-max: 1280px;
+  --grid-gap: 24px;
+  --header-height: 54px;
+  --transition-base: all 200ms ease-out;
+
+  /* Glassmorphism (§5.3) */
+  --glass-bg: rgba(30, 24, 56, 0.92);
+  --glass-blur: blur(12px);
+
+  /* === Alias legacy sincronizados con la paleta SBG === */
+  --color-aws-orange: #C143BC;
+  --color-aws-orange-light: #C143BC;
+  --color-aws-orange-dark: #613BB8;
+  --color-aws-navy: #422B78;
+  --color-aws-navy-light: #613BB8;
+
+  --color-emerald: #C143BC;
+  --color-emerald-light: #C143BC;
+  --color-emerald-dark: #613BB8;
+  --color-gold: #C143BC;
+  --color-gold-light: #C143BC;
+
+  /* Escala de superficies legacy */
+  --color-surface-900: #0E0E1A;
+  --color-surface-800: #1E1838;
+  --color-surface-700: #2A1F5E;
+  --color-surface-600: #2C2550;
+  --color-surface-500: #3A3A4A;
+  --color-surface-400: #73726C;
+  --color-surface-300: #8E8EA0;
+  --color-surface-200: #B4B2A9;
+  --color-surface-100: #E6E4DA;
+  --color-surface-50: #FFFFFF;
+
+  --color-glass: rgba(30, 24, 56, 0.7);
+  --color-glass-border: rgba(44, 37, 80, 0.6);
+  --color-glass-border-hover: rgba(193, 67, 188, 0.35);
+
+  --color-hack-block: #C143BC;
+  --color-hack-block-deep: #613BB8;
+  --color-hack-deep: #422B78;
+  --color-hack-primary: #C143BC;
+  --color-hack-secondary: #7B3FA6;
+  --color-hack-dim: #7B3FA6;
+  --color-hack-ink: #0E0E1A;
+  --color-hack-paper: #E6E4DA;
+
+  --color-kiro-purple: #C143BC;
+  --color-kiro-purple-light: #7B3FA6;
+  --color-kiro-purple-dark: #613BB8;
 
   --animate-fade-up: fade-up 0.6s ease-out both;
   --animate-fade-in: fade-in 0.4s ease-out both;
@@ -91,6 +167,70 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
   --animate-marquee-from-right: marquee-from-right var(--marquee-duration, 40s) linear infinite;
+}
+
+:root {
+  --color-primary: #422B78;
+  --color-secondary: #613BB8;
+  --color-tertiary: #7B3FA6;
+  --color-accent: #C143BC;
+  --color-magenta: #C026A1;
+  --color-conversion: #D85A30;
+  --color-cyan: #3DD6D0;
+  --color-link: #378ADD;
+  --color-error: #E24B4A;
+
+  --bg-base: #0E0E1A;
+  --bg-surface: #1E1838;
+  --bg-surface-2: #2A1F5E;
+  --bg-overlay: #000000;
+  --bg-badge: #1a1040;
+
+  --text-primary: #E6E4DA;
+  --text-secondary: #B4B2A9;
+  --text-muted: #73726C;
+
+  --border-default: #2C2550;
+
+  --font-display: var(--font-pixelify), monospace;
+  --font-body: var(--font-share-tech), monospace;
+  --font-mono: var(--font-share-tech), monospace;
+  --font-sans: var(--font-share-tech), monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --transition-base: all 200ms ease-out;
+
+  --glow-accent: 0 0 0 3px rgba(193, 67, 188, 0.20);
+  --glow-primary: 0 0 20px rgba(97, 59, 184, 0.25);
+  --glow-conversion: 0 0 20px rgba(216, 90, 48, 0.20);
+  --glow-hub: radial-gradient(circle, #C143BC 0%, #422B78 45%, transparent 70%);
+  --glow-logo: radial-gradient(circle, #C143BC 0%, #422B78 45%, transparent 70%);
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-sticky: 0 2px 12px rgba(0, 0, 0, 0.4);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --container-max: 1280px;
+  --grid-gap: 24px;
+  --header-height: 54px;
+
+  --glass-bg: rgba(30, 24, 56, 0.92);
+  --glass-blur: blur(12px);
 }
 
 /* === Keyframes ===
@@ -115,13 +255,13 @@
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(242,166,240, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(242,166,240, 0.4); }
+  0%, 100% { box-shadow: 0 0 20px rgba(193, 67, 188, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(193, 67, 188, 0.4); }
 }
 
 @keyframes glow-breathe {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(242,166,240,0.2)); }
-  50% { filter: drop-shadow(0 0 22px rgba(242,166,240,0.6)) drop-shadow(0 0 44px rgba(242,166,240,0.2)); }
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(193, 67, 188, 0.2)); }
+  50% { filter: drop-shadow(0 0 22px rgba(193, 67, 188, 0.6)) drop-shadow(0 0 44px rgba(193, 67, 188, 0.2)); }
 }
 
 @keyframes float {
@@ -135,8 +275,8 @@
 }
 
 @keyframes kiro-glow {
-  0%, 100% { filter: drop-shadow(0 0 14px rgba(242,166,240,0.35)); }
-  50% { filter: drop-shadow(0 0 34px rgba(242,166,240,0.75)) drop-shadow(0 0 60px rgba(242,166,240,0.3)); }
+  0%, 100% { filter: drop-shadow(0 0 14px rgba(193, 67, 188, 0.35)); }
+  50% { filter: drop-shadow(0 0 34px rgba(193, 67, 188, 0.75)) drop-shadow(0 0 60px rgba(193, 67, 188, 0.3)); }
 }
 
 @keyframes kiro-roam {
@@ -190,13 +330,13 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 10px 0 rgba(242,166,240,0.4); }
-  50%      { box-shadow: 0 0 26px 2px rgba(242,166,240,0.85); }
+  0%, 100% { box-shadow: 0 0 10px 0 rgba(193, 67, 188, 0.4); }
+  50%      { box-shadow: 0 0 26px 2px rgba(193, 67, 188, 0.85); }
 }
 
 @keyframes pulse-highlight {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(242,166,240,0.45); }
-  50%      { box-shadow: 0 0 0 7px rgba(242,166,240,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193, 67, 188, 0.45); }
+  50%      { box-shadow: 0 0 0 7px rgba(193, 67, 188, 0); }
 }
 
 @keyframes button-breathe {
@@ -274,9 +414,9 @@
 /* === Base Styles === */
 body {
   overflow-x: hidden;
-  background: var(--color-surface-900);
-  color: var(--color-surface-100);
-  font-family: var(--font-sans), ui-monospace, monospace;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
 }
 
 /* === Scrollbar === */
@@ -284,7 +424,7 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-surface-900);
+  background: var(--bg-base);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-surface-600);
@@ -296,8 +436,8 @@ body {
 
 /* === Selection === */
 ::selection {
-  background: rgba(242,166,240, 0.3);
-  color: var(--color-surface-50);
+  background: rgba(193, 67, 188, 0.3);
+  color: #FFFFFF;
 }
 
 /* === Kiro ghost blinking eyes (simple favicon ghost) === */
@@ -313,8 +453,8 @@ body {
 
 /* === Kiro page: recolor global orange chrome to purple === */
 html[data-kiro] ::selection {
-  background: rgba(242,166,240, 0.32);
-  color: var(--color-surface-50);
+  background: rgba(193, 67, 188, 0.32);
+  color: #FFFFFF;
 }
 html[data-kiro] .scroll-progress-bar {
   background: var(--color-kiro-purple) !important;
@@ -375,121 +515,11 @@ html {
   50%      { opacity: 0.45; }
 }
 
-/* === Formularios sobre bloque morado ==========================================
-   Los públicos (/registro, /voluntarios, /speakers) corren sobre el bloque
-   claro con tinta negra. En vez de meter un prop `tone` en cada primitiva —que
-   también usa el admin, en oscuro— se reviste por contexto: todo lo que caiga
-   dentro de `.form-block` se repinta. El admin no se entera.
-   Los botones de Platanus son fondo acento + texto negro; acá el bloque ya es
-   el acento, así que el botón se invierte a tinta sólida para destacar. ====== */
+/* === Formularios públicos === */
 .form-block {
-  color: var(--color-hack-ink);
+  color: var(--color-surface-100);
 }
 
-/* Etiquetas y textos de apoyo */
-.form-block label,
-.form-block .font-mono.text-sm.text-surface-200,
-.form-block span.text-surface-200 {
-  color: color-mix(in srgb, var(--color-hack-ink) 88%, transparent);
-  font-weight: 600;
-}
-.form-block .text-surface-300,
-.form-block .text-surface-400 { color: color-mix(in srgb, var(--color-hack-ink) 65%, transparent); }
-.form-block .text-surface-500,
-.form-block .text-surface-600 { color: color-mix(in srgb, var(--color-hack-ink) 50%, transparent); }
-.form-block .text-surface-50,
-.form-block .text-surface-100 { color: var(--color-hack-ink); }
-/* El asterisco de obligatorio: sobre morado el acento no se ve */
-.form-block .text-aws-orange { color: var(--color-hack-deep); }
-
-/* Campos: caja dura, borde negro, foco que engorda el borde */
-.form-block input:not([type="checkbox"]):not([type="radio"]),
-.form-block textarea,
-.form-block select {
-  border-radius: 0;
-  border: 2px solid color-mix(in srgb, var(--color-hack-ink) 35%, transparent);
-  background: color-mix(in srgb, #ffffff 55%, transparent);
-  color: var(--color-hack-ink);
-  box-shadow: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-}
-.form-block input::placeholder,
-.form-block textarea::placeholder { color: color-mix(in srgb, var(--color-hack-ink) 42%, transparent); }
-.form-block input:not([type="checkbox"]):not([type="radio"]):hover,
-.form-block textarea:hover,
-.form-block select:hover {
-  border-color: color-mix(in srgb, var(--color-hack-ink) 60%, transparent);
-}
-.form-block input:not([type="checkbox"]):not([type="radio"]):focus,
-.form-block textarea:focus,
-.form-block select:focus {
-  border-color: var(--color-hack-ink);
-  background: #ffffff;
-  /* Se levanta un pelo al enfocar: marca dónde estás sin mover el layout */
-  transform: translateY(-1px);
-  box-shadow: 3px 3px 0 0 color-mix(in srgb, var(--color-hack-ink) 30%, transparent);
-}
-
-/* Botones */
-  /* Opción múltiple: la elegida se marca en NEGRO, no con el acento.
-     El acento es el mismo morado del fondo del bloque, así que elegida y sin
-     elegir se veían casi iguales. Se reviste el <span> del control en vez de
-     tocar RadioGroup, que también lo usa el admin sobre fondo oscuro. */
-  .form-block [role="radio"] > span:first-child {
-    border-width: 2px;
-    border-color: color-mix(in srgb, var(--color-hack-ink) 45%, transparent);
-    background: color-mix(in srgb, #ffffff 55%, transparent);
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-  }
-  .form-block [role="radio"]:hover > span:first-child {
-    border-color: var(--color-hack-ink);
-  }
-  .form-block [role="radio"][aria-checked="true"] > span:first-child {
-    border-color: var(--color-hack-ink);
-    background: var(--color-hack-ink);
-  }
-  /* El punto interior pasa al morado del bloque para que se lea sobre el negro */
-  .form-block [role="radio"][aria-checked="true"] > span:first-child > span {
-    background: var(--color-hack-block);
-  }
-
-.form-block button[type="submit"],
-.form-block .btn-hard {
-  border-radius: 0;
-  background: var(--color-hack-ink);
-  color: var(--color-hack-block);
-  font-weight: 700;
-  box-shadow: 5px 5px 0 0 color-mix(in srgb, var(--color-hack-ink) 35%, transparent);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-}
-.form-block button[type="submit"]:hover:not(:disabled),
-.form-block .btn-hard:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 0 color-mix(in srgb, var(--color-hack-ink) 35%, transparent);
-}
-.form-block button[type="submit"]:active:not(:disabled),
-.form-block .btn-hard:active:not(:disabled) {
-  transform: translate(0, 0);
-  box-shadow: none;
-}
-.form-block button[type="submit"]:disabled { box-shadow: none; opacity: 0.45; }
-
-/* Botones secundarios dentro del formulario (atrás, opciones) */
-.form-block button:not([type="submit"]).rounded-xl,
-.form-block button:not([type="submit"]).rounded-full {
-  border-radius: 0;
-}
-
-/* Bloques de error */
-.form-block .border-red-500\/30 {
-  border-radius: 0;
-  border-color: #7f1d1d;
-  background: color-mix(in srgb, #7f1d1d 12%, transparent);
-}
-.form-block .text-red-400 { color: #7f1d1d; }
-
-/* Spinner: el acento desaparece sobre el morado, se pinta en tinta */
-.form-block .border-aws-orange { border-color: var(--color-hack-ink); }
 
 
 /* Antepone la fuente de banderas; el resto del texto cae a la de siempre. */

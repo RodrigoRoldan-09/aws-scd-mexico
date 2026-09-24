@@ -37,7 +37,7 @@ export const LEVEL_LABEL: Record<string, string> = {
 export const LEVEL_COLORS: Record<string, string> = {
   "100": "bg-emerald/10 text-emerald border-emerald/30",
   "200": "bg-sky-400/10 text-sky-400 border-sky-400/30",
-  "300": "bg-aws-orange/10 text-aws-orange border-aws-orange/30",
+  "300": "bg-[#D85A30]/10 text-[#D85A30] border-[#D85A30]/30",
   "400": "bg-red-400/10 text-red-400 border-red-400/30",
 };
 

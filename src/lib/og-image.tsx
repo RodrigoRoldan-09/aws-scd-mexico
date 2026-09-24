@@ -26,7 +26,7 @@ export function OGImage({
         flexDirection: "column",
         width: "1200px",
         height: "630px",
-        background: "#0A0A0F",
+        background: "#0E0E1A",
         fontFamily: "sans-serif",
         position: "relative",
         overflow: "hidden",
@@ -39,7 +39,7 @@ export function OGImage({
           right: -100,
           width: 500,
           height: 500,
-          background: "radial-gradient(circle, rgba(242,166,240,0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(193,67,188,0.18) 0%, transparent 70%)",
           borderRadius: "50%",
         }}
       />
@@ -50,7 +50,7 @@ export function OGImage({
           left: -80,
           width: 400,
           height: 400,
-          background: "radial-gradient(circle, rgba(242,166,240,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(97,59,184,0.15) 0%, transparent 70%)",
           borderRadius: "50%",
         }}
       />
@@ -62,7 +62,7 @@ export function OGImage({
           left: 0,
           right: 0,
           height: 5,
-          background: "linear-gradient(90deg, #F2A6F0 0%, #FFB347 50%, #F2A6F0 100%)",
+          background: "linear-gradient(90deg, #422B78 0%, #613BB8 50%, #C143BC 100%)",
         }}
       />
 
@@ -80,14 +80,14 @@ export function OGImage({
               display: "flex",
               alignItems: "center",
               gap: 8,
-              background: "#F2A6F0",
+              background: "#C143BC",
               borderRadius: 8,
               padding: "6px 14px",
             }}
           >
             <div
               style={{
-                color: "#0A0A0F",
+                color: "#0E0E1A",
                 fontSize: 15,
                 fontWeight: 900,
                 letterSpacing: "-0.5px",
@@ -99,7 +99,7 @@ export function OGImage({
           <div
             style={{
               display: "flex",
-              color: "#B0B0C0",
+              color: "#B4B2A9",
               fontSize: 15,
               letterSpacing: "0.05em",
               textTransform: "uppercase",
@@ -109,11 +109,11 @@ export function OGImage({
           </div>
           {label && (
             <>
-              <div style={{ display: "flex", color: "#3A3A4A", fontSize: 15 }}>·</div>
+              <div style={{ display: "flex", color: "#73726C", fontSize: 15 }}>·</div>
               <div
                 style={{
                   display: "flex",
-                  color: "#F2A6F0",
+                  color: "#C143BC",
                   fontSize: 15,
                   fontWeight: 600,
                   letterSpacing: "0.05em",
@@ -135,7 +135,7 @@ export function OGImage({
         >
           <div
             style={{
-              color: "#FFFFFF",
+              color: "#E6E4DA",
               fontSize: 72,
               fontWeight: 900,
               letterSpacing: "-2px",
@@ -146,7 +146,7 @@ export function OGImage({
           </div>
           <div
             style={{
-              color: "#F2A6F0",
+              color: "#C143BC",
               fontSize: 40,
               fontWeight: 700,
               letterSpacing: "-1px",
@@ -160,7 +160,7 @@ export function OGImage({
         <div
           style={{
             display: "flex",
-            color: "#B0B0C0",
+            color: "#B4B2A9",
             fontSize: 22,
             lineHeight: 1.5,
             marginTop: 24,
@@ -177,16 +177,16 @@ export function OGImage({
           alignItems: "center",
           justifyContent: "space-between",
           padding: "20px 72px",
-          borderTop: "1px solid #252530",
+          borderTop: "1px solid #2C2550",
           marginTop: 24,
         }}
       >
         <div style={{ display: "flex", gap: 32 }}>
-          <div style={{ display: "flex", color: "#B0B0C0", fontSize: 15, gap: 8 }}>
+          <div style={{ display: "flex", color: "#B4B2A9", fontSize: 15, gap: 8 }}>
             <span style={{ display: "flex" }}>📅</span>
             <span style={{ display: "flex" }}>{dateStr}</span>
           </div>
-          <div style={{ display: "flex", color: "#B0B0C0", fontSize: 15, gap: 8 }}>
+          <div style={{ display: "flex", color: "#B4B2A9", fontSize: 15, gap: 8 }}>
             <span style={{ display: "flex" }}>📍</span>
             <span style={{ display: "flex" }}>{venueStr}</span>
           </div>
@@ -194,7 +194,7 @@ export function OGImage({
         <div
           style={{
             display: "flex",
-            color: "#F2A6F0",
+            color: "#C143BC",
             fontSize: 15,
             fontWeight: 600,
           }}

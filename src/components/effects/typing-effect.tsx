@@ -23,7 +23,7 @@ export function TypingEffect({ text, speed = 50, className }: TypingEffectProps)
   return (
     <span className={cn(className)}>
       {displayed}
-      <span className={cn("inline-block w-[2px] h-[1em] bg-aws-orange ml-0.5 align-middle", done && "animate-[blink_1s_step-end_infinite]")} aria-hidden="true" />
+      <span className={cn("inline-block w-[2px] h-[1em] bg-[#C143BC] ml-0.5 align-middle", done && "animate-[blink_1s_step-end_infinite]")} aria-hidden="true" />
       <style>{`@keyframes blink { 50% { opacity: 0; } }`}</style>
     </span>
   );

@@ -20,9 +20,9 @@ export function RadioGroup({ label, options, value, onChange, required, classNam
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {label && (
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-surface-200">
+        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#B4B2A9]">
           {label}
-          {required && <span className="ml-1 text-aws-orange">*</span>}
+          {required && <span className="ml-1 text-[#D85A30]">*</span>}
         </span>
       )}
       <div className="flex flex-col gap-2">
@@ -37,20 +37,17 @@ export function RadioGroup({ label, options, value, onChange, required, classNam
           >
             <span
               className={cn(
-                // Cuadrado, no círculo: el sitio entero es de esquina viva. Lo
-                // que distingue un radio de una casilla es el bloque macizo de
-                // dentro frente al visto de la casilla.
-                "flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-colors",
+                "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
                 value === option.value
-                  ? "border-aws-orange bg-aws-orange/15"
-                  : "border-surface-500 bg-surface-800 hover:border-surface-400",
+                  ? "border-[#C143BC] bg-[#C143BC]/15"
+                  : "border-[#2C2550] bg-[#1E1838] hover:border-[#613BB8]",
               )}
             >
               {value === option.value && (
-                <span className="h-2.5 w-2.5 bg-aws-orange" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#C143BC]" />
               )}
             </span>
-            <span className="font-mono text-sm text-surface-100">{option.label}</span>
+            <span className="font-mono text-sm text-[#E6E4DA]">{option.label}</span>
           </button>
         ))}
       </div>

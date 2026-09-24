@@ -48,9 +48,9 @@ function IconInstagram({ className }: { className?: string }) {
  */
 export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "purple" }) {
   return (
-    <div className="group w-full max-w-[260px] border border-hack-block/70 bg-surface-900 transition-all duration-300 hover:-translate-y-1 hover:border-hack-block hover:shadow-[6px_6px_0_0_rgba(242,166,240,0.35)]">
+    <div className="group w-full max-w-[260px] border border-[#2C2550] bg-[#1E1838] rounded-[16px] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[#C143BC]/70 hover:shadow-[0_0_25px_rgba(193,67,188,0.25)]">
       {/* Foto — o la carita del pasaporte mientras no la haya */}
-      <div className="relative aspect-square w-full overflow-hidden border-b border-hack-block/70">
+      <div className="relative aspect-square w-full overflow-hidden border-b border-[#2C2550]">
         {org.photo ? (
           <Image
             src={org.photo}
@@ -60,12 +60,7 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
             className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.04] group-hover:grayscale-0"
           />
         ) : (
-          // La carita va a color, no en gris como las fotos: es una ilustración
-          // de fondo pastel y desaturarla la deja como una mancha. Comparte con
-          // la foto el mismo acercamiento al pasar el cursor para que la
-          // cuadrícula se sienta uniforme aunque se mezclen los dos casos.
-          // Semilla = `org.id`, que es estable y único.
-          <div className="flex h-full w-full items-center justify-center bg-surface-800 p-4">
+          <div className="flex h-full w-full items-center justify-center bg-[#0E0E1A] p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={avatarUrl(org.id)}
@@ -77,42 +72,42 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
           </div>
         )}
         {org.country && (
-          <span className="absolute right-2 top-2 bg-hack-block px-1.5 py-0.5 font-mono text-[10px] font-bold leading-none text-hack-ink">
+          <span className="absolute right-2 top-2 rounded-[4px] bg-[#C143BC] px-1.5 py-0.5 font-mono text-[10px] font-bold leading-none text-[#0E0E1A]">
             {org.country}
           </span>
         )}
       </div>
 
-      <div className="px-3 py-3">
-        <p className="m-0 font-mono text-sm font-bold leading-tight text-surface-50">
+      <div className="px-4 py-3.5">
+        <p className="m-0 font-display text-base font-bold leading-tight text-[#E6E4DA]">
           {org.name}
         </p>
-        <p className="mt-1 font-mono text-xs leading-snug text-hack-block">
+        <p className="mt-1 font-mono text-xs leading-snug text-[#C143BC]">
           {org.role}
         </p>
 
         <div className="mt-3 flex items-center gap-2.5">
           {org.social.github && (
             <a href={org.social.github} target="_blank" rel="noopener noreferrer"
-              className="text-hack-block transition-colors hover:text-surface-50" aria-label={`GitHub de ${org.name}`}>
+              className="text-[#8B84A0] transition-colors hover:text-[#C143BC]" aria-label={`GitHub de ${org.name}`}>
               <IconGithub className="h-4 w-4" />
             </a>
           )}
           {org.social.linkedin && (
             <a href={org.social.linkedin} target="_blank" rel="noopener noreferrer"
-              className="text-hack-block transition-colors hover:text-surface-50" aria-label={`LinkedIn de ${org.name}`}>
+              className="text-[#8B84A0] transition-colors hover:text-[#C143BC]" aria-label={`LinkedIn de ${org.name}`}>
               <IconLinkedin className="h-4 w-4" />
             </a>
           )}
           {org.social.awsBuilder && (
             <a href={org.social.awsBuilder} target="_blank" rel="noopener noreferrer"
-              className="text-hack-block transition-colors hover:text-surface-50" aria-label={`AWS Builder Center de ${org.name}`}>
+              className="text-[#8B84A0] transition-colors hover:text-[#C143BC]" aria-label={`AWS Builder Center de ${org.name}`}>
               <IconCloud className="h-4 w-4" />
             </a>
           )}
           {org.social.instagram && (
             <a href={org.social.instagram} target="_blank" rel="noopener noreferrer"
-              className="text-hack-block transition-colors hover:text-surface-50" aria-label={`Instagram de ${org.name}`}>
+              className="text-[#8B84A0] transition-colors hover:text-[#C143BC]" aria-label={`Instagram de ${org.name}`}>
               <IconInstagram className="h-4 w-4" />
             </a>
           )}
@@ -130,6 +125,20 @@ export function Organizers() {
     <section id="organizers" className="py-24 px-6">
       <div className="mx-auto max-w-7xl">
         <ScrollReveal>
+          <div className="mb-5 flex items-center justify-center">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-[#2C2550] bg-[#1E1838] px-4 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+              <Image
+                src="/images/logos/logo-sbg-cdmx.png"
+                alt="AWS Student Builder Group IPN CDMX"
+                width={20}
+                height={20}
+                className="h-5 w-5 rounded-full object-contain"
+              />
+              <span className="font-mono text-xs font-semibold text-[#E6E4DA]">
+                AWS Student Builder Group <span className="text-[#C143BC]">IPN CDMX</span>
+              </span>
+            </div>
+          </div>
           <SectionHeading title={t("heading")} subtitle={t("subheading")} />
         </ScrollReveal>
 

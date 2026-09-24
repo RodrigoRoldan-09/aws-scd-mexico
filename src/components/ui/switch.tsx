@@ -29,18 +29,18 @@ export function Switch({ label, checked = false, onChange, className, disabled }
           // Rectángulo con borde, no una píldora: en este sitio no hay nada
           // redondo. Se lee igual —la pastilla a la izquierda o a la derecha—
           // y el encendido va en el acento, que es como se marca lo activo.
-          "relative h-7 w-12 shrink-0 border-2 transition-colors",
-          checked ? "border-aws-orange bg-aws-orange" : "border-surface-500 bg-surface-800",
+          "relative h-6 w-11 shrink-0 rounded-full border transition-colors",
+          checked ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#1E1838]",
         )}
       >
         <span
           className={cn(
-            "absolute left-0.5 top-0.5 h-5 w-5 transition-transform",
-            checked ? "translate-x-5 bg-surface-900" : "bg-surface-400",
+            "absolute left-0.5 top-0.5 h-4 w-4 rounded-full transition-transform",
+            checked ? "translate-x-5 bg-[#0E0E1A]" : "bg-[#73726C]",
           )}
         />
       </button>
-      {label && <span className="font-mono text-sm text-surface-100">{label}</span>}
+      {label && <span className="font-mono text-sm text-[#E6E4DA]">{label}</span>}
     </label>
   );
 }

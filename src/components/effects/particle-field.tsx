@@ -37,7 +37,7 @@ export function ParticleField() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (const p of particles) {
         ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
-        ctx.font = `${p.size}px "JetBrains Mono", monospace`;
+        ctx.font = `${p.size}px "Share Tech Mono", monospace`;
         ctx.fillStyle = `rgba(107,107,128,${p.opacity})`;
         ctx.textAlign = "center"; ctx.textBaseline = "middle";
         ctx.fillText(p.symbol, 0, 0); ctx.restore();

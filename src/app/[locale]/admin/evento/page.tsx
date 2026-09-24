@@ -22,7 +22,7 @@ interface EventStats {
   leaderboard: { name: string; count: number; firstStampAt: string | null; lastStampAt: string | null }[];
 }
 
-const C = { orange: "#F2A6F0", emerald: "#34d399", amber: "#fbbf24", purple: "#7B3FA6", sky: "#38bdf8", blue: "#60a5fa" };
+const C = { orange: "#C143BC", emerald: "#34d399", amber: "#fbbf24", purple: "#7B3FA6", sky: "#38bdf8", blue: "#60a5fa" };
 
 function Counter({ label, value, icon: Icon, accent, hint }: { label: string; value: number; icon: React.ElementType; accent: string; hint?: string }) {
   return (

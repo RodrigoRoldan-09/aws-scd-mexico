@@ -55,14 +55,14 @@ export type SummaryRow = { label: string; value: string };
 
 export function SuccessScreen({
   kind,
-  attendance,
+  attendance: _attendance,
   name,
   extra,
   rows,
   preview,
 }: {
   kind: ShareKind | "volunteer";
-  /** Modalidad, sólo para asistentes: a quien va en línea no se le promete QR. */
+  /** Modalidad presencial. */
   attendance?: "in-person" | "online";
   /** Nombre completo, para la tarjeta. */
   name?: string;
@@ -73,21 +73,14 @@ export function SuccessScreen({
   /**
    * La tarjeta de lo que le queda a la persona: el pasaporte de un asistente
    * presencial, la credencial de un voluntario.
-   *
-   * Es distinta de la tarjeta de compartir, que es una imagen cuadrada para
-   * redes. Ésta enseña lo que va a tener el día del evento, así que sólo se
-   * pasa cuando de verdad lo va a tener — a quien se registró en línea no se
-   * le crea pasaporte y enseñárselo sería prometerle algo que no existe.
    */
   preview?: React.ReactNode;
 }) {
   const t = useTranslations("Forms");
   const withCard = kind !== "volunteer";
 
-  // Las claves siguen el patron success_<tipo>_<parte>, asi que el tipo elige
-  // el juego de textos sin necesidad de una tabla aparte. La modalidad online
-  // es un tipo mas para este efecto.
-  const copyKind = kind === "attendee" && attendance === "online" ? "attendee_online" : kind;
+  // Las claves siguen el patron success_<tipo>_<parte>. Todas las sesiones son presenciales.
+  const copyKind = kind;
   const cardKind = kind === "volunteer" ? "attendee" : copyKind;
 
   const copy = {

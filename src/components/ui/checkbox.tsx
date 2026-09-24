@@ -33,17 +33,17 @@ export function Checkbox({ label, labelNode, checked = false, onChange, classNam
         disabled={disabled}
         onClick={() => onChange?.(!checked)}
         className={cn(
-          "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center border-2 transition-colors",
+          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border transition-colors",
           checked
-            ? "border-aws-orange bg-aws-orange text-surface-900"
-            : "border-surface-500 bg-surface-800 hover:border-aws-orange",
+            ? "border-[#C143BC] bg-[#C143BC] text-[#0E0E1A]"
+            : "border-[#2C2550] bg-[#1E1838] hover:border-[#C143BC]",
         )}
       >
-        {checked && <Check className="h-4 w-4" strokeWidth={3} />}
+        {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
       </button>
       {labelNode
-        ? <span className="font-mono text-sm leading-relaxed text-surface-200">{labelNode}</span>
-        : label && <span className="font-mono text-sm leading-relaxed text-surface-200">{label}</span>
+        ? <span className="font-mono text-sm leading-relaxed text-[#B4B2A9]">{labelNode}</span>
+        : label && <span className="font-mono text-sm leading-relaxed text-[#B4B2A9]">{label}</span>
       }
     </label>
   );

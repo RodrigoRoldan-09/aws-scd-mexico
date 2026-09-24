@@ -100,9 +100,9 @@ export function Select({
   return (
     <div className={cn("flex flex-col gap-1.5", className)} ref={ref}>
       {label && (
-        <label htmlFor={id} className="font-mono text-xs font-bold uppercase tracking-widest text-surface-200">
+        <label htmlFor={id} className="font-mono text-xs font-bold uppercase tracking-wider text-[#B4B2A9]">
           {label}
-          {required && <span className="ml-1 text-aws-orange">*</span>}
+          {required && <span className="ml-1 text-[#D85A30]">*</span>}
         </label>
       )}
       <div
@@ -110,49 +110,49 @@ export function Select({
         role="combobox"
         tabIndex={0}
         aria-expanded={open}
+        aria-controls={`${id}-list`}
         className={cn(
-          // Caja dura, como los campos: esquina viva, borde de 2px y el foco
-          // engordando el borde en vez de un anillo difuminado alrededor.
-          "relative flex min-h-11 cursor-pointer items-center justify-between gap-2 border-2 border-surface-600 bg-surface-800 px-4 py-2.5",
-          "font-mono text-sm outline-none transition-colors hover:border-surface-500 focus:border-aws-orange",
-          open && "border-aws-orange",
-          error && "border-red-500",
+          "relative flex h-11 min-h-11 cursor-pointer items-center justify-between gap-2 rounded-[6px] border border-[#2C2550] bg-[#1E1838] px-4 py-2.5",
+          "font-mono text-sm outline-none transition-all duration-200 hover:border-[#613BB8]/60 focus:border-[#C143BC] focus:shadow-[0_0_0_3px_rgba(193,67,188,0.20)]",
+          open && "border-[#C143BC] shadow-[0_0_0_3px_rgba(193,67,188,0.20)]",
+          error && "border-[#E24B4A] focus:border-[#E24B4A] focus:shadow-[0_0_0_3px_rgba(226,75,74,0.20)]",
           disabled && "cursor-not-allowed opacity-50",
         )}
         onClick={() => !disabled && setOpenState(!open)}
         onKeyDown={disabled ? undefined : handleKeyDown}
       >
-        <span className={cn("truncate", selected ? "text-surface-100" : "text-surface-400")}>
+        <span className={cn("truncate", selected ? "text-[#E6E4DA]" : "text-[#73726C]")}>
           {selected?.label || placeholder}
         </span>
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-surface-400 transition-transform",
-            open && "rotate-180",
+            "h-4 w-4 text-[#73726C] transition-transform",
+            open && "rotate-180 text-[#C143BC]",
           )}
         />
 
         {open && (
           <div
+            id={`${id}-list`}
             ref={listRef}
-            className="absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto border-2 border-surface-500 bg-surface-800 shadow-[4px_4px_0_0_rgba(0,0,0,0.6)]"
+            className="absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-[6px] border border-[#2C2550] bg-[#1E1838] shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
           >
             {searchable && (
-              <div className="flex items-center gap-2 border-b-2 border-surface-600 px-3 py-2">
-                <Search className="h-4 w-4 text-surface-400" />
+              <div className="flex items-center gap-2 border-b border-[#2C2550] px-3 py-2">
+                <Search className="h-4 w-4 text-[#73726C]" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-full bg-transparent font-mono text-sm text-surface-100 outline-none placeholder:text-surface-400"
+                  className="w-full bg-transparent font-mono text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
                   placeholder="Buscar..."
                   autoFocus
                 />
               </div>
             )}
             {filtered.length === 0 ? (
-              <div className="px-4 py-3 font-mono text-sm text-surface-300">Sin resultados</div>
+              <div className="px-4 py-3 font-mono text-sm text-[#73726C]">Sin resultados</div>
             ) : (
               filtered.map((option, i) => (
                 <div
@@ -160,9 +160,9 @@ export function Select({
                   className={cn(
                     "cursor-pointer px-4 py-2.5 font-mono text-sm transition-colors",
                     option.value === value
-                      ? "bg-aws-orange font-bold text-surface-900"
-                      : "text-surface-200 hover:bg-surface-700",
-                    i === highlighted && option.value !== value && "bg-surface-700",
+                      ? "bg-[#613BB8] font-bold text-[#E6E4DA]"
+                      : "text-[#B4B2A9] hover:bg-[#2A1F5E] hover:text-[#E6E4DA]",
+                    i === highlighted && option.value !== value && "bg-[#2A1F5E]",
                   )}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -177,7 +177,7 @@ export function Select({
           </div>
         )}
       </div>
-      {error && <span className="font-mono text-xs text-red-400">{error}</span>}
+      {error && <span className="font-mono text-xs text-[#E24B4A]">{error}</span>}
     </div>
   );
 }

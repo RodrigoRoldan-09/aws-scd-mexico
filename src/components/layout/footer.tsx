@@ -1,8 +1,7 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Heart } from "lucide-react";
 import { SOCIAL, EXTERNAL_LINKS } from "@/lib/constants";
-import { studentBuilderGroups } from "@/data/student-builder-groups";
-import { basePath, localePath } from "@/lib/utils";
+import { localePath } from "@/lib/utils";
 
 function IconInstagram({ className }: { className?: string }) {
   return (
@@ -22,171 +21,170 @@ function IconLinkedin({ className }: { className?: string }) {
   );
 }
 
-function IconX({ className }: { className?: string }) {
+function SbgLogoLockup({ locale }: { locale: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
-function FooterLogo({ locale }: { locale: string }) {
-  return (
-    <a href={`${localePath(locale)}#home`} className="inline-flex items-center gap-3">
-      <img
-        src={`${basePath}/images/logos/aws-logo.svg`}
-        alt="AWS"
-        className="h-9 w-auto shrink-0 brightness-0"
+    <a href={`${localePath(locale)}#home`} className="group inline-flex items-center gap-2.5">
+      <Image
+        src="/images/logos/logo-sbg-cdmx.png"
+        alt="AWS Student Builder Group IPN CDMX"
+        width={32}
+        height={32}
+        className="h-8 w-8 object-contain rounded-[6px]"
       />
-      <div className="leading-tight">
-        <p className="font-mono text-xs font-semibold tracking-wide text-hack-ink">Student</p>
-        <p className="font-mono text-xs font-semibold tracking-wide text-hack-ink">Community Day</p>
-        <p className="font-mono text-[10px] tracking-widest text-hack-ink">México 2026</p>
+      <div className="flex flex-col text-left">
+        <span className="font-display text-[11px] font-bold leading-tight text-[#E6E4DA]">
+          AWS Student Builder Group
+        </span>
+        <span className="font-mono text-[9px] uppercase tracking-wider text-[#C143BC] leading-tight">
+          IPN CDMX
+        </span>
       </div>
     </a>
   );
 }
 
-const eventLinks = [
-  { key: "about",     href: "#about",       page: false },
-  { key: "agenda",    href: "#agenda",      page: false },
-  { key: "speakers",  href: "/directorio",  page: true  },
-  { key: "kiro",      href: "/kiro",         page: true  },
-  { key: "venue",     href: "#venue",       page: false },
-  { key: "faq",       href: "#faq",        page: false },
-] as const;
-
 export async function Footer({ locale }: { locale: string }) {
   const t = await getTranslations({ locale, namespace: "Footer" });
 
+  const scdLinks = [
+    { label: t("about"), href: `${localePath(locale)}#about` },
+    { label: t("agenda"), href: `${localePath(locale)}#agenda` },
+    { label: t("speakers"), href: localePath(locale, "/directorio") },
+  ];
+
+  const sbgLinks = [
+    { label: "Workshops", href: `${localePath(locale)}#tracks` },
+    { label: "Blog", href: `${localePath(locale)}#blog` },
+    { label: "Aula", href: `${localePath(locale)}#aula` },
+    { label: "Proyectos", href: `${localePath(locale)}#proyectos` },
+    { label: t("community"), href: `${localePath(locale)}#about` },
+  ];
+
+  const resourcesLinks = [
+    { label: "AWS Free Tier", href: EXTERNAL_LINKS.awsFreeTier },
+    { label: "Skill Builder", href: EXTERNAL_LINKS.awsSkillBuilder },
+    { label: "Certification", href: EXTERNAL_LINKS.awsCertification },
+    { label: "Docs", href: EXTERNAL_LINKS.awsDocs },
+  ];
+
   return (
-    <footer className="bg-hack-block text-hack-ink">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="flex flex-col gap-12 lg:flex-row">
-          <div className="shrink-0 lg:w-64">
-            <FooterLogo locale={locale} />
-            <p className="mt-4 text-sm leading-relaxed text-hack-ink/70">{t("brand_tagline_desc")}</p>
-            <div className="mt-5 flex gap-4">
+    <footer className="border-t border-[#2C2550] bg-[#0E0E1A] text-[#E6E4DA]">
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:py-16">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          {/* Columna 1: Ancha (5 cols en lg) */}
+          <div className="flex flex-col lg:col-span-5">
+            <SbgLogoLockup locale={locale} />
+            <p className="mt-4 max-w-sm font-mono text-xs leading-relaxed text-[#B4B2A9]">
+              {t("brand_tagline_desc")}
+            </p>
+            <div className="mt-6 flex items-center gap-3">
               {SOCIAL.instagram && (
-                <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className="text-hack-ink/60 transition-colors hover:text-hack-ink" aria-label="Instagram">
-                  <IconInstagram className="h-5 w-5" />
-                </a>
-              )}
-              {SOCIAL.twitter && (
-                <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer" className="text-hack-ink/60 transition-colors hover:text-hack-ink" aria-label="X (Twitter)">
-                  <IconX className="h-5 w-5" />
+                <a
+                  href={SOCIAL.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-all hover:border-[#613BB8] hover:text-[#C143BC]"
+                  aria-label="Instagram"
+                >
+                  <IconInstagram className="h-4 w-4" />
                 </a>
               )}
               {SOCIAL.linkedin && (
-                <a href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" className="text-hack-ink/60 transition-colors hover:text-hack-ink" aria-label="LinkedIn">
-                  <IconLinkedin className="h-5 w-5" />
+                <a
+                  href={SOCIAL.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-all hover:border-[#613BB8] hover:text-[#C143BC]"
+                  aria-label="LinkedIn"
+                >
+                  <IconLinkedin className="h-4 w-4" />
                 </a>
               )}
             </div>
           </div>
 
-          <div className="hidden lg:block w-px self-stretch bg-hack-ink/20" />
+          {/* Columna 2: SCD (2 cols) */}
+          <div className="lg:col-span-2">
+            <h3 className="font-display text-xs font-bold uppercase tracking-wider text-[#E6E4DA]">
+              SCD
+            </h3>
+            <ul className="mt-4 space-y-2.5 font-mono text-xs">
+              {scdLinks.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          <div className="grid flex-1 grid-cols-2 gap-10 sm:grid-cols-4">
-            <div>
-              <h3 className="font-mono text-sm font-semibold uppercase tracking-wider text-hack-ink">{t("the_event")}</h3>
-              <ul className="mt-4 space-y-2.5">
-                {eventLinks.map(({ key, href, page }) => (
-                  <li key={key}>
-                    <a
-                      href={page ? localePath(locale, href) : `${localePath(locale)}${href}`}
-                      className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink"
-                    >
-                      {t(key)}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Columna 3: SBG (3 cols) */}
+          <div className="lg:col-span-3">
+            <h3 className="font-display text-xs font-bold uppercase tracking-wider text-[#E6E4DA]">
+              SBG
+            </h3>
+            <ul className="mt-4 space-y-2.5 font-mono text-xs">
+              {sbgLinks.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <div>
-              <h3 className="font-mono text-sm font-semibold uppercase tracking-wider text-hack-ink">{t("community")}</h3>
-              <ul className="mt-4 space-y-2.5">
-                <li>
-                  <a href={EXTERNAL_LINKS.awsCloudClubs} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("aws_cloud_clubs")}
+          {/* Columna 4: RECURSOS (2 cols) */}
+          <div className="lg:col-span-2">
+            <h3 className="font-display text-xs font-bold uppercase tracking-wider text-[#E6E4DA]">
+              RECURSOS
+            </h3>
+            <ul className="mt-4 space-y-2.5 font-mono text-xs">
+              {resourcesLinks.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
+                  >
+                    {item.label}
                   </a>
                 </li>
-                <li>
-                  <a href={localePath(locale, "/codigo-conducta")} className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("code_of_conduct")}
-                  </a>
-                </li>
-                <li>
-                  <a href={localePath(locale, "/privacidad")} className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("privacy_policy")}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-mono text-sm font-semibold uppercase tracking-wider text-hack-ink">{t("resources")}</h3>
-              <ul className="mt-4 space-y-2.5">
-                <li>
-                  <a href={EXTERNAL_LINKS.awsFreeTier} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("aws_free_tier")}
-                  </a>
-                </li>
-                <li>
-                  <a href={EXTERNAL_LINKS.awsSkillBuilder} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("aws_skill_builder")}
-                  </a>
-                </li>
-                <li>
-                  <a href={EXTERNAL_LINKS.awsCertification} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("aws_certification")}
-                  </a>
-                </li>
-                <li>
-                  <a href={EXTERNAL_LINKS.awsDocs} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                    {t("aws_docs")}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-mono text-sm font-semibold uppercase tracking-wider text-hack-ink">{t("cloud_clubs")}</h3>
-              <ul className="mt-4 space-y-2.5">
-                {studentBuilderGroups.map((club) => (
-                  <li key={club.name}>
-                    {club.meetupUrl ? (
-                      <a href={club.meetupUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">
-                        {club.name}
-                      </a>
-                    ) : (
-                      <span className="text-sm text-hack-ink/70 transition-colors hover:text-hack-ink">{club.name}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-hack-ink/20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-6 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
-          <p className="text-sm text-hack-ink/70">
-            {t("made_with")}{" "}
-            <Heart className="inline h-4 w-4 fill-hack-ink text-hack-ink" />{" "}
-            {t("made_by")}{" "}
+      {/* Franja inferior: Legales centrados */}
+      <div className="border-t border-[#2C2550] bg-[#0E0E1A] py-6">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-3 px-6 text-center">
+          <div className="flex items-center gap-4 font-mono text-xs text-[#B4B2A9]">
             <a
-              href="https://builder.aws.com/community/@sebitas"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium font-semibold text-hack-ink transition-colors hover:underline"
+              href={localePath(locale, "/codigo-conducta")}
+              className="transition-colors hover:text-[#E6E4DA]"
             >
-              {t("made_by_name")}
+              {t("code_of_conduct")}
             </a>
+            <span className="text-[#2C2550]" aria-hidden="true">·</span>
+            <a
+              href={localePath(locale, "/privacidad")}
+              className="transition-colors hover:text-[#E6E4DA]"
+            >
+              {t("privacy_policy")}
+            </a>
+          </div>
+          <p className="font-mono text-[11px] text-[#73726C]">
+            {t("copyright")}
           </p>
-          <p className="text-xs text-hack-ink/60">{t("copyright")}</p>
         </div>
       </div>
     </footer>

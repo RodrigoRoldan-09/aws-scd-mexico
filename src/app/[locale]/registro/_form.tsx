@@ -80,21 +80,20 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-hack-ink">
-        {label} {required && <span className="text-hack-deep">*</span>}
+      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-[#E6E4DA]">
+        {label} {required && <span className="text-[#D85A30]">*</span>}
       </label>
-      {hint && <p className="m-0 -mt-1 font-mono text-xs text-hack-ink/55">{hint}</p>}
+      {hint && <p className="m-0 -mt-1 font-mono text-xs text-[#B4B2A9]">{hint}</p>}
       {children}
-      {error && <p className="m-0 font-mono text-xs text-[#7f1d1d]">{error}</p>}
+      {error && <p className="m-0 font-mono text-xs text-[#E24B4A]">{error}</p>}
     </div>
   );
 }
 
 const inputCls =
-  "w-full border-2 border-hack-ink/35 bg-white/55 px-4 py-3 font-mono text-sm text-hack-ink " +
-  "placeholder:text-hack-ink/40 outline-none transition-all " +
-  "focus:-translate-y-px focus:border-hack-ink focus:bg-white " +
-  "focus:shadow-[3px_3px_0_0_rgba(0,0,0,0.3)]";
+  "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
+  "placeholder:text-[#73726C] outline-none transition-all " +
+  "focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/30";
 
 export function RegistroForm({
   onSubmit,
@@ -278,7 +277,7 @@ export function RegistroForm({
               onChange={(e) => set("firstName", e.target.value)}
               placeholder={t.firstName_ph}
               maxLength={60}
-              className={cn(inputCls, errors.firstName && "border-[#7f1d1d]")}
+              className={cn(inputCls, errors.firstName && "border-[#E24B4A]")}
             />
           </Field>
           <Field label={t.lastName} required htmlFor="f-last" error={errors.lastName}>
@@ -288,7 +287,7 @@ export function RegistroForm({
               onChange={(e) => set("lastName", e.target.value)}
               placeholder={t.lastName_ph}
               maxLength={60}
-              className={cn(inputCls, errors.lastName && "border-[#7f1d1d]")}
+              className={cn(inputCls, errors.lastName && "border-[#E24B4A]")}
             />
           </Field>
         </div>
@@ -306,7 +305,7 @@ export function RegistroForm({
               setErrors((x) => ({ ...x, email: r.ok ? undefined : r.reason }));
             }}
             placeholder={t.email_ph}
-            className={cn(inputCls, errors.email && "border-[#7f1d1d]")}
+            className={cn(inputCls, errors.email && "border-[#E24B4A]")}
           />
         </Field>
 
@@ -319,10 +318,10 @@ export function RegistroForm({
                 type="button"
                 onClick={() => set("attendance", code)}
                 className={cn(
-                  "border-2 py-3.5 font-mono text-sm font-bold transition-all",
+                  "rounded-[6px] border py-3.5 font-mono text-sm font-bold transition-all",
                   v.attendance === code
-                    ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
-                    : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                    ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
+                    : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
                 )}
               >
                 {texto}
@@ -376,7 +375,7 @@ export function RegistroForm({
                     maxLength={24}
                     className={cn(
                       inputCls,
-                      errors.documentNumber && "border-[#7f1d1d]",
+                      errors.documentNumber && "border-[#E24B4A]",
                       !v.documentType && "cursor-not-allowed opacity-50",
                     )}
                   />
@@ -415,7 +414,7 @@ export function RegistroForm({
                   onChange={(e) => set("roleOther", e.target.value)}
                   placeholder={t.which_ph}
                   maxLength={FREE_TEXT_MAX}
-                  className={cn(inputCls, errors.roleOther && "border-[#7f1d1d]")}
+                  className={cn(inputCls, errors.roleOther && "border-[#E24B4A]")}
                 />
               </Field>
             </motion.div>
@@ -460,7 +459,7 @@ export function RegistroForm({
                   onChange={(e) => set("entityName", e.target.value)}
                   placeholder={t.entityName_ph}
                   maxLength={FREE_TEXT_MAX}
-                  className={cn(inputCls, errors.entityName && "border-[#7f1d1d]")}
+                  className={cn(inputCls, errors.entityName && "border-[#E24B4A]")}
                 />
               </Field>
             </motion.div>
@@ -468,7 +467,7 @@ export function RegistroForm({
         </AnimatePresence>
 
         {/* Consentimientos */}
-        <div className="flex flex-col gap-3 border-t-2 border-hack-ink/20 pt-6">
+        <div className="flex flex-col gap-3 border-t border-[#2C2550] pt-6">
           {(
             [
               ["coc", acceptCoc, setAcceptCoc, t.coc_text, t.coc_link, "/codigo-conducta"],
@@ -486,33 +485,33 @@ export function RegistroForm({
                     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
                   }}
                   className={cn(
-                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-all",
-                    checked ? "border-hack-ink bg-hack-ink" : "border-hack-ink/40 bg-white/55",
-                    errors[key] && "border-[#7f1d1d]",
+                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border transition-all",
+                    checked ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]",
+                    errors[key] && "border-[#E24B4A]",
                   )}
                 >
                   {checked && (
-                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#F2A6F0" strokeWidth="4">
+                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#FFFFFF" strokeWidth="4">
                       <path d="M20 6 9 17l-5-5" />
                     </svg>
                   )}
                 </button>
-                <span className="font-mono text-xs leading-relaxed text-hack-ink/85">
+                <span className="font-mono text-xs leading-relaxed text-[#B4B2A9]">
                   {text}
                   <a
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold underline underline-offset-4"
+                    className="font-bold text-[#378ADD] underline underline-offset-4 hover:text-[#3DD6D0]"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {linkText}
                   </a>
-                  . <span className="text-hack-deep">*</span>
+                  . <span className="text-[#D85A30]">*</span>
                 </span>
               </label>
               {errors[key] && (
-                <p className="m-0 pl-8 font-mono text-xs text-[#7f1d1d]">{errors[key]}</p>
+                <p className="m-0 pl-8 font-mono text-xs text-[#E24B4A]">{errors[key]}</p>
               )}
             </div>
           ))}
@@ -529,11 +528,11 @@ export function RegistroForm({
               transition={{ duration: 0.25, ease: "easeOut" }}
               className="overflow-hidden"
             >
-              <p className="m-0 border-2 border-hack-ink/30 bg-white/30 px-4 py-3.5 font-mono text-xs leading-relaxed text-hack-ink/80">
+              <p className="m-0 rounded-[6px] border border-[#3DD6D0]/30 bg-[#3DD6D0]/10 px-4 py-3.5 font-mono text-xs leading-relaxed text-[#E6E4DA]">
                 {t.volunteers_q}
-                <strong className="font-bold">{t.volunteers_strong}</strong>
+                <strong className="font-bold text-[#3DD6D0]">{t.volunteers_strong}</strong>
                 {t.volunteers_rest}
-                <Link href="/voluntarios" className="font-bold underline underline-offset-4">
+                <Link href="/voluntarios" className="font-bold text-[#3DD6D0] underline underline-offset-4 hover:brightness-110">
                   {t.volunteers_link}
                 </Link>
                 .
@@ -548,7 +547,7 @@ export function RegistroForm({
               <Turnstile
                 ref={captchaRef}
                 siteKey={siteKey}
-                theme="light"
+                theme="dark"
                 appearance="interaction-only"
                 onVerify={setCaptchaToken}
                 onExpire={() => setCaptchaToken("")}
@@ -559,13 +558,13 @@ export function RegistroForm({
         )}
 
         {formError && (
-          <p className="m-0 border-2 border-[#7f1d1d] bg-[#7f1d1d]/10 px-4 py-3 font-mono text-sm text-[#7f1d1d]">
+          <p className="m-0 rounded-[6px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">
             {formError}
           </p>
         )}
 
         {siteKey && !captchaToken && !formError && (
-          <p className="m-0 text-center font-mono text-xs text-hack-ink/50">
+          <p className="m-0 text-center font-mono text-xs text-[#73726C]">
             {t.captcha}
           </p>
         )}
@@ -573,7 +572,7 @@ export function RegistroForm({
         <button
           type="submit"
           disabled={submitting || (!!siteKey && !captchaToken)}
-          className="btn-hard w-full px-6 py-4 font-mono text-sm"
+          className="w-full rounded-[6px] bg-[#D85A30] px-6 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
         >
           {submitting ? t.sending : t.submit}
         </button>

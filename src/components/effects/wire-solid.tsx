@@ -103,7 +103,7 @@ export function WireSolid({
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
 
-    const ACCENT = "242,166,240";
+    const ACCENT = "193,67,188";
 
     const draw = () => {
       const w = canvas.clientWidth;

@@ -41,9 +41,9 @@ export function HackCard({
       transition={{ type: "spring", stiffness: 180, damping: 18 }}
       style={{ transformStyle: "preserve-3d", perspective: 900 }}
       className={cn(
-        "group relative h-full rounded-2xl border border-surface-700/70 bg-gradient-to-br from-surface-800 to-surface-900 p-6",
-        "transition-colors duration-500 hover:border-hack-primary/45",
-        "hover:shadow-[0_10px_50px_-12px_rgba(242,166,240,0.35)]",
+        "group relative h-full rounded-[12px] border border-[#2C2550] bg-gradient-to-br from-[#1E1838] to-[#0E0E1A] p-5 sm:p-6",
+        "transition-all duration-300 hover:border-[#C143BC]",
+        "hover:shadow-[0_0_24px_rgba(193,67,188,0.25)]",
         className,
       )}
     >

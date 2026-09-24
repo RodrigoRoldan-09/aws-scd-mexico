@@ -10,7 +10,7 @@ export default function Icon() {
         style={{
           width: 48,
           height: 48,
-          background: "#F2A6F0",
+          background: "linear-gradient(135deg, #613BB8 0%, #C143BC 100%)",
           borderRadius: 10,
           display: "flex",
           alignItems: "center",
@@ -19,7 +19,7 @@ export default function Icon() {
       >
         <div
           style={{
-            color: "#0A0A0F",
+            color: "#FFFFFF",
             fontSize: 30,
             fontWeight: 900,
             fontFamily: "serif",

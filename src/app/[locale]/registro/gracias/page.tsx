@@ -27,7 +27,6 @@ function read(key: string) {
 }
 
 const readName = () => read("scd:nombre");
-const readAttendance = () => read("scd:modalidad");
 const readSummary = () => read("scd:resumen");
 const readEmail = () => read("scd:correo");
 const readEntity = () => read("scd:entidad");
@@ -38,8 +37,6 @@ export default function GraciasPage() {
   // una fuente externa sin encadenar un render extra al montar, y deja
   // explícito que en el servidor no hay sessionStorage.
   const name = useSyncExternalStore(subscribe, readName, () => "");
-  const modalidad = useSyncExternalStore(subscribe, readAttendance, () => "");
-  const online = modalidad === "online";
 
   // El repaso de lo enviado. Si el navegador bloqueó el almacenamiento o
   // alguien llegó por la URL directa, simplemente no se muestra.
@@ -57,21 +54,16 @@ export default function GraciasPage() {
   return (
     <SuccessScreen
       kind="attendee"
-      attendance={online ? "online" : "in-person"}
+      attendance="in-person"
       name={name}
       rows={rows}
       preview={
-        // Sólo presencial: a quien sigue la transmisión no se le crea
-        // pasaporte, así que enseñárselo sería prometerle algo que no va a
-        // tener.
-        online ? undefined : (
-          <PassportPreview
-            firstName={name.split(" ")[0] ?? ""}
-            lastName={name.split(" ").slice(1).join(" ")}
-            email={email}
-            extra={entidad}
-          />
-        )
+        <PassportPreview
+          firstName={name.split(" ")[0] ?? ""}
+          lastName={name.split(" ").slice(1).join(" ")}
+          email={email}
+          extra={entidad}
+        />
       }
       extra={
         <p className="font-mono text-sm text-hack-ink/70">

@@ -51,7 +51,7 @@ function Marca() {
         <span className="block truncate font-mono text-xs font-semibold tracking-wide text-surface-50">
           Community Day
         </span>
-        <span className="block truncate font-mono text-[10px] tracking-widest text-hack-block">
+        <span className="block truncate font-mono text-[10px] tracking-widest text-[#D85A30]">
           México 2026
         </span>
       </span>
@@ -98,7 +98,7 @@ export function Sidebar() {
           <div className="min-w-0 flex-1">
             <p className="m-0 truncate font-mono text-sm font-bold text-surface-50">{user.name}</p>
             <p className="m-0 truncate font-mono text-[11px] text-surface-300">{user.email}</p>
-            <span className="mt-1 inline-block border-2 border-aws-orange/60 bg-aws-orange/15 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-aws-orange">
+            <span className="mt-1 inline-block border-2 border-[#3DD6D0]/40 bg-[#3DD6D0]/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#3DD6D0]">
               {ROL[user.role] ?? user.role}
             </span>
           </div>
@@ -133,7 +133,7 @@ export function Sidebar() {
         </button>
 
         <span className="min-w-0 flex-1 truncate font-mono text-xs font-semibold tracking-wide text-surface-200">
-          Student Community Day <span className="text-hack-block">· México 2026</span>
+          Student Community Day <span className="text-[#D85A30]">· México 2026</span>
         </span>
       </header>
 
@@ -187,7 +187,7 @@ export function Sidebar() {
                           className={cn(
                             "flex min-h-[4.5rem] flex-col justify-between border-2 p-3 transition-colors",
                             activo
-                              ? "border-aws-orange bg-aws-orange text-surface-900"
+                              ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] font-bold"
                               : "border-surface-600 bg-surface-800 text-surface-100 active:bg-surface-700",
                           )}
                         >
@@ -234,7 +234,7 @@ export function Sidebar() {
                         className={cn(
                           "flex min-h-11 items-center gap-3 border-2 px-3 py-2 font-mono text-sm transition-all",
                           activo
-                            ? "border-aws-orange bg-aws-orange font-bold text-surface-900"
+                            ? "border-[#D85A30] bg-[#D85A30]/15 font-bold text-[#D85A30]"
                             : "border-transparent text-surface-200 hover:border-surface-600 hover:bg-surface-800 hover:text-surface-50",
                         )}
                       >

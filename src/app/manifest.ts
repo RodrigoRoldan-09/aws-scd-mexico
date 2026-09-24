@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "4 nov · CDMX · Gratis — Charlas, talleres y networking cloud",
     start_url: "/",
     display: "standalone",
-    background_color: "#0A0A0F",
-    theme_color: "#F2A6F0",
+    background_color: "#0E0E1A",
+    theme_color: "#C143BC",
     icons: [
       {
         src: "/images/logos/event-logo.png",

@@ -87,7 +87,7 @@ export function PassportPreview({
       <div className="flex justify-center pb-3 pt-6">
         <div
           className="h-[104px] w-[104px] rounded-full p-[3px]"
-          style={{ background: "linear-gradient(135deg,#F2A6F0,#F9D0F7,#F2A6F0)" }}
+          style={{ background: "linear-gradient(135deg,#613BB8,#C143BC,#613BB8)" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -159,7 +159,7 @@ export function SpeakerPreview({
   const name = cleanWhitespace(`${firstName} ${lastName}`);
   const badges = [
     level && t("preview_level", { level }),
-    sessionType === "online" ? "Online" : sessionType === "in-person" ? t("preview_inperson") : null,
+    sessionType === "in-person" ? t("preview_inperson") : null,
     language === "en" ? "English" : language === "es" ? "Español" : null,
   ].filter(Boolean) as string[];
 

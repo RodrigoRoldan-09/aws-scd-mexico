@@ -43,7 +43,7 @@ export function RegistrationCTA() {
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(242,166,240,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(242,166,240,0.5) 1px, transparent 1px)",
+            "linear-gradient(rgba(193,67,188,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(193,67,188,0.5) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
       />
@@ -59,7 +59,7 @@ export function RegistrationCTA() {
           <div className="absolute -right-6 top-6 h-[92%] w-6 bg-hack-block/70 sm:-right-10 sm:w-10" />
           {/* Marquesina */}
           <div className="mx-auto mb-3 w-[86%] border-2 border-hack-block bg-hack-block px-4 py-2 text-center">
-            <span className="dot-matrix text-lg leading-none text-hack-ink sm:text-2xl">
+            <span className="font-display text-lg font-bold leading-none text-hack-ink sm:text-2xl">
               {EVENT.name} · {EVENT.year}
             </span>
           </div>
@@ -67,8 +67,8 @@ export function RegistrationCTA() {
 
         {/* Pantalla */}
         <motion.div
-          style={{ boxShadow: useTransform(glow, (g) => `0 0 80px rgba(242,166,240,${g})`) }}
-          className="relative border-2 border-hack-block bg-black p-6 sm:p-10"
+          style={{ boxShadow: useTransform(glow, (g) => `0 0 80px rgba(193,67,188,${g})`) }}
+          className="relative border-2 border-hack-block bg-[#0E0E1A] p-6 sm:p-10"
         >
           {/* Líneas de barrido del tubo */}
           <div
@@ -76,34 +76,34 @@ export function RegistrationCTA() {
             className="pointer-events-none absolute inset-0 opacity-25"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(0deg, rgba(242,166,240,0.16) 0px, rgba(242,166,240,0.16) 1px, transparent 1px, transparent 3px)",
+                "repeating-linear-gradient(0deg, rgba(193,67,188,0.16) 0px, rgba(193,67,188,0.16) 1px, transparent 1px, transparent 3px)",
             }}
           />
 
           <div className="relative text-center">
-            <p className="dot-matrix text-sm text-hack-block/70 sm:text-base">
+            <p className="font-mono text-sm text-[#C143BC]/80 sm:text-base">
               {"// "}
               {t("description")}
             </p>
 
-            <h2 className="dot-matrix mt-5 text-3xl leading-none text-hack-block sm:text-5xl md:text-6xl">
+            <h2 className="font-display mt-5 text-3xl font-bold leading-none text-[#E6E4DA] sm:text-5xl md:text-6xl">
               {t("heading")}
             </h2>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <span className="dot-matrix text-sm text-surface-300">
+              <span className="font-mono text-sm text-surface-300">
                 {EVENT.capacity}+ cupos
               </span>
-              <span className="dot-matrix text-sm text-surface-300">{t("free")}</span>
+              <span className="font-mono text-sm text-surface-300">{t("free")}</span>
             </div>
 
             {/* Con el registro cerrado deja de ser un enlace y lo dice. */}
             {attendeeOpen ? (
               <a
                 href={localePath(locale, "/registro")}
-                className="mt-8 inline-flex items-center justify-center border-2 border-hack-block bg-hack-block px-10 py-4 text-hack-ink transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-hack-dim)]"
+                className="mt-8 inline-flex items-center justify-center border-2 border-[#D85A30] bg-[#D85A30] px-10 py-4 font-mono font-bold text-[#0E0E1A] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(216,90,48,0.45)]"
               >
-                <span className="dot-matrix text-lg leading-none sm:text-xl">
+                <span className="font-mono text-lg font-bold leading-none sm:text-xl">
                   &gt;&gt; {t("cta")} &lt;&lt;
                 </span>
               </a>
@@ -112,8 +112,8 @@ export function RegistrationCTA() {
                 aria-disabled="true"
                 className="mt-8 inline-flex cursor-not-allowed flex-col items-center justify-center border-2 border-hack-block/40 px-10 py-4 text-hack-block/50"
               >
-                <span className="dot-matrix text-lg leading-none sm:text-xl">{t("cta_closed")}</span>
-                <span className="dot-matrix mt-1.5 text-[11px] leading-none">{t("closed_note")}</span>
+                <span className="font-mono text-lg leading-none sm:text-xl">{t("cta_closed")}</span>
+                <span className="font-mono mt-1.5 text-[11px] leading-none">{t("closed_note")}</span>
               </span>
             )}
           </div>

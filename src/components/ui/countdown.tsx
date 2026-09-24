@@ -12,9 +12,9 @@ export function Countdown() {
 
   if (!EVENT.dateConfirmed) {
     return (
-      <div className="inline-flex items-center gap-2 font-mono text-lg md:text-xl text-surface-300">
-        <span className="text-surface-400">{"// "}</span>
-        <span className="animate-glow-pulse text-aws-orange">{t("coming_soon")}</span>
+      <div className="inline-flex items-center gap-2 font-mono text-lg text-[#B4B2A9] md:text-xl">
+        <span className="text-[#73726C]">{"// "}</span>
+        <span className="animate-glow-pulse text-[#C143BC]">{t("coming_soon")}</span>
       </div>
     );
   }
@@ -28,11 +28,11 @@ export function Countdown() {
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center gap-1.5 text-center"
       >
-        <p className="font-mono text-base font-semibold text-surface-50">
+        <p className="font-mono text-base font-semibold text-[#E6E4DA]">
           {t("post_desc")}
         </p>
-        <p className="inline-flex items-center gap-1.5 font-mono text-sm text-surface-400">
-          {t("post_sub")} <Sparkles className="h-4 w-4 text-aws-orange" />
+        <p className="inline-flex items-center gap-1.5 font-mono text-sm text-[#73726C]">
+          {t("post_sub")} <Sparkles className="h-4 w-4 text-[#C143BC]" />
         </p>
       </motion.div>
     );
@@ -47,10 +47,10 @@ export function Countdown() {
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center gap-2 text-center"
       >
-        <p className="font-mono text-4xl font-bold text-aws-orange md:text-5xl [filter:drop-shadow(0_0_24px_rgba(242,166,240,0.55))]">
+        <p className="font-display text-4xl font-bold text-[#C143BC] md:text-5xl [filter:drop-shadow(0_0_24px_rgba(193,67,188,0.55))]">
           {t("event_day_title")}
         </p>
-        <p className="font-mono text-base text-surface-50">
+        <p className="font-mono text-base text-[#E6E4DA]">
           {t("event_day_desc")}
         </p>
       </motion.div>
@@ -69,12 +69,12 @@ export function Countdown() {
       <div className="flex gap-3">
         {blocks.map((b) => (
           <div key={b.label} className="flex flex-col items-center">
-            <div className="bg-surface-800 border border-aws-orange/30 rounded-xl px-4 py-3 min-w-[64px] shadow-[0_0_18px_rgba(242,166,240,0.12)]">
-              <span className="font-mono text-3xl md:text-4xl font-bold text-aws-orange tabular-nums">
+            <div className="min-w-[64px] rounded-[12px] border border-[#C143BC]/30 bg-[#1E1838] px-4 py-3 shadow-[0_0_18px_rgba(193,67,188,0.15)]">
+              <span className="font-display text-3xl font-bold text-[#E6E4DA] tabular-nums md:text-4xl">
                 {String(b.value).padStart(2, "0")}
               </span>
             </div>
-            <span className="mt-1.5 font-mono text-xs text-surface-400 uppercase tracking-wider">{b.label}</span>
+            <span className="mt-1.5 font-mono text-xs uppercase tracking-wider text-[#B4B2A9]">{b.label}</span>
           </div>
         ))}
       </div>

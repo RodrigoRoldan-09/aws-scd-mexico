@@ -17,9 +17,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={id} className="font-mono text-xs font-bold uppercase tracking-widest text-surface-200">
+          <label htmlFor={id} className="font-mono text-xs font-bold uppercase tracking-wider text-[#B4B2A9]">
             {label}
-            {props.required && <span className="ml-1 text-aws-orange">*</span>}
+            {props.required && <span className="ml-1 text-[#D85A30]">*</span>}
           </label>
         )}
         <input
@@ -29,21 +29,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           value={value}
           maxLength={maxLength}
           className={cn(
-            // Caja dura: esquina viva, borde de 2px y nada de resplandores.
-            // El foco engorda el borde y lo levanta un pelo, igual que en los
-            // formularios públicos.
-            "min-h-11 w-full border-2 border-surface-600 bg-surface-800 px-4 py-2.5",
-            "font-mono text-sm text-surface-100 placeholder:text-surface-400",
-            "outline-none transition-colors hover:border-surface-500 focus:border-aws-orange",
-            error && "border-red-500 focus:border-red-500",
+            "h-11 min-h-11 w-full rounded-[6px] border border-[#2C2550] bg-[#1E1838] px-4 py-2.5",
+            "font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C]",
+            "outline-none transition-all duration-200 hover:border-[#613BB8]/60 focus:border-[#C143BC] focus:shadow-[0_0_0_3px_rgba(193,67,188,0.20)]",
+            error && "border-[#E24B4A] focus:border-[#E24B4A] focus:shadow-[0_0_0_3px_rgba(226,75,74,0.20)]",
             className,
           )}
           {...props}
         />
         <div className="flex justify-between">
-          {error && <span className="font-mono text-xs text-red-400">{error}</span>}
+          {error && <span className="font-mono text-xs text-[#E24B4A]">{error}</span>}
           {showCount && maxLength && (
-            <span className="ml-auto font-mono text-xs text-surface-300">
+            <span className="ml-auto font-mono text-xs text-[#73726C]">
               {length}/{maxLength}
             </span>
           )}

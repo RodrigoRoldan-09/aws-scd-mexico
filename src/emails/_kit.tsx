@@ -31,22 +31,22 @@ import { EVENT, EVENT_OPS, SITE_HOST, SITE_URL } from "@/lib/constants";
 export const APP_URL = SITE_URL;
 
 export const C = {
-  ink: "#0A0A0F",
-  paper: "#0A0A0F",
-  block: "#F2A6F0",
-  blockDeep: "#C143BC",
-  line: "#252530",
-  text: "#E0E0EB",
-  muted: "#B0B0C0",
+  ink: "#0E0E1A",
+  paper: "#0E0E1A",
+  block: "#C143BC",
+  blockDeep: "#422B78",
+  line: "#2C2550",
+  text: "#E6E4DA",
+  muted: "#B4B2A9",
   white: "#FFFFFF",
 } as const;
 
 /** Pila monoespaciada que existe en todos los clientes. */
 export const MONO =
-  "'JetBrains Mono', 'Courier New', Courier, ui-monospace, monospace";
-/** Para titulares: sans pesada con fallbacks reales en Outlook. */
+  "'Share Tech Mono', 'Courier New', Courier, monospace";
+/** Para titulares: display con fallbacks reales en Outlook. */
 export const DISPLAY =
-  "'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+  "'Pixelify Sans', 'Arial Black', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 
 // ── Bloques ──────────────────────────────────────────────────────────────────
 

@@ -20,40 +20,40 @@ function buildSVG(d: number, h: number, m: number, s: number): Buffer {
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="${W}" height="${H}" fill="#0C0D10"/>
+  <rect width="${W}" height="${H}" fill="#0E0E1A"/>
 
   <!-- Unit boxes -->
-  <rect x="10"  y="10" width="120" height="108" fill="#161820" rx="8"/>
-  <rect x="150" y="10" width="120" height="108" fill="#161820" rx="8"/>
-  <rect x="290" y="10" width="120" height="108" fill="#161820" rx="8"/>
-  <rect x="430" y="10" width="120" height="108" fill="#161820" rx="8"/>
+  <rect x="10"  y="10" width="120" height="108" fill="#1E1838" rx="8"/>
+  <rect x="150" y="10" width="120" height="108" fill="#1E1838" rx="8"/>
+  <rect x="290" y="10" width="120" height="108" fill="#1E1838" rx="8"/>
+  <rect x="430" y="10" width="120" height="108" fill="#1E1838" rx="8"/>
 
   <!-- Colon dots -->
-  <circle cx="140" cy="48" r="5.5" fill="#F2A6F0"/>
-  <circle cx="140" cy="80" r="5.5" fill="#F2A6F0"/>
-  <circle cx="280" cy="48" r="5.5" fill="#F2A6F0"/>
-  <circle cx="280" cy="80" r="5.5" fill="#F2A6F0"/>
-  <circle cx="420" cy="48" r="5.5" fill="#F2A6F0"/>
-  <circle cx="420" cy="80" r="5.5" fill="#F2A6F0"/>
+  <circle cx="140" cy="48" r="5.5" fill="#C143BC"/>
+  <circle cx="140" cy="80" r="5.5" fill="#C143BC"/>
+  <circle cx="280" cy="48" r="5.5" fill="#C143BC"/>
+  <circle cx="280" cy="80" r="5.5" fill="#C143BC"/>
+  <circle cx="420" cy="48" r="5.5" fill="#C143BC"/>
+  <circle cx="420" cy="80" r="5.5" fill="#C143BC"/>
 
   <!-- Numbers -->
-  <text x="70"  y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#F9FAFB">${pad2(d)}</text>
-  <text x="210" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#F9FAFB">${pad2(h)}</text>
-  <text x="350" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#F9FAFB">${pad2(m)}</text>
-  <text x="490" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#F9FAFB">${pad2(s)}</text>
+  <text x="70"  y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#E6E4DA">${pad2(d)}</text>
+  <text x="210" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#E6E4DA">${pad2(h)}</text>
+  <text x="350" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#E6E4DA">${pad2(m)}</text>
+  <text x="490" y="70" text-anchor="middle" font-family="DejaVu Sans Mono,Courier New,Courier,monospace" font-size="42" font-weight="900" fill="#E6E4DA">${pad2(s)}</text>
 
   <!-- Labels -->
-  <text x="70"  y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#F2A6F0">DIAS</text>
-  <text x="210" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#F2A6F0">HORAS</text>
-  <text x="350" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#F2A6F0">MINUTOS</text>
-  <text x="490" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#F2A6F0">SEGUNDOS</text>
+  <text x="70"  y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#C143BC">DIAS</text>
+  <text x="210" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#C143BC">HORAS</text>
+  <text x="350" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#C143BC">MINUTOS</text>
+  <text x="490" y="105" text-anchor="middle" font-family="DejaVu Sans,Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#C143BC">SEGUNDOS</text>
 </svg>`;
   return Buffer.from(svg, "utf8");
 }
 
 async function svgToRGBA(svgBuffer: Buffer): Promise<Uint8Array> {
   const { data } = await sharp(svgBuffer)
-    .flatten({ background: "#0C0D10" })
+    .flatten({ background: "#0E0E1A" })
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });

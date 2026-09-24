@@ -38,10 +38,10 @@ export function FacebookIcon({ className }: { className?: string }) {
 export function Field({ label, error, children, hint }: { label?: string; error?: string; children: React.ReactNode; hint?: string }) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <span className="font-mono text-xs font-semibold text-hack-ink">{label}</span>}
+      {label && <span className="font-mono text-xs font-semibold text-[#E6E4DA]">{label}</span>}
       {children}
-      {hint && !error && <p className="font-mono text-[10px] text-hack-ink/50">{hint}</p>}
-      {error && <p className="font-mono text-xs text-red-400">{error}</p>}
+      {hint && !error && <p className="font-mono text-[10px] text-[#B4B2A9]">{hint}</p>}
+      {error && <p className="font-mono text-xs text-[#E24B4A]">{error}</p>}
     </div>
   );
 }
@@ -59,10 +59,10 @@ export function TextInput({ value, onChange, onBlur, placeholder, maxLength, cla
         inputMode={inputMode}
         autoComplete={autoComplete ?? "off"}
         spellCheck={false}
-        className={cn("w-full border border-hack-ink/25 bg-white/40 px-4 py-3 font-mono text-sm text-hack-ink placeholder:text-hack-ink/50 focus:border-hack-ink focus:outline-none focus:ring-1 focus:ring-aws-orange/30 transition-all", className)}
+        className={cn("w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all", className)}
       />
       {maxLength && value.length > maxLength * 0.8 && (
-        <span className="absolute right-3 top-3 font-mono text-[10px] text-hack-ink/50">{value.length}/{maxLength}</span>
+        <span className="absolute right-3 top-3 font-mono text-[10px] text-[#73726C]">{value.length}/{maxLength}</span>
       )}
     </div>
   );
@@ -78,10 +78,10 @@ export function Textarea({ value, onChange, placeholder, maxLength, rows = 4 }: 
         placeholder={placeholder}
         maxLength={maxLength}
         rows={rows}
-        className="w-full resize-none border border-hack-ink/25 bg-white/40 px-4 py-3 font-mono text-sm text-hack-ink placeholder:text-hack-ink/50 focus:border-hack-ink focus:outline-none focus:ring-1 focus:ring-aws-orange/30 transition-all"
+        className="w-full resize-none rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all"
       />
       {maxLength && (
-        <span className={cn("absolute right-3 bottom-3 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-hack-deep" : "text-hack-ink/50")}>
+        <span className={cn("absolute right-3 bottom-3 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-[#D85A30]" : "text-[#73726C]")}>
           {value.length}/{maxLength}
         </span>
       )}
@@ -122,7 +122,7 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
         onClick={() => !uploading && inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) upload(f); }}
-        className={cn("relative flex cursor-pointer flex-col items-center justify-center overflow-hidden border-2 border-dashed transition-all", className ?? "aspect-square w-full max-w-[200px]", value ? "border-hack-ink/40" : "border-hack-ink/25 bg-white/40 hover:border-hack-ink/40 hover:bg-white/40", uploading && "pointer-events-none cursor-wait")}
+        className={cn("relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[6px] border-2 border-dashed transition-all", className ?? "aspect-square w-full max-w-[200px]", value ? "border-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A] hover:border-[#C143BC] hover:bg-[#0E0E1A]/80", uploading && "pointer-events-none cursor-wait")}
       >
         {value && !uploading && (
           <>
@@ -136,16 +136,16 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
         )}
         {!value && !uploading && (
           <div className="flex flex-col items-center gap-2 p-4 text-center">
-            <Upload className="h-7 w-7 text-hack-ink/50" />
-            <p className="font-mono text-xs font-semibold text-hack-ink/70">Subir foto</p>
+            <Upload className="h-7 w-7 text-[#73726C]" />
+            <p className="font-mono text-xs font-semibold text-[#B4B2A9]">Subir foto</p>
           </div>
         )}
         {uploading && (
           <div className="flex w-full flex-col items-center gap-2 p-4">
-            <div className="h-1.5 w-3/4 overflow-hidden bg-hack-ink/20">
-              <div className="h-full bg-hack-ink transition-all" style={{ width: `${progress}%` }} />
+            <div className="h-1.5 w-3/4 overflow-hidden rounded-full bg-[#2C2550]">
+              <div className="h-full bg-[#D85A30] transition-all" style={{ width: `${progress}%` }} />
             </div>
-            <span className="font-mono text-xs text-hack-ink/60">{progress}%</span>
+            <span className="font-mono text-xs text-[#B4B2A9]">{progress}%</span>
           </div>
         )}
         {value && !uploading && (
@@ -154,7 +154,7 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
           </button>
         )}
       </div>
-      {err && <p className="font-mono text-xs text-red-400">{err}</p>}
+      {err && <p className="font-mono text-xs text-[#E24B4A]">{err}</p>}
       <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); }} />
     </div>
   );
@@ -198,15 +198,12 @@ export function CardSelector<T extends string>({
           aria-disabled={opt.disabled}
           onClick={() => onChange(opt.value)}
           className={cn(
-            // Elegida = tinta sólida: el acento es el mismo color del bloque.
-            "flex flex-col items-center gap-2 border-2 p-4 text-center transition-all",
+            "flex flex-col items-center gap-2 rounded-[6px] border p-4 text-center transition-all",
             opt.disabled
-              // Apagada: punteada, tachada y sin hover. Sigue leyéndose para
-              // que se entienda que la modalidad existe y que hoy no va.
-              ? "cursor-not-allowed border-dashed border-hack-ink/30 bg-transparent text-hack-ink/45 [&>span:nth-child(2)]:line-through"
+              ? "cursor-not-allowed border-dashed border-[#2C2550] bg-transparent text-[#73726C] [&>span:nth-child(2)]:line-through"
               : value === opt.value
-                ? "border-hack-ink bg-hack-ink text-hack-block shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]"
-                : "border-hack-ink/25 bg-white/30 text-hack-ink/70 hover:border-hack-ink hover:text-hack-ink",
+                ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
+                : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
           )}
         >
           <span className="flex h-8 w-8 items-center justify-center">

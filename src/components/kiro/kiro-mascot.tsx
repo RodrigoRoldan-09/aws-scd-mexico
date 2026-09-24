@@ -32,7 +32,7 @@ export function KiroMascot({
       role="img"
       aria-label="Kiro"
       className={className}
-      style={{ filter: "drop-shadow(0 0 26px rgba(242,166,240,0.45))", transform: "scaleX(-1)", ...style }}
+      style={{ filter: "drop-shadow(0 0 26px rgba(193,67,188,0.45))", transform: "scaleX(-1)", ...style }}
     >
       {/* gentle vertical bob for the whole ghost */}
       <g>

@@ -3,7 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
-import { handjet, jetbrainsMono, oxanium } from "@/lib/fonts";
+import { pixelifySans, shareTechMono } from "@/lib/fonts";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { SiteChrome } from "@/components/layout/site-chrome";
@@ -144,12 +144,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html
       lang={locale}
-      className={`${jetbrainsMono.variable} ${oxanium.variable} ${handjet.variable} h-full antialiased`}
+      className={`${pixelifySans.variable} ${shareTechMono.variable} h-full antialiased`}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
       data-kiro={isKiro ? "" : undefined}
     >
-      <body className="min-h-full bg-surface-900 text-surface-100 font-sans">
+      <body className="min-h-full bg-[var(--bg-base)] text-[var(--text-primary)] font-body">
         <BfcacheReset />
         <KiroThemeSync />
         <NextIntlClientProvider>

@@ -71,7 +71,7 @@ export default function EncuestaPage() {
           <button onClick={() => window.open("/api/admin/campaigns/email-preview?type=post_survey", "_blank")} className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-surface-600 bg-surface-800 px-3 py-2 font-mono text-xs font-semibold text-surface-200 hover:bg-surface-700">
             <Eye className="h-3.5 w-3.5" /> Preview
           </button>
-          <button onClick={resend} disabled={sending} className="col-span-2 inline-flex min-h-11 items-center justify-center gap-2 border-2 border-aws-orange bg-aws-orange px-4 py-2 font-mono text-xs font-bold text-surface-900 sm:col-span-1 hover:shadow-[0_0_16px_rgba(242,166,240,0.4)] disabled:opacity-50">
+          <button onClick={resend} disabled={sending} className="col-span-2 inline-flex min-h-11 items-center justify-center gap-2 border-2 border-aws-orange bg-aws-orange px-4 py-2 font-mono text-xs font-bold text-surface-900 sm:col-span-1 hover:shadow-[0_0_16px_rgba(193,67,188,0.4)] disabled:opacity-50">
             <Send className="h-3.5 w-3.5" /> {sending ? "Enviando…" : "Enviar / Reenviar a pendientes"}
           </button>
         </div>

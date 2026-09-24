@@ -30,9 +30,9 @@ const icons = {
 // Fondo sólido: sin desenfoque, un fondo translúcido deja leer lo de debajo
 // a través del texto.
 const styles = {
-  success: "border-emerald bg-surface-800",
-  error: "border-red-500 bg-surface-800",
-  info: "border-aws-orange bg-surface-800",
+  success: "border-[#3DD6D0] bg-[#1E1838]",
+  error: "border-[#E24B4A] bg-[#1E1838]",
+  info: "border-[#C143BC] bg-[#1E1838]",
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -75,15 +75,15 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 40, scale: 0.95 }}
       className={cn(
-        "flex items-center gap-3 border-2 px-4 py-3 shadow-[4px_4px_0_0_rgba(0,0,0,0.6)]",
+        "flex items-center gap-3 rounded-[6px] border px-4 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
         styles[toast.type],
       )}
     >
-      <Icon className={cn("h-5 w-5 shrink-0", toast.type === "success" ? "text-emerald" : toast.type === "error" ? "text-red-400" : "text-aws-orange")} />
-      <span className="font-mono text-sm text-surface-100">{toast.message}</span>
+      <Icon className={cn("h-5 w-5 shrink-0", toast.type === "success" ? "text-[#3DD6D0]" : toast.type === "error" ? "text-[#E24B4A]" : "text-[#C143BC]")} />
+      <span className="font-mono text-sm text-[#E6E4DA]">{toast.message}</span>
       <button
         onClick={() => onRemove(toast.id)}
-        className="ml-2 shrink-0 text-surface-400 hover:text-surface-200"
+        className="ml-2 shrink-0 text-[#73726C] hover:text-[#E6E4DA]"
       >
         <X className="h-4 w-4" />
       </button>

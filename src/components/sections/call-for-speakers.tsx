@@ -41,7 +41,7 @@ function DeadlineCountdown() {
   if (!isActive) return <div className="h-[92px]" aria-hidden="true" />;
 
   if (isExpired) {
-    return <p className="dot-matrix text-lg text-hack-ink">{t("closed_note")}</p>;
+    return <p className="dot-matrix text-lg text-[#D85A30]">{t("closed_note")}</p>;
   }
 
   const blocks = [
@@ -53,18 +53,18 @@ function DeadlineCountdown() {
 
   return (
     <div>
-      <p className="dot-matrix mb-2.5 text-sm text-hack-ink/70">
+      <p className="dot-matrix mb-2.5 text-sm text-[#B4B2A9]">
         {t("countdown_label")}
       </p>
       <div className="flex gap-2">
         {blocks.map((b) => (
           <div key={b.label} className="flex flex-col items-center">
-            <div className="min-w-[66px] bg-hack-ink px-3 py-2.5">
-              <span className="dot-matrix text-3xl leading-none text-hack-block md:text-4xl">
+            <div className="min-w-[66px] rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-3 py-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <span className="dot-matrix text-3xl font-bold leading-none text-[#D85A30] md:text-4xl">
                 {String(b.value).padStart(2, "0")}
               </span>
             </div>
-            <span className="dot-matrix mt-1.5 text-xs text-hack-ink/70">
+            <span className="dot-matrix mt-1.5 text-xs text-[#B4B2A9]">
               {b.label}
             </span>
           </div>
@@ -74,7 +74,7 @@ function DeadlineCountdown() {
   );
 }
 
-/** Fila de la línea de tiempo / de tracks: hairline negro que se rellena al hover. */
+/** Fila de la línea de tiempo / de tracks: hairline sutil que se rellena al hover. */
 function Row({
   left,
   title,
@@ -87,22 +87,22 @@ function Row({
   dot?: boolean;
 }) {
   return (
-    <li className="group relative grid grid-cols-1 items-start gap-2 border-b-2 border-hack-ink/20 px-1 py-6 transition-colors duration-300 hover:bg-hack-ink/5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] sm:gap-10">
+    <li className="group relative grid grid-cols-1 items-start gap-2 border-b border-[#2C2550] px-1 py-6 transition-colors duration-300 hover:bg-[#1E1838]/50 sm:grid-cols-[minmax(0,1fr)_minmax(0,2.2fr)] sm:gap-10">
       <div
-        className="absolute bottom-[-2px] left-0 h-0.5 w-0 bg-hack-ink transition-[width] duration-500 group-hover:w-full"
+        className="absolute bottom-[-1px] left-0 h-0.5 w-0 bg-[#D85A30] transition-[width] duration-500 group-hover:w-full"
         aria-hidden="true"
       />
       <div className="flex items-center gap-3">
-        {dot && <span className="h-2.5 w-2.5 shrink-0 bg-hack-ink" aria-hidden="true" />}
+        {dot && <span className="h-2 w-2 shrink-0 rounded-full bg-[#D85A30]" aria-hidden="true" />}
         {left}
       </div>
-      <div className={dot ? "pl-6 sm:pl-0" : "pl-0"}>
+      <div className={dot ? "pl-5 sm:pl-0" : "pl-0"}>
         {title && (
-          <p className="m-0 font-display text-lg font-medium lowercase tracking-tight text-hack-ink">
+          <p className="m-0 font-display text-lg font-medium lowercase tracking-tight text-[#E6E4DA]">
             {title}
           </p>
         )}
-        <p className={`font-mono text-sm leading-relaxed text-hack-ink/70 ${title ? "mt-1" : "m-0"}`}>
+        <p className={`font-mono text-sm leading-relaxed text-[#B4B2A9] ${title ? "mt-1" : "m-0"}`}>
           {desc}
         </p>
       </div>
@@ -117,36 +117,33 @@ export function CallForSpeakers() {
   const closed = isActive && isExpired;
 
   return (
-    <BlockSection id="cfp" tone="block">
+    <BlockSection id="cfp" tone="ink">
       <div className="mb-12 flex flex-wrap items-end justify-between gap-8">
         <ScrollReveal>
-          <DotHeading tone="block" variant="inverted" flicker className="mb-6">
+          <DotHeading flicker className="mb-6 text-[#E6E4DA]">
             {t("heading")}
           </DotHeading>
           <h2
-            className="m-0 max-w-[16ch] font-display font-medium lowercase leading-[1.02] tracking-tight text-hack-ink"
+            className="m-0 max-w-[16ch] font-display font-medium lowercase leading-[1.02] tracking-tight text-[#E6E4DA]"
             style={{ fontSize: "clamp(28px,4vw,48px)" }}
           >
             {t("lead_pre")}
-            <em className="not-italic text-hack-deep">{t("lead_em")}</em>
+            <em className="not-italic text-[#D85A30]">{t("lead_em")}</em>
             {t("lead_post")}
           </h2>
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <p className="m-0 max-w-[38ch] font-mono text-base leading-relaxed text-hack-ink/75">
+          <p className="m-0 max-w-[38ch] font-mono text-base leading-relaxed text-[#B4B2A9]">
             {t("lead_desc")}
           </p>
         </ScrollReveal>
       </div>
 
       <ScrollReveal delay={0.15}>
-        <div className="mb-16 flex flex-col items-start justify-between gap-8 border-2 border-hack-ink p-6 md:flex-row md:items-center md:p-8">
+        <div className="mb-16 flex flex-col items-start justify-between gap-8 rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-6 shadow-[0_8px_32px_rgba(0,0,0,0.35)] md:flex-row md:items-center md:p-8">
           <DeadlineCountdown />
           <HardButton
-            // Ruta propia y no ancla: en movil el ancla dejaba a la persona
-            // en medio del formulario sin encabezado a la vista.
             href={localePath(locale, "/speakers/postular")}
-            tone="block"
             pulse
             disabled={closed}
             sub={closed ? t("closed_note") : undefined}
@@ -158,18 +155,18 @@ export function CallForSpeakers() {
 
       {/* Fechas importantes */}
       <ScrollReveal>
-        <DotHeading tone="block" as="h3" className="mb-6 text-2xl md:text-3xl">
+        <DotHeading as="h3" flicker className="mb-6 text-2xl text-[#E6E4DA] md:text-3xl">
           {t("dates_heading")}
         </DotHeading>
       </ScrollReveal>
 
-      <ol className="mb-16 border-t-2 border-hack-ink/20">
+      <ol className="mb-16 border-t border-[#2C2550]">
         {cfpMilestones.map((m, i) => (
           <ScrollReveal key={m.id} delay={i * 0.07} from={i % 2 ? "right" : "left"} distance={60}>
             <Row
               dot
               left={
-                <time className="dot-matrix text-base text-hack-ink md:text-lg">
+                <time className="dot-matrix text-base font-bold text-[#D85A30] md:text-lg">
                   {t(m.dateKey)}
                 </time>
               }
@@ -180,9 +177,9 @@ export function CallForSpeakers() {
         ))}
       </ol>
 
-      {/* Modalidades — cajas negras sobre el bloque */}
+      {/* Modalidades — cajas con diseño uniforme */}
       <ScrollReveal>
-        <DotHeading tone="block" as="h3" className="mb-6 text-2xl md:text-3xl">
+        <DotHeading as="h3" flicker className="mb-6 text-2xl text-[#E6E4DA] md:text-3xl">
           {t("formats_heading")}
         </DotHeading>
       </ScrollReveal>
@@ -192,17 +189,19 @@ export function CallForSpeakers() {
           const Icon = ICONS[f.icon] ?? Mic;
           return (
             <ScrollReveal key={f.id} delay={i * 0.1} from="scale" className="h-full">
-              <div className="flex h-full flex-col bg-hack-ink p-7 transition-transform duration-300 hover:-translate-y-1">
+              <div className="flex h-full flex-col rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#D85A30]/50 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
                 <div className="mb-5 flex items-center justify-between gap-4">
-                  <Icon className="h-9 w-9 text-hack-block" />
-                  <span className="dot-matrix text-xl leading-none text-hack-block">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-[#D85A30]/30 bg-[#D85A30]/10 text-[#D85A30]">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <span className="dot-matrix text-lg font-bold leading-none text-[#D85A30]">
                     {t(f.durationKey)}
                   </span>
                 </div>
-                <h4 className="font-display text-xl font-medium lowercase leading-tight tracking-tight text-hack-block">
+                <h4 className="font-display text-xl font-bold lowercase leading-tight tracking-tight text-[#E6E4DA]">
                   {t(f.titleKey)}
                 </h4>
-                <p className="mt-2 font-mono text-sm leading-relaxed text-surface-300">
+                <p className="mt-2 font-mono text-sm leading-relaxed text-[#B4B2A9]">
                   {t(f.descKey)}
                 </p>
               </div>
@@ -213,7 +212,7 @@ export function CallForSpeakers() {
 
       {/* Criterios */}
       <ScrollReveal>
-        <DotHeading tone="block" as="h3" className="mb-6 text-2xl md:text-3xl">
+        <DotHeading as="h3" flicker className="mb-6 text-2xl text-[#E6E4DA] md:text-3xl">
           {t("criteria_heading")}
         </DotHeading>
       </ScrollReveal>
@@ -228,13 +227,13 @@ export function CallForSpeakers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="border-2 border-hack-ink p-6 transition-colors duration-300 hover:bg-hack-ink/5"
+              className="rounded-[12px] border border-[#2C2550] bg-[#1E1838]/60 p-6 transition-all duration-300 hover:border-[#C143BC]/60 hover:bg-[#1E1838]"
             >
-              <Icon className="mb-3 h-6 w-6 text-hack-ink" />
-              <p className="m-0 font-display text-lg font-medium lowercase tracking-tight text-hack-ink">
+              <Icon className="mb-3 h-6 w-6 text-[#C143BC]" />
+              <p className="m-0 font-display text-lg font-bold lowercase tracking-tight text-[#E6E4DA]">
                 {t(c.titleKey)}
               </p>
-              <p className="mt-1.5 font-mono text-sm leading-relaxed text-hack-ink/70">
+              <p className="mt-1.5 font-mono text-sm leading-relaxed text-[#B4B2A9]">
                 {t(c.descKey)}
               </p>
             </motion.div>

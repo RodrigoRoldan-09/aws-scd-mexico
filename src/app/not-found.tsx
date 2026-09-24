@@ -1,4 +1,4 @@
-import { jetbrainsMono } from "@/lib/fonts";
+import { pixelifySans, shareTechMono } from "@/lib/fonts";
 import { NotFoundScreen } from "@/components/not-found-screen";
 
 // Fallback 404 raíz (rutas que no caen bajo [locale]). Devuelve un 404 real
@@ -6,8 +6,8 @@ import { NotFoundScreen } from "@/components/not-found-screen";
 // app/layout.tsx solo pasa children, así que aquí montamos <html>/<body>.
 export default function RootNotFound() {
   return (
-    <html lang="es" className={`${jetbrainsMono.variable} h-full antialiased`}>
-      <body className="min-h-full bg-surface-900 text-surface-100 font-sans">
+    <html lang="es" className={`${pixelifySans.variable} ${shareTechMono.variable} h-full antialiased`}>
+      <body className="min-h-full bg-[var(--bg-base)] text-[var(--text-primary)] font-body">
         <NotFoundScreen />
       </body>
     </html>

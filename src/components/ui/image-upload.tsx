@@ -90,7 +90,7 @@ export function ImageUpload({
 
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      {label && <span className="font-mono text-xs font-medium text-surface-300">{label}</span>}
+      {label && <span className="font-mono text-xs font-medium text-[#E6E4DA]/70">{label}</span>}
 
       <div
         onClick={() => !uploading && inputRef.current?.click()}
@@ -101,8 +101,8 @@ export function ImageUpload({
           "relative flex cursor-pointer flex-col items-center justify-center overflow-hidden border-2 border-dashed transition-colors",
           aspectRatio === "square" ? "aspect-square" : "aspect-video",
           dragging
-            ? "border-aws-orange bg-aws-orange/10"
-            : "border-surface-500 bg-surface-800 hover:border-aws-orange",
+            ? "border-[#C143BC] bg-[#C143BC]/10"
+            : "border-[#2C2550] bg-[#1E1838] hover:border-[#C143BC]",
           uploading && "cursor-wait pointer-events-none",
         )}
       >
@@ -124,25 +124,25 @@ export function ImageUpload({
 
         {!value && !uploading && (
           <div className="flex flex-col items-center justify-center gap-2 p-4 text-center">
-            <ImageIcon className="h-8 w-8 text-surface-400" />
+            <ImageIcon className="h-8 w-8 text-[#E6E4DA]/40" />
             <div>
-              <p className="font-mono text-xs font-semibold text-surface-300">
+              <p className="font-mono text-xs font-semibold text-[#E6E4DA]/70">
                 {dragging ? "Suelta aquí" : "Haz clic o arrastra"}
               </p>
-              <p className="font-mono text-[10px] text-surface-300">JPG, PNG, WEBP · máx 5 MB</p>
+              <p className="font-mono text-[10px] text-[#E6E4DA]/50">JPG, PNG, WEBP · máx 5 MB</p>
             </div>
           </div>
         )}
 
         {uploading && (
           <div className="flex w-full flex-col items-center justify-center gap-3 p-4">
-            <div className="h-1.5 w-3/4 overflow-hidden rounded-full bg-surface-700">
+            <div className="h-1.5 w-3/4 overflow-hidden rounded-full bg-[#2C2550]">
               <div
-                className="h-full rounded-full bg-aws-orange transition-all duration-200"
+                className="h-full rounded-full bg-[#C143BC] transition-all duration-200"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="font-mono text-xs text-surface-400">{progress}%</p>
+            <p className="font-mono text-xs text-[#E6E4DA]/60">{progress}%</p>
           </div>
         )}
 

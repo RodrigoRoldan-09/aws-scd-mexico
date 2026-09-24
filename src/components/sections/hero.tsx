@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { useEventConfig } from "@/components/providers/event-config-provider";
 import { WireGlobe } from "@/components/effects/wire-globe";
 import { MarqueeStrip } from "@/components/ui/marquee-strip";
@@ -13,12 +13,12 @@ import { localePath } from "@/lib/utils";
 function Digit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="border-2 border-hack-block/40 bg-surface-800 px-3 py-2 sm:px-4 sm:py-2.5">
-        <span className="dot-matrix block text-4xl leading-none text-hack-block sm:text-5xl md:text-6xl">
+      <div className="rounded-[6px] border border-[#2C2550] bg-[#1E1838] px-3 py-2 sm:px-4 sm:py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+        <span className="font-display block text-4xl font-bold leading-none text-[#E6E4DA] sm:text-5xl md:text-6xl">
           {String(value).padStart(2, "0")}
         </span>
       </div>
-      <span className="dot-matrix mt-2 text-[10px] text-surface-400 sm:text-xs">
+      <span className="font-mono mt-2 text-[10px] text-surface-400 sm:text-xs">
         {label}
       </span>
     </div>
@@ -34,11 +34,11 @@ function HeroCountdown() {
   if (!isActive) return <div className="h-[112px] md:h-[132px]" aria-hidden="true" />;
 
   if (isPostEvent) {
-    return <p className="dot-matrix text-2xl text-hack-block md:text-4xl">{t("post_desc")}</p>;
+    return <p className="font-display text-2xl text-[#E6E4DA] md:text-4xl">{t("post_desc")}</p>;
   }
   if (isExpired) {
     return (
-      <p className="dot-matrix animate-flicker text-3xl text-hack-block md:text-5xl">
+      <p className="font-display animate-flicker text-3xl text-[#C143BC] md:text-5xl">
         {t("event_day_title")}
       </p>
     );
@@ -55,6 +55,55 @@ function HeroCountdown() {
 }
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+const titleWordVariants: Variants = {
+  rest: {},
+  hover: {
+    transition: {
+      staggerChildren: 0.028,
+    },
+  },
+};
+
+const titleLetterVariants: Variants = {
+  rest: {
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 20,
+    },
+  },
+  hover: {
+    y: [0, -8, 0],
+    transition: {
+      duration: 0.38,
+      ease,
+    },
+  },
+};
+
+function BouncyWord({ word }: { word: string }) {
+  return (
+    <motion.span
+      className="inline-block whitespace-nowrap"
+      initial="rest"
+      whileHover="hover"
+      animate="rest"
+      variants={titleWordVariants}
+    >
+      {word.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          variants={titleLetterVariants}
+          className="inline-block cursor-default select-none transition-colors duration-150 hover:text-[#C143BC]"
+        >
+          {char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+}
 
 export function Hero() {
   const t = useTranslations("Hero");
@@ -76,21 +125,32 @@ export function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="dot-matrix text-3xl leading-none text-hack-block md:text-4xl"
+            className="font-mono text-sm tracking-widest text-[#C143BC] uppercase md:text-base"
           >
-            méxico [26]
+            méxico-cdmx [26]
           </motion.p>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.08, ease }}
-            className="mt-4 font-display text-[13vw] font-medium lowercase leading-[0.85] tracking-tighter text-surface-50 sm:text-[10vw] lg:text-[6.4vw] xl:text-[86px]"
+            className="mt-3 font-display text-[13vw] font-bold lowercase leading-[0.85] tracking-tighter text-[#E6E4DA] sm:text-[10vw] lg:text-[6.4vw] xl:text-[86px]"
           >
-            aws student
+            <BouncyWord word="aws" />{" "}
+            <BouncyWord word="student" />
             <br />
-            community day
+            <BouncyWord word="community" />{" "}
+            <BouncyWord word="day" />
           </motion.h1>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.12, ease }}
+            className="mt-3 font-display text-[28px] font-bold leading-tight text-[#D85A30] sm:text-[34px] md:text-[40px]"
+          >
+            IPN CDMX
+          </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -99,7 +159,7 @@ export function Hero() {
             className="mt-5 font-mono text-base text-surface-300 md:text-lg"
           >
             {t("event_date")} · {EVENT.city.toLowerCase()} · 8:00 am ·{" "}
-            <span className="text-hack-block">{t("tagline_short")}</span>
+            <span className="text-[#C143BC]">{t("tagline_short")}</span>
           </motion.p>
 
           <motion.div
@@ -160,7 +220,7 @@ export function Hero() {
               // como mucho, por eso las etiquetas son cortas y el relleno px-4.
               <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
                 {attendeeOpen ? (
-                  <HardButton href={localePath(locale, "/registro")} pulse className="px-4">
+                  <HardButton href={localePath(locale, "/registro")} variant="conversion" pulse className="px-4">
                     {t("cta_register")}
                   </HardButton>
                 ) : (
@@ -199,14 +259,14 @@ export function Hero() {
           <div className="relative mx-auto w-full max-w-[560px]">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-8 bottom-10 top-16 rounded-full bg-hack-block/10 blur-3xl"
+              className="pointer-events-none absolute inset-x-8 bottom-10 top-16 rounded-full bg-[#C143BC]/10 blur-3xl"
             />
             <WireGlobe
               marker={{ lat: 19.43, lon: -99.13 }}
               label="CDMX"
               className="relative aspect-square w-full min-h-[320px]"
             />
-            <p className="dot-matrix mt-1 text-center text-[11px] text-surface-500 sm:text-xs">
+            <p className="font-mono mt-1 text-center text-[11px] text-surface-400 sm:text-xs">
               19°26′n 99°08′o · arrástralo
             </p>
           </div>

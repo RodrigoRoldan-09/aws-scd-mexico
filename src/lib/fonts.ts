@@ -1,27 +1,29 @@
-import { Handjet, JetBrains_Mono, Oxanium } from "next/font/google";
+import { Pixelify_Sans, Share_Tech_Mono } from "next/font/google";
 
-export const jetbrainsMono = JetBrains_Mono({
+/**
+ * Tipografía Display del Design System SBG v1.0.
+ * Utilizada para H1, H2, títulos, countdown y números grandes.
+ */
+export const pixelifySans = Pixelify_Sans({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-pixelify",
   display: "swap",
 });
 
-// Display font del sitio (estética hack): titulares en minúsculas,
-// tracking apretado. Se usa vía la utilidad `font-display` de Tailwind.
-export const oxanium = Oxanium({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-oxanium",
+/**
+ * Tipografía Body / Mono del Design System SBG v1.0.
+ * Utilizada para párrafos, labels, forms, código y metadatos.
+ */
+export const shareTechMono = Share_Tech_Mono({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-share-tech",
   display: "swap",
 });
 
-// Dot-matrix / display de LED. Es la equivalente libre a la MD Thermochrome que
-// usa Platanus: variable, con ejes ELGR (densidad de la grilla) y ELSH (forma
-// del elemento, 0 = cuadrado … 16 = redondo). Los puntos redondos se piden en
-// CSS con `font-variation-settings` — ver la utilidad `.dot-matrix`.
-export const handjet = Handjet({
-  subsets: ["latin", "latin-ext"],
-  axes: ["ELGR", "ELSH"],
-  weight: "variable",
-  variable: "--font-handjet",
-  display: "swap",
-});
+// Alias compatibles para evitar roturas de importación antes de que todos los componentes sean migrados
+export const oxanium = pixelifySans;
+export const jetbrainsMono = shareTechMono;
+export const handjet = pixelifySans;
+

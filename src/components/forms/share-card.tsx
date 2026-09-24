@@ -17,10 +17,10 @@ import { cleanWhitespace, toUpper } from "@/lib/normalize";
 const SIZE = 1080;
 
 const C = {
-  ink: "#0A0A0F",
-  block: "#F2A6F0",
-  deep: "#C143BC",
-  white: "#FFFFFF",
+  ink: "#0E0E1A",
+  block: "#C143BC",
+  deep: "#613BB8",
+  white: "#E6E4DA",
 };
 
 export type ShareKind = "attendee" | "speaker";
@@ -99,9 +99,9 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const display = familyOf("--font-oxanium", "system-ui, sans-serif");
-  const mono = familyOf("--font-jetbrains", "monospace");
-  const dot = familyOf("--font-handjet", mono);
+  const display = familyOf("--font-display", familyOf("--font-oxanium", "system-ui, sans-serif"));
+  const mono = familyOf("--font-mono", familyOf("--font-jetbrains", "monospace"));
+  const dot = familyOf("--font-mono", mono);
 
   canvas.width = SIZE;
   canvas.height = SIZE;
@@ -111,7 +111,7 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   ctx.fillRect(0, 0, SIZE, SIZE);
 
   // Rejilla tenue: da textura sin competir con el texto.
-  ctx.strokeStyle = "rgba(242,166,240,0.07)";
+  ctx.strokeStyle = "rgba(193,67,188,0.08)";
   ctx.lineWidth = 1;
   for (let x = 0; x <= SIZE; x += 60) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, SIZE); ctx.stroke();
@@ -128,7 +128,7 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   // Cinta superior invertida
   ctx.fillStyle = C.block;
   ctx.fillRect(48, 48, SIZE - 96, 96);
-  ctx.fillStyle = C.ink;
+  ctx.fillStyle = "#FFFFFF";
   ctx.font = `40px ${dot}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "left";
@@ -157,7 +157,7 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   }
 
   // Separador
-  ctx.strokeStyle = "rgba(242,166,240,0.35)";
+  ctx.strokeStyle = "rgba(193,67,188,0.35)";
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(84, 700);
@@ -169,7 +169,7 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   ctx.font = `700 44px ${mono}`;
   ctx.fillText(labels.date, 84, 768);
 
-  ctx.fillStyle = "rgba(255,255,255,0.62)";
+  ctx.fillStyle = "rgba(230,228,218,0.65)";
   ctx.font = `32px ${mono}`;
   ctx.fillText(EVENT.venue.name.toUpperCase(), 84, 826);
   ctx.fillText("CIUDAD DE MÉXICO · MÉXICO", 84, 872);
@@ -177,7 +177,7 @@ function draw(canvas: HTMLCanvasElement, name: string, labels: ShareLabels) {
   // Cinta inferior
   ctx.fillStyle = C.block;
   ctx.fillRect(48, SIZE - 144, SIZE - 96, 96);
-  ctx.fillStyle = C.ink;
+  ctx.fillStyle = "#FFFFFF";
   ctx.font = `40px ${dot}`;
   ctx.textAlign = "center";
   ctx.fillText(labels.footer, SIZE / 2, SIZE - 96);

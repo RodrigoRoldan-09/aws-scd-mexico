@@ -22,7 +22,7 @@ export async function GET(
       type: "png",
       width: 300,
       margin: 2,
-      color: { dark: "#F2A6F0", light: "#0A0A0F" },
+      color: { dark: "#C143BC", light: "#0E0E1A" },
     });
 
     return new Response(new Uint8Array(qrBuffer), {

@@ -161,8 +161,8 @@ export function CodeTyper() {
         ))}
       </div>
       {/* Viñeta suave detrás del texto del hero: da contraste sin tapar el código */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,rgba(10,10,15,0.75),transparent_75%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-surface-900 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,rgba(14,14,26,0.75),transparent_75%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--bg-base)] to-transparent" />
     </div>
   );
 }

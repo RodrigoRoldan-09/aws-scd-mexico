@@ -13,12 +13,12 @@ function bufferToArrayBuffer(buf: Buffer): ArrayBuffer {
 }
 
 const TRACK_COLORS: Record<string, string> = {
-  cloud: "#F2A6F0",
-  devops: "#4FC3F7",
-  "ai-ml": "#CE93D8",
-  security: "#EF9A9A",
-  "soft-skills": "#A5D6A7",
-  general: "#F2A6F0",
+  cloud: "#C143BC",
+  devops: "#3DD6D0",
+  "ai-ml": "#C143BC",
+  security: "#E24B4A",
+  "soft-skills": "#7B3FA6",
+  general: "#C143BC",
 };
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
@@ -42,7 +42,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
 
   const initials = profile.name.split(" ").slice(0, 2).map((w: string) => w[0]?.toUpperCase() ?? "").join("");
-  const trackColor = TRACK_COLORS[profile.track] ?? "#F2A6F0";
+  const trackColor = TRACK_COLORS[profile.track] ?? "#C143BC";
   const trackLabel = profile.track.replace(/-/g, " ").toUpperCase();
   const abstract = profile.talkAbstract.length > 160 ? profile.talkAbstract.slice(0, 160) + "…" : profile.talkAbstract;
   const speakerLine = [profile.role, profile.company].filter(Boolean).join(" · ");
@@ -53,7 +53,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         {templateDataUrl ? (
           <img src={templateDataUrl} alt="" style={{ position: "absolute", top: 0, left: 0, width: 1080, height: 1080 }} />
         ) : (
-          <div style={{ position: "absolute", top: 0, left: 0, width: 1080, height: 1080, background: "linear-gradient(135deg, #000000 0%, #0A0A0F 55%, #16161F 100%)", display: "flex" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, width: 1080, height: 1080, background: "linear-gradient(135deg, #0E0E1A 0%, #1E1838 55%, #2A1F5E 100%)", display: "flex" }} />
         )}
         <div style={{ position: "absolute", top: 0, left: 0, width: 1080, height: 1080, display: "flex", flexDirection: "column", padding: "190px 80px 160px" }}>
           {/* Main row: content left + photo right (photo right = never touches AWS logo at top-left) */}
@@ -90,8 +90,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           </div>
           {/* Bottom: name badge left, right clear for template event logo */}
           <div style={{ display: "flex", alignItems: "center", marginTop: 40 }}>
-            <div style={{ display: "flex", flexDirection: "column", background: "#F2A6F020", border: "2px solid #F2A6F055", borderRadius: 16, padding: "14px 28px" }}>
-              <span style={{ fontSize: 34, fontWeight: 700, color: "#F2A6F0" }}>{profile.name}</span>
+            <div style={{ display: "flex", flexDirection: "column", background: "#C143BC20", border: "2px solid #C143BC55", borderRadius: 16, padding: "14px 28px" }}>
+              <span style={{ fontSize: 34, fontWeight: 700, color: "#C143BC" }}>{profile.name}</span>
               {speakerLine && <span style={{ fontSize: 22, color: "#d1d5db", marginTop: 4 }}>{speakerLine}</span>}
             </div>
           </div>

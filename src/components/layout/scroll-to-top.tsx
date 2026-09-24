@@ -29,7 +29,7 @@ export function ScrollToTop() {
             "fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-colors",
             isKiro
               ? "bg-kiro-purple text-surface-900 shadow-kiro-purple/30 hover:bg-kiro-purple-light"
-              : "bg-aws-orange text-surface-900 shadow-aws-orange/20 hover:bg-aws-orange/90"
+              : "bg-[#613BB8] text-[#E6E4DA] shadow-[0_0_20px_rgba(97,59,184,0.4)] hover:bg-[#C143BC] hover:text-[#0E0E1A]"
           )}
           aria-label="Scroll to top"
         >

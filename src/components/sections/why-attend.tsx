@@ -41,29 +41,29 @@ function WhyRow({ num, titleKey, tagKey, descKey, t }: {
   return (
     <div
       ref={ref}
-      className={`group relative grid grid-cols-1 sm:grid-cols-[minmax(80px,0.7fr)_1.2fr_2fr] gap-4 sm:gap-10 md:gap-16 items-start py-8 md:py-12 px-2 border-b border-surface-700 transition-colors duration-500 ${lit ? "bg-surface-800/40" : "hover:bg-surface-800/40"}`}
+      className={`group relative grid grid-cols-1 sm:grid-cols-[minmax(80px,0.7fr)_1.2fr_2fr] gap-4 sm:gap-10 md:gap-16 items-start py-8 md:py-12 px-2 border-b border-[#2C2550] transition-colors duration-500 ${lit ? "bg-[#1E1838]/40" : "hover:bg-[#1E1838]/40"}`}
     >
       {/* Animated accent underline */}
-      <div className={`absolute left-0 bottom-[-1px] h-px bg-aws-orange transition-[width] duration-700 ${lit ? "w-full" : "w-0 group-hover:w-full"}`} />
+      <div className={`absolute left-0 bottom-[-1px] h-px bg-[#C143BC] transition-[width] duration-700 ${lit ? "w-full" : "w-0 group-hover:w-full"}`} />
 
       {/* Number — outline → fills on hover (desktop) or scroll-enter (mobile) */}
       <span
-        className={`font-display font-medium leading-none tracking-tight select-none transition-colors duration-500 ${lit ? "text-aws-orange" : "text-white/10 group-hover:text-aws-orange"} [-webkit-text-stroke:1.5px_rgba(255,255,255,0.22)] group-hover:[-webkit-text-stroke-color:#F2A6F0] [transition:color_0.5s_ease,_-webkit-text-stroke-color_0.5s_ease]`}
+        className={`font-display font-bold leading-none tracking-tight select-none transition-colors duration-500 ${lit ? "text-[#C143BC]" : "text-white/10 group-hover:text-[#C143BC]"} [-webkit-text-stroke:1.5px_rgba(255,255,255,0.22)] group-hover:[-webkit-text-stroke-color:var(--color-accent)] [transition:color_0.5s_ease,_-webkit-text-stroke-color_0.5s_ease]`}
         style={{ fontSize: "clamp(32px,4.5vw,58px)" }}
       >
         {num}
       </span>
 
       <div className="flex flex-col gap-2.5">
-        <h3 className="font-display font-medium lowercase leading-tight tracking-tight text-surface-50 m-0 text-lg md:text-xl lg:text-2xl">
+        <h3 className="font-display font-bold lowercase leading-tight tracking-tight text-[#E6E4DA] m-0 text-lg md:text-xl lg:text-2xl">
           {t(titleKey)}
         </h3>
-        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-surface-500">
+        <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#8B84A0]">
           {t(tagKey)}
         </span>
       </div>
 
-      <p className="text-surface-300 leading-relaxed m-0 text-sm md:text-base lg:text-[17px]">
+      <p className="font-mono text-surface-300 leading-relaxed m-0 text-sm md:text-base lg:text-[17px]">
         {t(descKey)}
       </p>
     </div>
@@ -80,7 +80,7 @@ export function WhyAttend() {
           <DotHeading as="div" variant="inverted" className="mb-5 text-xl sm:text-2xl md:text-3xl">
             {t("eyebrow")}
           </DotHeading>
-          <h2 className="font-display font-medium lowercase leading-[1.02] tracking-tight max-w-[16ch] m-0"
+          <h2 className="font-display font-bold lowercase leading-[1.02] tracking-tight max-w-[16ch] m-0"
             style={{ fontSize: "clamp(28px,4vw,48px)" }}>
             {t("section_pre")}
             <em className="not-italic text-hack-block">{t("section_em")}</em>
@@ -88,13 +88,13 @@ export function WhyAttend() {
           </h2>
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <p className="text-surface-300 leading-relaxed max-w-[38ch] m-0 text-base md:text-lg">
+          <p className="font-mono text-surface-300 leading-relaxed max-w-[38ch] m-0 text-base md:text-lg">
             {t("section_lead")}
           </p>
         </ScrollReveal>
       </div>
 
-      <div className="border-t border-surface-700">
+      <div className="border-t border-[#2C2550]">
         {WHY_ITEMS.map((item, i) => (
           <ScrollReveal key={item.num} delay={i * 0.1} from="left" distance={70}>
             <WhyRow {...item} t={t as (k: string) => string} />

@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { WireSolid } from "@/components/effects/wire-solid";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { Modal } from "@/components/ui/modal";
-import { Clock, MapPin, Wifi, GitMerge, ExternalLink, X } from "lucide-react";
+import { Clock, MapPin, ExternalLink, X } from "lucide-react";
 import type { AgendaEventDTO as AgendaEvent } from "@/lib/data/agenda";
 import { TZ_LABEL } from "@/lib/constants";
 
@@ -19,7 +19,7 @@ const trackColors: Record<string, string> = {
   general:       "border-teal-500/40 bg-teal-500/10 text-teal-300",
 };
 
-const DEFAULT_TRACK_COLOR = "border-aws-orange/40 bg-aws-orange/10 text-orange-300";
+const DEFAULT_TRACK_COLOR = "border-[#C143BC]/40 bg-[#C143BC]/10 text-[#C143BC]";
 
 const trackLabels: Record<string, string> = {
   cloud: "Cloud", devops: "DevOps", "ai-ml": "AI/ML",
@@ -53,7 +53,7 @@ function renderWithLinks(text: string): React.ReactNode {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-bold text-aws-orange underline underline-offset-2 break-all hover:text-aws-orange/80"
+          className="font-bold text-[#C143BC] underline underline-offset-2 break-all hover:text-[#C143BC]/80"
         >
           {part}
         </a>
@@ -65,14 +65,6 @@ function renderWithLinks(text: string): React.ReactNode {
 
 function getTrackColor(track: string) { return trackColors[track] || DEFAULT_TRACK_COLOR; }
 function getTrackLabel(track: string) { return trackLabels[track] || (track.charAt(0).toUpperCase() + track.slice(1)); }
-
-function OnlineBadge() {
-  return (
-    <span className="inline-flex items-center gap-0.5 rounded border border-blue-500/30 bg-blue-500/10 px-1.5 py-0.5 font-mono text-[10px] text-blue-400">
-      <Wifi className="h-2.5 w-2.5" /> Online
-    </span>
-  );
-}
 
 function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void }) {
   const colors = getTrackColor(event.track);
@@ -99,9 +91,6 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
           <p className="font-mono text-[13px] font-bold leading-snug line-clamp-3">{event.title}</p>
           {event.speaker && (
             <p className="font-mono text-[11px] opacity-60 line-clamp-1">{event.speaker}</p>
-          )}
-          {event.sessionType === "online" && (
-            <div className="mt-0.5"><OnlineBadge /></div>
           )}
         </div>
       </div>
@@ -141,16 +130,6 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
                 {languageLabels[event.language] || event.language}
               </span>
             )}
-            {event.sessionType === "online" && (
-              <span className="inline-flex items-center gap-1 rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 font-mono text-xs text-blue-400">
-                <Wifi className="h-3 w-3" /> Online
-              </span>
-            )}
-            {event.sessionType === "hibrida" && (
-              <span className="inline-flex items-center gap-1 rounded border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 font-mono text-xs text-purple-400">
-                <GitMerge className="h-3 w-3" /> Híbrida
-              </span>
-            )}
           </div>
 
           <div>
@@ -164,12 +143,12 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
             <button
               type="button"
               onClick={() => setCardOpen(true)}
-              className="group relative mx-auto block w-full max-w-[320px] overflow-hidden rounded-xl shadow-lg ring-1 ring-white/10 transition-all hover:ring-aws-orange/50 hover:shadow-[0_0_24px_rgba(242,166,240,0.15)]"
+              className="group relative mx-auto block w-full max-w-[320px] overflow-hidden rounded-[12px] shadow-lg ring-1 ring-white/10 transition-all hover:ring-[#C143BC]/50 hover:shadow-[0_0_24px_rgba(193,67,188,0.2)]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={cardUrl} alt={`${event.speaker} — speaker card`} className="w-full block" loading="lazy" />
               <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30">
-                <span className="translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 font-mono text-xs font-semibold text-white bg-black/60 px-3 py-1.5 rounded-none">
+                <span className="translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 font-mono text-xs font-semibold text-white bg-black/60 px-3 py-1.5 rounded-[4px]">
                   Ver en grande →
                 </span>
               </div>
@@ -179,7 +158,7 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
           {event.speakerSlug && (
             <a
               href={`/speakers/${event.speakerSlug}`}
-              className="flex items-center justify-center gap-2 rounded-none border border-aws-orange bg-aws-orange/10 px-5 py-3 font-mono text-sm font-bold text-aws-orange transition-all hover:bg-aws-orange hover:text-surface-900 hover:shadow-[0_0_20px_rgba(242,166,240,0.3)]"
+              className="flex items-center justify-center gap-2 rounded-[6px] border border-[#C143BC] bg-[#C143BC]/10 px-5 py-3 font-mono text-sm font-bold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A] hover:shadow-[0_0_20px_rgba(193,67,188,0.3)]"
             >
               Ver perfil del ponente <ExternalLink className="h-4 w-4" />
             </a>
@@ -187,17 +166,17 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
 
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-1.5 text-sm text-surface-400">
-              <Clock className="h-4 w-4 text-aws-orange" />
+              <Clock className="h-4 w-4 text-[#C143BC]" />
               <span className="font-mono">{event.startTime} – {event.endTime} ({TZ_LABEL})</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm text-surface-400">
-              <MapPin className="h-4 w-4 text-aws-orange" />
+              <MapPin className="h-4 w-4 text-[#C143BC]" />
               <span className="font-mono">{event.room}</span>
             </div>
           </div>
 
           {event.description && (
-            <div className="rounded-xl border border-surface-700 bg-surface-800/60 p-4">
+            <div className="rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-4">
               <p className="text-sm leading-relaxed text-surface-200 whitespace-pre-line">{renderWithLinks(event.description)}</p>
             </div>
           )}
@@ -207,7 +186,7 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
               href={event.cta}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-none bg-aws-orange px-5 py-2.5 font-mono text-sm font-bold text-surface-900 transition-all hover:shadow-[0_0_20px_rgba(242,166,240,0.4)]"
+              className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-[#D85A30] px-5 py-2.5 font-mono text-sm font-bold text-[#0E0E1A] transition-all hover:shadow-[0_0_20px_rgba(216,90,48,0.4)]"
             >
               Más información <ExternalLink className="h-4 w-4" />
             </a>
@@ -217,7 +196,7 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
           <button
             type="button"
             onClick={onClose}
-            className="sm:hidden w-full rounded-full border border-surface-700 py-3 font-mono text-sm text-surface-400 hover:border-surface-500 hover:text-surface-200 transition-colors"
+            className="sm:hidden w-full rounded-[6px] border border-[#2C2550] bg-[#1E1838] py-3 font-mono text-sm text-surface-400 hover:border-[#C143BC]/40 hover:text-surface-200 transition-colors"
           >
             Cerrar
           </button>
@@ -392,7 +371,7 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
   const tableMinWidth = 148 + rooms.length * 210;
 
   return (
-    <section id="agenda" className="py-24 px-4 sm:px-6 bg-surface-800/50">
+    <section id="agenda" className="py-24 px-4 sm:px-6 bg-[#0E0E1A]">
       <div className="mx-auto max-w-7xl">
         <ScrollReveal>
           <div className="flex flex-wrap items-center justify-between gap-8">
@@ -407,19 +386,19 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
           <ScrollReveal>
             {/* ── Desktop ─────────────────────────────────────── */}
             <div className="hidden md:block mt-10">
-              <div className="relative rounded-2xl border border-surface-700/60 overflow-hidden">
+              <div className="relative rounded-[16px] border border-[#2C2550] overflow-hidden bg-[#1E1838]">
                 {/* Fade right edge to hint at scroll */}
-                <div className="pointer-events-none absolute right-0 inset-y-0 w-10 bg-gradient-to-l from-surface-900/80 to-transparent z-10" />
+                <div className="pointer-events-none absolute right-0 inset-y-0 w-10 bg-gradient-to-l from-[#0E0E1A]/90 to-transparent z-10" />
 
                 <div ref={scrollRef} className="overflow-x-auto">
                   <table className="border-collapse" style={{ minWidth: tableMinWidth, width: "100%" }}>
                     <thead>
-                      <tr className="bg-surface-800/80 border-b border-surface-700">
+                      <tr className="bg-[#1E1838] border-b border-[#2C2550]">
                         <th className="px-5 py-3.5 text-left w-[148px] shrink-0">
-                          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-surface-500">Hora ({TZ_LABEL})</span>
+                          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#8B84A0]">Hora ({TZ_LABEL})</span>
                         </th>
                         {rooms.map((room) => (
-                          <th key={room} className="px-4 py-3.5 text-left border-l border-surface-700/60">
+                          <th key={room} className="px-4 py-3.5 text-left border-l border-[#2C2550]">
                             <span className="font-mono text-xs font-bold uppercase tracking-wider text-surface-200">{room}</span>
                           </th>
                         ))}
@@ -434,18 +413,18 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
                         return (
                           <tr
                             key={slot}
-                            className={`border-b border-surface-800 ${i % 2 === 1 ? "bg-surface-800/20" : ""}`}
+                            className={`border-b border-[#2C2550] ${i % 2 === 1 ? "bg-[#0E0E1A]/40" : ""}`}
                             style={{ height: "116px" }}
                           >
                             <td className="px-5 align-middle w-[148px]">
-                              <span className="font-mono text-xl font-bold text-aws-orange whitespace-nowrap">{slot}</span>
+                              <span className="font-mono text-xl font-bold text-[#C143BC] whitespace-nowrap">{slot}</span>
                             </td>
                             {rooms.map((room, ri) => {
                               // Celda ya tomada por un evento que se extiende desde arriba
                               if (covered[i]?.has(ri)) return null;
                               const cellEvents = eventsByRoom[room];
                               if (!cellEvents || cellEvents.length === 0) return (
-                                <td key={room} className="px-3 py-3 border-l border-surface-800 align-top" />
+                                <td key={room} className="px-3 py-3 border-l border-[#2C2550] align-top" />
                               );
                               // La celda ocupa tantas filas como el evento más largo del grupo
                               const span = Math.max(...cellEvents.map((e) => spanByEvent[e._id] ?? 1));
@@ -453,7 +432,7 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
                                 <td
                                   key={room}
                                   rowSpan={span}
-                                  className="p-2 border-l border-surface-800"
+                                  className="p-2 border-l border-[#2C2550]"
                                   style={{ height: "inherit" }}
                                 >
                                   {cellEvents.length === 1 ? (
@@ -484,15 +463,15 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
               {sortedSlots.map((slot) => (
                 <div key={slot}>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="font-mono text-2xl font-bold text-aws-orange leading-none">{slot}</span>
-                    <div className="flex-1 h-px bg-surface-700" />
+                    <span className="font-mono text-2xl font-bold text-[#C143BC] leading-none">{slot}</span>
+                    <div className="flex-1 h-px bg-[#2C2550]" />
                   </div>
                   <div className="flex flex-col gap-2.5">
                     {timeSlots[slot]
                       .sort((a, b) => a.room.localeCompare(b.room))
                       .map((event) => (
                         <div key={event._id}>
-                          <p className="mb-1 pl-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-aws-orange/50">
+                          <p className="mb-1 pl-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C143BC]/70">
                             {event.room}
                           </p>
                           <EventCard event={event} onClick={() => setSelected(event)} />

@@ -75,13 +75,13 @@ export function SectionHead({
         <h2
           className={cn(
             "dot-matrix m-0 text-lg leading-none sm:text-xl",
-            tone === "danger" ? "text-red-400" : "text-aws-orange",
+            tone === "danger" ? "text-red-400" : "text-[#E6E4DA]",
           )}
         >
           {title}
         </h2>
         {lead && (
-          <p className="m-0 mt-1.5 max-w-[72ch] font-mono text-xs leading-relaxed text-surface-300">
+          <p className="m-0 mt-1.5 max-w-[72ch] font-mono text-xs leading-relaxed text-[#B4B2A9]">
             {lead}
           </p>
         )}
@@ -144,10 +144,10 @@ export function Stat({
 }) {
   const color = {
     ink: "text-surface-50",
-    accent: "text-aws-orange",
-    good: "text-emerald",
+    accent: "text-[#D85A30]",
+    good: "text-[#3DD6D0]",
     warn: "text-amber-400",
-    info: "text-sky-400",
+    info: "text-[#378ADD]",
     danger: "text-red-400",
   }[tone];
 
@@ -174,8 +174,8 @@ export function Stat({
       className={cn(
         base,
         active
-          ? "border-aws-orange shadow-[4px_4px_0_0_var(--color-aws-orange-dark)]"
-          : "border-surface-600 hover:-translate-y-0.5 hover:border-aws-orange hover:shadow-[4px_4px_0_0_var(--color-aws-orange-dark)]",
+          ? "border-[#D85A30] shadow-[4px_4px_0_0_rgba(216,90,48,0.35)]"
+          : "border-surface-600 hover:-translate-y-0.5 hover:border-[#D85A30] hover:shadow-[4px_4px_0_0_rgba(216,90,48,0.35)]",
       )}
     >
       {inner}
@@ -280,11 +280,11 @@ export function Tag({
 }) {
   const styles = {
     neutral: "border-surface-500 bg-surface-700 text-surface-100",
-    good: "border-emerald/60 bg-emerald/15 text-emerald",
+    good: "border-[#3DD6D0]/60 bg-[#3DD6D0]/15 text-[#3DD6D0]",
     warn: "border-amber-400/60 bg-amber-400/15 text-amber-300",
     danger: "border-red-500/60 bg-red-500/15 text-red-300",
-    accent: "border-aws-orange/60 bg-aws-orange/15 text-aws-orange",
-    info: "border-sky-400/60 bg-sky-400/15 text-sky-300",
+    accent: "border-[#D85A30]/60 bg-[#D85A30]/15 text-[#D85A30]",
+    info: "border-[#378ADD]/60 bg-[#378ADD]/15 text-[#378ADD]",
   }[tone];
 
   return (
@@ -325,13 +325,13 @@ export function HardButton({
 }) {
   const styles = {
     accent:
-      "border-aws-orange bg-aws-orange text-surface-900 hover:shadow-[4px_4px_0_0_var(--color-aws-orange-dark)]",
+      "border-[#D85A30] bg-[#D85A30] text-[#0E0E1A] hover:shadow-[4px_4px_0_0_rgba(216,90,48,0.4)]",
     ghost:
-      "border-surface-500 bg-transparent text-surface-100 hover:border-aws-orange hover:text-aws-orange",
+      "border-surface-500 bg-transparent text-surface-100 hover:border-[#D85A30] hover:text-[#D85A30]",
     danger:
       "border-red-500 bg-red-500/15 text-red-300 hover:bg-red-500/25 hover:shadow-[4px_4px_0_0_rgba(239,68,68,0.4)]",
     good:
-      "border-emerald bg-emerald/15 text-emerald hover:bg-emerald/25 hover:shadow-[4px_4px_0_0_var(--color-emerald-dark)]",
+      "border-[#3DD6D0] bg-[#3DD6D0]/15 text-[#3DD6D0] hover:bg-[#3DD6D0]/25 hover:shadow-[4px_4px_0_0_rgba(61,214,208,0.4)]",
   }[tone];
 
   return (
@@ -373,9 +373,9 @@ export function HardLink({
 }) {
   const styles = {
     accent:
-      "border-aws-orange bg-aws-orange text-surface-900 hover:shadow-[4px_4px_0_0_var(--color-aws-orange-dark)]",
+      "border-[#D85A30] bg-[#D85A30] text-[#0E0E1A] hover:shadow-[4px_4px_0_0_rgba(216,90,48,0.4)]",
     ghost:
-      "border-surface-500 bg-transparent text-surface-100 hover:border-aws-orange hover:text-aws-orange",
+      "border-surface-500 bg-transparent text-surface-100 hover:border-[#D85A30] hover:text-[#D85A30]",
     danger:
       "border-red-500 bg-red-500/15 text-red-300 hover:bg-red-500/25",
   }[tone];
@@ -419,7 +419,7 @@ export function Toolbar({ children, className }: { children: React.ReactNode; cl
 
 const selectBase =
   "min-h-11 w-full border-2 border-surface-600 bg-surface-800 px-3 py-2 font-mono text-xs text-surface-100 " +
-  "outline-none transition-colors focus:border-aws-orange sm:w-auto";
+  "outline-none transition-colors focus:border-[#D85A30] sm:w-auto";
 
 /** Desplegable de filtro, con el mismo borde duro que todo lo demás. */
 export function Select({
@@ -469,8 +469,8 @@ export function Aviso({
   const styles = {
     warn: "border-amber-400 bg-amber-400/5 text-amber-300",
     danger: "border-red-500 bg-red-500/5 text-red-300",
-    good: "border-emerald bg-emerald/5 text-emerald",
-    info: "border-sky-400 bg-sky-400/5 text-sky-300",
+    good: "border-[#3DD6D0] bg-[#3DD6D0]/5 text-[#3DD6D0]",
+    info: "border-[#378ADD] bg-[#378ADD]/5 text-[#378ADD]",
   }[tone];
 
   return (
@@ -582,7 +582,7 @@ export function RowCard({
   const base = "block w-full min-w-0 border-2 border-surface-600 bg-surface-800 p-3 text-left transition-colors";
 
   return onClick ? (
-    <button type="button" onClick={onClick} className={cn(base, "active:bg-surface-700 hover:border-aws-orange")}>
+    <button type="button" onClick={onClick} className={cn(base, "active:bg-surface-700 hover:border-[#D85A30]")}>
       {inner}
     </button>
   ) : (
@@ -617,7 +617,7 @@ export function Empty({
 export function Cargando({ className }: { className?: string }) {
   return (
     <div className={cn("flex justify-center py-12", className)}>
-      <div className="h-5 w-5 animate-spin rounded-full border-2 border-aws-orange border-t-transparent" />
+      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#D85A30] border-t-transparent" />
     </div>
   );
 }
@@ -652,7 +652,7 @@ export function Pager({
           onClick={() => onPage(Math.max(0, page - 1))}
           disabled={page === 0}
           aria-label="Página anterior"
-          className="flex h-11 w-11 items-center justify-center border-2 border-surface-600 text-surface-200 transition-colors hover:border-aws-orange hover:text-aws-orange disabled:opacity-30 disabled:hover:border-surface-600 disabled:hover:text-surface-200"
+          className="flex h-11 w-11 items-center justify-center border-2 border-surface-600 text-surface-200 transition-colors hover:border-[#D85A30] hover:text-[#D85A30] disabled:opacity-30 disabled:hover:border-surface-600 disabled:hover:text-surface-200"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -664,7 +664,7 @@ export function Pager({
           onClick={() => onPage(Math.min(totalPages - 1, page + 1))}
           disabled={page >= totalPages - 1}
           aria-label="Página siguiente"
-          className="flex h-11 w-11 items-center justify-center border-2 border-surface-600 text-surface-200 transition-colors hover:border-aws-orange hover:text-aws-orange disabled:opacity-30 disabled:hover:border-surface-600 disabled:hover:text-surface-200"
+          className="flex h-11 w-11 items-center justify-center border-2 border-surface-600 text-surface-200 transition-colors hover:border-[#D85A30] hover:text-[#D85A30] disabled:opacity-30 disabled:hover:border-surface-600 disabled:hover:text-surface-200"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
