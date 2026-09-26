@@ -50,6 +50,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         { label: "Acerca de", href: resolveHref("#about"), icon: Info },
         { label: "Speakers", href: localePath(locale, "/directorio"), icon: Users },
         { label: "Agenda", href: resolveHref("#agenda"), icon: Calendar },
+        { label: "Sponsors & Contacto", href: localePath(locale, "/sponsors"), icon: HeartHandshake },
       ],
     },
     {

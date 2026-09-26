@@ -411,6 +411,14 @@
   font-variation-settings: "ELSH" 16, "ELGR" 2;
 }
 
+/* === Arcade Pixel: elementos cuadrados (ELSH 0) para estética retro-hardware / sintetizador === */
+.arcade-pixel {
+  font-family: var(--font-dot);
+  font-variation-settings: "ELSH" 0, "ELGR" 1.2;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 /* === Base Styles === */
 body {
   overflow-x: hidden;

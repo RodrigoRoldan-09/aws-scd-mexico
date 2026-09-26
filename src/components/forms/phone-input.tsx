@@ -111,9 +111,9 @@ export function PhoneInput({
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="font-mono text-sm text-hack-ink/85">
+        <label className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">
           {label}
-          {required && <span className="ml-1 text-hack-deep">*</span>}
+          {required && <span className="ml-1 text-[#C143BC]">*</span>}
         </label>
       )}
 
@@ -126,8 +126,10 @@ export function PhoneInput({
           aria-haspopup="listbox"
           aria-expanded={open}
           className={cn(
-            "flex shrink-0 items-center gap-2 border-2 border-r-0 px-3 py-3 font-mono text-sm transition-colors",
-            "border-hack-ink/25 bg-white/55 text-hack-ink hover:border-hack-ink",
+            "flex shrink-0 items-center gap-2 rounded-l-[4px] border border-r-0 px-3 py-2.5 font-mono text-xs sm:text-sm transition-all outline-none",
+            error
+              ? "border-[#E24B4A] bg-[#090812] text-[#E6E4DA]"
+              : "border-[#2C2550] bg-[#090812] text-[#E6E4DA] hover:border-[#C143BC]/60 focus:border-[#C143BC]",
           )}
         >
           {/* `font-flag` antepone la fuente de banderas (ver globals.css):
@@ -135,8 +137,8 @@ export function PhoneInput({
           <span aria-hidden="true" className="font-flag text-base leading-none">
             {country.flag}
           </span>
-          <span className="tabular-nums">{country.dial}</span>
-          <svg viewBox="0 0 24 24" className={cn("h-3 w-3 transition-transform", open && "rotate-180")} aria-hidden="true">
+          <span className="tabular-nums font-bold">{country.dial}</span>
+          <svg viewBox="0 0 24 24" className={cn("h-3 w-3 text-[#8E8EA0] transition-transform", open && "rotate-180 text-[#C143BC]")} aria-hidden="true">
             <path d="M5 9l7 7 7-7" stroke="currentColor" strokeWidth="2.5" fill="none" />
           </svg>
         </button>
@@ -157,9 +159,9 @@ export function PhoneInput({
           placeholder={"0".repeat(Array.isArray(country.digits) ? country.digits[0] : country.digits)}
           aria-label={label ?? t("phone_label")}
           className={cn(
-            "w-full border-2 bg-white/55 px-4 py-3 font-mono text-sm tabular-nums text-hack-ink outline-none transition-colors",
-            "placeholder:text-hack-ink/40 focus:border-hack-ink",
-            error ? "border-error" : "border-hack-ink/25",
+            "w-full rounded-r-[4px] border bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm tabular-nums text-[#E6E4DA] outline-none transition-all",
+            "placeholder:text-[#73726C] focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+            error ? "border-[#E24B4A]" : "border-[#2C2550]",
           )}
         />
 
@@ -171,7 +173,7 @@ export function PhoneInput({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-0 top-full z-30 mt-1 w-[min(20rem,100%)] border-2 border-hack-ink bg-hack-block shadow-[6px_6px_0_0_rgba(0,0,0,0.5)]"
+              className="absolute left-0 top-full z-30 mt-1 w-[min(20rem,100%)] overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_0_25px_rgba(193,67,188,0.35)]"
             >
               <input
                 ref={searchRef}
@@ -183,11 +185,11 @@ export function PhoneInput({
                 onKeyDown={onKeyDown}
                 placeholder={t("phone_search")}
                 aria-label={t("phone_search_aria")}
-                className="w-full border-b-2 border-hack-ink/25 bg-white/55 px-3 py-2.5 font-mono text-sm text-hack-ink outline-none placeholder:text-hack-ink/40"
+                className="w-full border-b border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
               />
               <ul role="listbox" className="max-h-60 overflow-y-auto">
                 {filtered.length === 0 && (
-                  <li className="px-3 py-3 font-mono text-xs text-hack-ink/50">{t("phone_no_results")}</li>
+                  <li className="px-3 py-3 font-mono text-xs text-[#73726C]">{t("phone_no_results")}</li>
                 )}
                 {filtered.map((c, i) => (
                   <li key={c.code}>
@@ -198,8 +200,10 @@ export function PhoneInput({
                       onMouseEnter={() => setActive(i)}
                       onClick={() => pick(c)}
                       className={cn(
-                        "flex w-full items-center gap-3 px-3 py-2.5 text-left font-mono text-sm transition-colors",
-                        i === active ? "bg-hack-ink text-hack-block" : "text-hack-ink/85",
+                        "flex w-full items-center gap-3 px-3 py-2 text-left font-mono text-xs sm:text-sm transition-colors",
+                        i === active || c.code === country.code
+                          ? "bg-[#C143BC]/20 text-[#F2A6F0]"
+                          : "text-[#E6E4DA] hover:bg-[#16102A]",
                       )}
                     >
                       <span aria-hidden="true" className="font-flag text-base leading-none">
@@ -218,13 +222,13 @@ export function PhoneInput({
 
       <div className="flex justify-between gap-3">
         {error ? (
-          <span className="font-mono text-xs text-red-400">{error}</span>
+          <span className="font-mono text-xs text-[#E24B4A]">{error}</span>
         ) : (
-          <span className="font-mono text-xs text-hack-ink/50">
+          <span className="font-mono text-[11px] text-[#8E8EA0]">
             {country.name} · {expected} dígitos
           </span>
         )}
-        <span className="ml-auto shrink-0 font-mono text-xs text-hack-ink/40 tabular-nums">
+        <span className="ml-auto shrink-0 font-mono text-[11px] text-[#73726C] tabular-nums">
           {value.length}
         </span>
       </div>

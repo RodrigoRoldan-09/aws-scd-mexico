@@ -90,6 +90,12 @@ export function Navbar() {
       description: "Horarios y tracks presenciales at IPN",
       href: resolveHref("#agenda"),
       icon: Calendar,
+    },
+    {
+      title: "Sponsors & Club",
+      description: "Patrocinios y contacto con SBG IPN",
+      href: localePath(locale, "/sponsors"),
+      icon: HeartHandshake,
       fullWidth: true,
     },
   ];
@@ -308,6 +314,14 @@ export function Navbar() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Sponsors (pestaña dedicada) */}
+            <a
+              href={localePath(locale, "/sponsors")}
+              className="rounded-[6px] px-2.5 py-1 font-mono text-xs text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
+            >
+              Sponsors
+            </a>
 
             {/* Contacto (standalone) */}
             <a

@@ -11,6 +11,7 @@ import { SpeakerPreview } from "@/components/forms/previews";
 import { SuccessScreen, type SummaryRow } from "@/components/forms/success-screen";
 import { useCountdown } from "@/hooks/use-countdown";
 import { DotHeading } from "@/components/ui/dot-heading";
+import { FormShell } from "@/components/forms/form-shell";
 import { localePath } from "@/lib/utils";
 import { SITE_HOST } from "@/lib/constants";
 import { CFP_DEADLINE, CFP_ONLINE_SPEAKERS } from "@/data/cfp";
@@ -397,14 +398,14 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/registro"
-              className="inline-flex items-center gap-2 rounded-[4px] bg-[#D85A30] px-8 py-3.5 font-mono text-sm font-bold text-[#0E0E1A] transition-all hover:shadow-[0_0_25px_rgba(216,90,48,0.4)] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-8 py-3.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0"
             >
               Regístrate como participante
               <ChevronRight className="h-4 w-4" />
             </Link>
             <Link
               href="/directorio"
-              className="inline-flex items-center gap-2 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-6 py-3 font-mono text-sm font-semibold text-[#C143BC] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
+              className="inline-flex items-center gap-2 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-6 py-3 font-mono text-sm font-semibold text-[#F2A6F0] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
             >
               Ver speakers confirmados
             </Link>
@@ -434,74 +435,47 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
   }
 
   // ── Main form ────────────────────────────────────────────────────────────────
-  return (
-    // pt-8 sólo en móvil: el navbar fijo mide 80px, igual que el relleno
-    // superior de BlockSection en móvil. Sin pb: el bloque del formulario llega
-    // hasta el footer, que es del mismo color.
-    <div
-      className={cn(
-        "min-h-screen bg-[#0E0E1A]",
-        // En /postular el bloque del formulario ya trae su propio pt-28.
-        !formOnly && "pt-8 md:pt-0",
-      )}
-    >
-      {/* Toda la información del Call for Speakers vive aquí, no en el home:
-          quien va como asistente no necesita leer las bases. En
-          /speakers/postular se omite: quien llega ahí ya decidió postular. */}
-      {!formOnly && <CallForSpeakers />}
-
-      {/* El formulario vive sólo en /speakers/postular; en /speakers quedan las
-          bases y el botón. pt-28: es lo primero bajo el navbar fijo (80px). */}
-      {formOnly && (
-      <div id="postular" className="form-block min-h-screen bg-[#0E0E1A] text-[#E6E4DA] px-4 pb-20 pt-28">
-        {/* Encabezado propio cuando el formulario va solo: sin las bases
-            arriba, la persona necesita ver que esta postulando y poder
-            volver a leerlas sin perder lo que ya escribio. */}
-        {formOnly && (
-          <div className="mx-auto mb-10 w-full max-w-3xl">
-            <DotHeading flicker className="text-[#E6E4DA]">
-              {t.step_apply}
-            </DotHeading>
-            <p className="mt-4 font-mono text-sm leading-relaxed text-[#B4B2A9]">
-              {t.apply_lead}
-            </p>
+  // ── Main form ────────────────────────────────────────────────────────────────
+  if (formOnly) {
+    return (
+      <FormShell
+        title={t.step_apply}
+        lead={t.apply_lead}
+        className="max-w-3xl"
+        aside={
+          <div className="flex items-center gap-4">
             <Link
               href={localePath(locale, "/speakers")}
-              className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#D85A30] underline underline-offset-4 hover:text-[#E6E4DA]"
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#F2A6F0] underline underline-offset-4 hover:text-[#E6E4DA]"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               {t.apply_back}
             </Link>
+            <div className="inline-flex items-center rounded-[4px] border border-[#2C2550] bg-[#090812] p-0.5">
+              {(["es", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  className={cn(
+                    "rounded-[2px] px-3.5 py-1.5 font-mono text-xs font-bold transition-colors",
+                    lang === l
+                      ? "bg-[#C143BC] text-[#0E0E1A]"
+                      : "text-[#B4B2A9] hover:text-[#E6E4DA]",
+                  )}
+                >
+                  {l === "es" ? "ES" : "EN"}
+                </button>
+              ))}
+            </div>
           </div>
-        )}
-        {/* Una sola columna: la preview aparece al final. */}
-        <div className="mx-auto w-full max-w-3xl">
-        <div className="min-w-0">
-
-        {/* Selector de idioma del formulario */}
-        <div className="mb-10 flex justify-center">
-          <div className="inline-flex items-center rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] p-0.5">
-            {(["es", "en"] as Lang[]).map((l) => (
-              <button key={l} type="button" onClick={() => setLang(l)}
-                className={cn(
-                  "rounded-[4px] px-5 py-2 font-mono text-xs font-bold transition-colors",
-                  lang === l
-                    ? "bg-[#D85A30] text-white"
-                    : "text-[#B4B2A9] hover:text-[#E6E4DA]",
-                )}
-              >
-                {l === "es" ? "Español" : "English"}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Pasos. El conector va detrás de los números; la parte recorrida se
-            pinta con un ancho porcentual. */}
-        <div className="relative mb-10">
+        }
+      >
+        {/* Pasos de postulación */}
+        <div className="relative mb-8">
           <div className="absolute left-0 right-0 top-5 h-0.5 bg-[#2C2550]" aria-hidden="true">
             <div
-              className="h-full bg-[#D85A30] transition-[width] duration-500"
+              className="h-full bg-[#C143BC] transition-[width] duration-500 shadow-[0_0_8px_#C143BC]"
               style={{ width: `${(step / 2) * 100}%` }}
             />
           </div>
@@ -516,9 +490,8 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     className={cn(
                       "flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-bold transition-all",
                       done || current
-                        ? "border-[#D85A30] bg-[#D85A30] text-white"
-                        : "border-[#2C2550] bg-[#0E0E1A] text-[#73726C]",
-                      current && "shadow-[0_0_12px_rgba(216,90,48,0.4)]",
+                        ? "border-[#C143BC] bg-[#C143BC] text-[#0E0E1A] shadow-[0_0_12px_rgba(193,67,188,0.5)]"
+                        : "border-[#2C2550] bg-[#090812] text-[#73726C]",
                     )}
                     aria-current={current ? "step" : undefined}
                   >
@@ -527,7 +500,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                   <span
                     className={cn(
                       "hidden text-center font-mono text-[10px] leading-tight sm:block",
-                      current ? "font-bold text-[#E6E4DA]" : "text-[#73726C]",
+                      current ? "font-bold text-[#F2A6F0]" : "text-[#73726C]",
                     )}
                   >
                     {label}
@@ -538,30 +511,18 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
           </ol>
         </div>
 
-        {/* Card */}
-        <div
-          className="relative overflow-hidden rounded-[12px]"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(216,90,48,0.22) 0%, rgba(66,43,120,0.55) 38%, rgba(123,63,166,0.40) 68%, rgba(97,59,184,0.38) 100%)",
-            border: "1px solid",
-            borderImage:
-              "linear-gradient(135deg, rgba(216,90,48,0.60) 0%, rgba(123,63,166,0.60) 50%, rgba(97,59,184,0.65) 100%) 1",
-            boxShadow:
-              "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(216,90,48,0.16), inset 0 1px 0 rgba(216,90,48,0.14), 0 0 24px rgba(97,59,184,0.20)",
-          }}
-        >
-          {/* Línea decorativa naranja→morado en la parte superior de la tarjeta */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-[2px] rounded-t-[12px] z-10"
-            style={{
-              background:
-                "linear-gradient(90deg, #D85A30 0%, #7B3FA6 50%, #613BB8 100%)",
-              opacity: 0.85,
-            }}
-          />
-          <form onSubmit={handleSubmit}>
+        {/* Recuadro del paso actual */}
+        <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+          <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+            <span className="arcade-pixel text-xs text-[#F2A6F0]">
+              // 0{step + 1} · {step === 0 ? t.step1 : step === 1 ? t.step2 : t.step3}
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+              Paso {step + 1} / 3
+            </span>
+          </div>
+
+          <form onSubmit={handleSubmit} noValidate>
             <AnimatePresence mode="wait" custom={dir}>
               <motion.div
                 key={step}
@@ -571,25 +532,25 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.22, ease: "easeInOut" }}
-                className="p-6 sm:p-8"
+                className="flex flex-col gap-5"
               >
                 {/* ── Step 0: Session ── */}
                 {step === 0 && (
                   <div className="flex flex-col gap-5">
                     <div>
-                      <h2 className="font-mono text-lg font-bold text-surface-50">{t.step1}</h2>
-                      <p className="font-mono text-sm text-surface-400">{t.step1_desc}</p>
+                      <h2 className="font-mono text-base font-bold text-surface-50 uppercase tracking-wide">{t.step1}</h2>
+                      <p className="font-mono text-xs text-[#8E8EA0]">{t.step1_desc}</p>
                     </div>
 
-                    <Field label={t.talkTitle} error={errors.talkTitle}>
+                    <Field label={t.talkTitle} error={errors.talkTitle} required>
                       <TextInput value={form.talkTitle} onChange={(v) => { set("talkTitle", v); clearErr("talkTitle"); }} placeholder={t.talkTitle_ph} maxLength={80} />
                     </Field>
 
-                    <Field label={t.description} error={errors.talkAbstract}>
+                    <Field label={t.description} error={errors.talkAbstract} required>
                       <Textarea value={form.talkAbstract} onChange={(v) => { set("talkAbstract", v); clearErr("talkAbstract"); }} placeholder={t.description_ph} maxLength={1000} rows={5} />
                     </Field>
 
-                    <Field label={t.sessionType} error={errors.sessionType}>
+                    <Field label={t.sessionType} error={errors.sessionType} required>
                       <CardSelector
                         options={sessionTypeOpts}
                         value={form.sessionType as never}
@@ -600,7 +561,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     {form.sessionType === "online" && (
                       <Field label={t.preRecordingDate} error={errors.preRecordingDate}>
                         <div className="relative">
-                          <Calendar className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-surface-500" />
+                          <Calendar className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[#73726C]" />
                           <TextInput
                             value={form.preRecordingDate}
                             onChange={(v) => { set("preRecordingDate", v); clearErr("preRecordingDate"); }}
@@ -612,7 +573,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       </Field>
                     )}
 
-                    <Field label={t.audienceLevel} error={errors.audienceLevel}>
+                    <Field label={t.audienceLevel} error={errors.audienceLevel} required>
                       <CardSelector
                         options={audienceLevelOpts}
                         value={form.audienceLevel as never}
@@ -624,12 +585,11 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       <div className="flex gap-3">
                         {([["es", t.lang_es], ["en", t.lang_en]] as const).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => set("language", val)}
-                            // Mismo tratamiento que CardSelector: elegido en tinta sólida.
                             className={cn(
-                              "flex-1 rounded-[6px] border py-3 font-mono text-xs font-bold transition-all",
+                              "flex-1 rounded-[4px] border py-3 font-mono text-xs font-bold transition-all",
                               form.language === val
-                                ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
-                                : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
+                                ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                                : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
                             )}
                           >{lbl}</button>
                         ))}
@@ -646,26 +606,24 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 {step === 1 && (
                   <div className="flex flex-col gap-5">
                     <div>
-                      <h2 className="font-mono text-lg font-bold text-surface-50">{t.step2}</h2>
-                      <p className="font-mono text-sm text-surface-400">{t.step2_desc}</p>
+                      <h2 className="font-mono text-base font-bold text-surface-50 uppercase tracking-wide">{t.step2}</h2>
+                      <p className="font-mono text-xs text-[#8E8EA0]">{t.step2_desc}</p>
                     </div>
 
                     {/* Photo upload — full width, compact horizontal layout */}
-                    <Field label={t.photo} error={errors.photo}>
+                    <Field label={t.photo} error={errors.photo} required>
                       <div className="flex items-center gap-4">
                         <PhotoUpload
                           value={form.photo}
                           onChange={(v) => { set("photo", v); clearErr("photo"); }}
                           className="aspect-square h-24 w-24 shrink-0"
                         />
-                        <div className="flex min-w-0 flex-col gap-1 text-surface-400">
+                        <div className="flex min-w-0 flex-col gap-1 text-[#8E8EA0]">
                           <p className="font-mono text-xs leading-relaxed">{t.photo_hint}</p>
-                          <p className="font-mono text-[10px] text-surface-500">JPG · PNG · WEBP · máx 8 MB</p>
+                          <p className="font-mono text-[10px] text-[#73726C]">JPG · PNG · WEBP · máx 8 MB</p>
                         </div>
                       </div>
 
-                      {/* Los consejos aparecen sólo mientras no hay foto: una
-                          vez subida ya no sirven de nada y estorban. */}
                       <AnimatePresence>
                         {!form.photo && (
                           <motion.div
@@ -675,14 +633,14 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                             transition={{ duration: 0.25, ease: "easeOut" }}
                             className="overflow-hidden"
                           >
-                            <div className="mt-4 rounded-[8px] border-l-4 border-[#D85A30] bg-[#1E1838] py-3 pl-4 pr-3">
-                              <p className="dot-matrix m-0 mb-2 text-sm leading-none text-[#E6E4DA]">
+                            <div className="mt-4 rounded-[4px] border-l-4 border-[#C143BC] bg-[#16102A] py-3 pl-4 pr-3">
+                              <p className="dot-matrix m-0 mb-2 text-sm leading-none text-[#F2A6F0]">
                                 {t.photo_tips_title}
                               </p>
                               <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
                                 {[t.photo_tip_1, t.photo_tip_2, t.photo_tip_3, t.photo_tip_4].map((tip, i) => (
                                   <li key={i} className="flex gap-2 font-mono text-[11px] leading-relaxed text-[#B4B2A9]">
-                                    <span className="shrink-0 font-bold text-[#D85A30]">·</span>
+                                    <span className="shrink-0 font-bold text-[#C143BC]">·</span>
                                     <span>{tip}</span>
                                   </li>
                                 ))}
@@ -694,10 +652,10 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     </Field>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <Field label={t.firstName} error={errors.firstName}>
+                      <Field label={t.firstName} error={errors.firstName} required>
                         <TextInput value={form.firstName} onChange={(v) => { set("firstName", v); clearErr("firstName"); }} placeholder={t.firstName_ph} maxLength={80} />
                       </Field>
-                      <Field label={t.lastName} error={errors.lastName}>
+                      <Field label={t.lastName} error={errors.lastName} required>
                         <TextInput value={form.lastName} onChange={(v) => { set("lastName", v); clearErr("lastName"); }} placeholder={t.lastName_ph} maxLength={80} />
                       </Field>
                     </div>
@@ -706,7 +664,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       <TextInput value={form.tagline} onChange={(v) => { set("tagline", v); clearErr("tagline"); }} placeholder={t.tagline_ph} maxLength={120} />
                     </Field>
 
-                    <Field label={t.email} error={errors.email}>
+                    <Field label={t.email} error={errors.email} required>
                       <TextInput
                         value={form.email}
                         onChange={(v) => {
@@ -720,18 +678,18 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       {emailHint && !errors.email && (
                         <button type="button"
                           onClick={() => { set("email", emailHint); setEmailHint(""); }}
-                          className="mt-1 font-mono text-xs text-[#C143BC] underline underline-offset-2">
+                          className="mt-1 font-mono text-xs text-[#F2A6F0] underline underline-offset-2">
                           ¿Quisiste decir {emailHint}?
                         </button>
                       )}
                     </Field>
 
-                    <Field label={t.bio} error={errors.bio}>
+                    <Field label={t.bio} error={errors.bio} required>
                       <Textarea value={form.bio} onChange={(v) => { set("bio", v); clearErr("bio"); }} placeholder={t.bio_ph} maxLength={700} rows={5} />
                     </Field>
 
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <Field label={t.countryCity} error={errors.countryCity}>
+                      <Field label={t.countryCity} error={errors.countryCity} required>
                         <TextInput value={form.countryCity} onChange={(v) => { set("countryCity", v); clearErr("countryCity"); }} placeholder={t.countryCity_ph} maxLength={80} />
                       </Field>
                       <Field label="" error={undefined}>
@@ -752,10 +710,10 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                         {([true, false] as const).map((val) => (
                           <button key={String(val)} type="button" onClick={() => { set("firstTimeSpeaker", val); clearErr("firstTimeSpeaker"); }}
                             className={cn(
-                              "flex-1 rounded-[6px] border py-3 font-mono text-sm font-bold transition-all",
+                              "flex-1 rounded-[4px] border py-3 font-mono text-sm font-bold transition-all",
                               form.firstTimeSpeaker === val
-                                ? "border-[#D85A30] bg-[#D85A30] text-white shadow-[0_0_14px_rgba(216,90,48,0.3)]"
-                                : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
+                                ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                                : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
                             )}
                           >
                             {val ? t.yes_opt : t.no_opt}
@@ -765,7 +723,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     </Field>
 
                     <div className="flex flex-col gap-2">
-                      <span className="font-mono text-xs font-semibold text-surface-100">{t.socials}</span>
+                      <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">{t.socials}</span>
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         {([
                           ["builderCenter", <BuilderCenterIcon key="bc" className="h-3.5 w-3.5" />, "AWS Builder Center"],
@@ -775,13 +733,8 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                           ["instagram", <InstagramIcon key="ig" className="h-3.5 w-3.5" />, "Instagram"],
                           ["blog",      <Globe         key="bl" className="h-3.5 w-3.5" />, "Blog / Web"],
                         ] as const).map(([key, icon, label]) => (
-                          // El icono va dentro del campo, en posición absoluta.
                           <div key={key} className="relative">
-                            {/* z-10: al enfocar, `.form-block` le aplica al
-                                campo un `transform`, que crea un contexto de
-                                apilamiento y lo pinta por encima del icono.
-                                Sin esto el logo desaparecia al hacer clic. */}
-                            <span className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-hack-ink/60">
+                            <span className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-[#8E8EA0]">
                               {icon}
                             </span>
                             <input
@@ -792,12 +745,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               inputMode="url"
                               aria-label={label}
                               className={cn(
-                                "w-full py-2.5 pl-10 pr-3 font-mono text-xs",
-                                socialErrors[key] && "border-[#7f1d1d]",
+                                "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] py-2.5 pl-10 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+                                socialErrors[key] && "border-[#E24B4A]",
                               )}
                             />
                             {socialErrors[key] && (
-                              <p className="m-0 mt-1 font-mono text-[11px] text-[#7f1d1d]">
+                              <p className="m-0 mt-1 font-mono text-[11px] text-[#E24B4A]">
                                 {socialErrors[key]}
                               </p>
                             )}
@@ -812,27 +765,26 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 {step === 2 && (
                   <div className="flex flex-col gap-5">
                     <div>
-                      <h2 className="font-mono text-lg font-bold text-surface-50">{t.step3}</h2>
-                      <p className="font-mono text-sm text-surface-400">{t.step3_desc}</p>
+                      <h2 className="font-mono text-base font-bold text-surface-50 uppercase tracking-wide">{t.step3}</h2>
+                      <p className="font-mono text-xs text-[#8E8EA0]">{t.step3_desc}</p>
                     </div>
 
                     {/* Slug preview */}
-                    <div className="rounded-[8px] border-l-4 border-[#C143BC] bg-[#1E1838] py-3 pl-4 pr-3">
-                      <p className="dot-matrix m-0 mb-1.5 text-sm leading-none text-[#E6E4DA]">{t.slug_preview}</p>
-                      <p className="m-0 break-all font-mono text-sm text-[#B4B2A9]">
+                    <div className="rounded-[4px] border-l-4 border-[#C143BC] bg-[#16102A] py-3 pl-4 pr-3">
+                      <p className="dot-matrix m-0 mb-1.5 text-sm leading-none text-[#F2A6F0]">{t.slug_preview}</p>
+                      <p className="m-0 break-all font-mono text-xs sm:text-sm text-[#B4B2A9]">
                         {SITE_HOST}/speakers/<span className="font-bold text-[#E6E4DA]">{computedSlug || "..."}</span>
                       </p>
                     </div>
 
                     {/* Co-speakers */}
                     <div className="flex flex-col gap-3">
-                      <span className="font-mono text-xs font-semibold text-surface-100">{t.coSpeakers}</span>
+                      <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">{t.coSpeakers}</span>
                       {form.coSpeakers.map((cs, i) => (
-                        <div key={i} className="rounded-[8px] border border-[#2C2550] bg-[#1E1838]/80 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+                        <div key={i} className="rounded-[4px] border border-[#C143BC]/30 bg-[#16102A]/80 p-4 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
                           <div className="mb-4 flex items-center justify-between gap-3 border-b border-[#2C2550] pb-3">
                             <span className="flex items-center gap-2.5">
-                              {/* Numero en caja oscura */}
-                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[4px] border border-[#2C2550] bg-[#0E0E1A] font-mono text-[11px] font-bold tabular-nums text-[#D85A30]">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[2px] border border-[#C143BC]/50 bg-[#090812] font-mono text-[11px] font-bold tabular-nums text-[#F2A6F0]">
                                 {String(i + 1).padStart(2, "0")}
                               </span>
                               <span className="font-mono text-xs font-bold text-[#E6E4DA]">{t.coSpeaker_label}</span>
@@ -840,7 +792,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                             <button
                               type="button"
                               onClick={() => setForm((f) => ({ ...f, coSpeakers: f.coSpeakers.filter((_, j) => j !== i) }))}
-                              className="shrink-0 rounded-[4px] border border-red-500/40 px-2.5 py-1 font-mono text-[10px] font-bold text-red-400 transition-colors hover:bg-red-500/20"
+                              className="shrink-0 rounded-[2px] border border-red-500/40 px-2.5 py-1 font-mono text-[10px] font-bold text-red-400 transition-colors hover:bg-red-500/20"
                             >
                               {t.coSpeaker_remove}
                             </button>
@@ -848,10 +800,10 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
 
                           {/* Photo */}
                           <div className="mb-3">
-                            <span className="mb-1.5 block font-mono text-xs font-semibold text-surface-100">{t.coSpeaker_photo}</span>
+                            <span className="mb-1.5 block font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">{t.coSpeaker_photo}</span>
                             <div className="flex items-center gap-3">
                               <PhotoUpload value={cs.photo} onChange={(v) => { updateCoSpeaker(i, { photo: v }); clearErr(`cs_${i}_photo`); }} className="aspect-square h-16 w-16 shrink-0" />
-                              <p className="font-mono text-[10px] text-surface-400 leading-relaxed">{t.photo_hint}</p>
+                              <p className="font-mono text-[10px] text-[#8E8EA0] leading-relaxed">{t.photo_hint}</p>
                             </div>
                             {errors[`cs_${i}_photo`] && <p className="mt-1 font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_photo`]}</p>}
                           </div>
@@ -861,13 +813,13 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                             <div className="flex flex-col gap-1">
                               <input value={cs.firstName} onChange={(e) => { updateCoSpeaker(i, { firstName: e.target.value }); clearErr(`cs_${i}_firstName`); }}
                                 placeholder={t.coSpeaker_firstName_ph} maxLength={80}
-                                className="w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-3 py-2.5 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all" />
+                                className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                               {errors[`cs_${i}_firstName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_firstName`]}</p>}
                             </div>
                             <div className="flex flex-col gap-1">
                               <input value={cs.lastName} onChange={(e) => { updateCoSpeaker(i, { lastName: e.target.value }); clearErr(`cs_${i}_lastName`); }}
                                 placeholder={t.coSpeaker_lastName_ph} maxLength={80}
-                                className="w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-3 py-2.5 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all" />
+                                className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                               {errors[`cs_${i}_lastName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_lastName`]}</p>}
                             </div>
                           </div>
@@ -880,7 +832,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               placeholder={t.coSpeaker_email_ph}
                               type="text" inputMode="email" autoComplete="off" spellCheck={false}
                               maxLength={200}
-                              className="w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-3 py-2.5 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all" />
+                              className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                             {errors[`cs_${i}_email`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_email`]}</p>}
                           </div>
 
@@ -888,15 +840,15 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                           <div className="mb-3 relative">
                             <textarea value={cs.bio} onChange={(e) => updateCoSpeaker(i, { bio: e.target.value })}
                               placeholder={t.coSpeaker_bio_ph} maxLength={400} rows={3}
-                              className="w-full resize-none rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-3 py-2.5 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all" />
-                            <span className={cn("absolute right-3 bottom-3 font-mono text-[10px]", cs.bio.length > 360 ? "text-[#D85A30]" : "text-surface-500")}>
+                              className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                            <span className={cn("absolute right-3 bottom-2.5 font-mono text-[10px]", cs.bio.length > 360 ? "text-[#E24B4A]" : "text-[#73726C]")}>
                               {cs.bio.length}/400
                             </span>
                           </div>
 
                           {/* Social */}
                           <div className="flex flex-col gap-2">
-                            <span className="font-mono text-xs font-semibold text-[#B4B2A9]">{t.coSpeaker_socials}</span>
+                            <span className="font-mono text-xs font-semibold text-[#8E8EA0]">{t.coSpeaker_socials}</span>
                             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                               {([
                                 ["linkedin",  <LinkedInIcon  key="li" className="h-3.5 w-3.5" />, "LinkedIn"],
@@ -915,7 +867,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                                     inputMode="url"
                                     aria-label={`${label} — ${t.coSpeaker_label} ${i + 1}`}
                                     className={cn(
-                                      "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] py-2 pl-8 pr-2.5 font-mono text-xs text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all",
+                                      "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] py-2 pl-8 pr-2.5 font-mono text-xs text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all",
                                       errors[`cs_${i}_${key}`] && "border-[#E24B4A]",
                                     )}
                                   />
@@ -932,49 +884,50 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       ))}
                       {form.coSpeakers.length < 3 && (
                         <button type="button" onClick={() => setForm((f) => ({ ...f, coSpeakers: [...f.coSpeakers, emptyCoSpeaker()] }))}
-                          className="flex w-full items-center justify-center gap-2 rounded-[6px] border-2 border-dashed border-[#2C2550] py-3.5 font-mono text-xs font-bold text-[#B4B2A9] transition-all hover:border-[#D85A30] hover:text-[#D85A30]">
+                          className="flex w-full items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#2C2550] bg-[#090812] py-3.5 font-mono text-xs font-bold text-[#B4B2A9] transition-all hover:border-[#C143BC] hover:text-[#F2A6F0]">
                           {t.coSpeaker_add}
                         </button>
                       )}
                     </div>
 
                     {/* Legal agreements */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-3">
                       {/* Code of conduct */}
-                      <label className={cn("flex cursor-pointer items-start gap-3 rounded-[6px] border p-3.5 transition-all", form.codeOfConduct ? "border-[#C143BC]/40 bg-[#C143BC]/10" : "border-[#2C2550] bg-[#0E0E1A] hover:border-[#2C2550]/80")}>
-                        <div className="relative mt-0.5 shrink-0">
-                          <input type="checkbox" checked={form.codeOfConduct} onChange={(e) => { set("codeOfConduct", e.target.checked); clearErr("codeOfConduct"); }} className="sr-only" />
-                          <div className={cn("flex h-5 w-5 items-center justify-center rounded border transition-all", form.codeOfConduct ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]")}>
-                            {form.codeOfConduct && <CheckCircle2 className="h-3 w-3 text-white" />}
-                          </div>
-                        </div>
+                      <label className="flex cursor-pointer items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={form.codeOfConduct}
+                          onChange={(e) => { set("codeOfConduct", e.target.checked); clearErr("codeOfConduct"); }}
+                          className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                        />
                         <span className="font-mono text-xs text-[#B4B2A9] leading-relaxed">
                           {t.consent_conduct}{" "}
-                          <Link href="/codigo-conducta" target="_blank" className="font-bold text-[#378ADD] hover:text-[#3DD6D0] hover:underline">{t.conduct_link}</Link>
+                          <Link href="/codigo-conducta" target="_blank" className="font-bold text-[#F2A6F0] hover:text-[#E6E4DA] underline underline-offset-4">{t.conduct_link}</Link>
+                          . <span className="text-[#C143BC]">*</span>
                         </span>
                       </label>
-                      {errors.codeOfConduct && <p className="font-mono text-xs text-[#E24B4A] px-1">{errors.codeOfConduct}</p>}
+                      {errors.codeOfConduct && <p className="m-0 pl-7 font-mono text-xs text-[#E24B4A]">{errors.codeOfConduct}</p>}
 
                       {/* Privacy */}
-                      <label className={cn("flex cursor-pointer items-start gap-3 rounded-[6px] border p-3.5 transition-all", form.consent ? "border-[#C143BC]/40 bg-[#C143BC]/10" : "border-[#2C2550] bg-[#0E0E1A] hover:border-[#2C2550]/80")}>
-                        <div className="relative mt-0.5 shrink-0">
-                          <input type="checkbox" checked={form.consent} onChange={(e) => { set("consent", e.target.checked); clearErr("consent"); }} className="sr-only" />
-                          <div className={cn("flex h-5 w-5 items-center justify-center rounded border transition-all", form.consent ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]")}>
-                            {form.consent && <CheckCircle2 className="h-3 w-3 text-white" />}
-                          </div>
-                        </div>
+                      <label className="flex cursor-pointer items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={form.consent}
+                          onChange={(e) => { set("consent", e.target.checked); clearErr("consent"); }}
+                          className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                        />
                         <span className="font-mono text-xs text-[#B4B2A9] leading-relaxed">
                           {t.consent_privacy}{" "}
-                          <Link href="/privacidad" target="_blank" className="font-bold text-[#378ADD] hover:text-[#3DD6D0] hover:underline">{t.privacy}</Link>
+                          <Link href="/privacidad" target="_blank" className="font-bold text-[#F2A6F0] hover:text-[#E6E4DA] underline underline-offset-4">{t.privacy}</Link>
+                          . <span className="text-[#C143BC]">*</span>
                         </span>
                       </label>
-                      {errors.consent && <p className="font-mono text-xs text-[#E24B4A] px-1">{errors.consent}</p>}
+                      {errors.consent && <p className="m-0 pl-7 font-mono text-xs text-[#E24B4A]">{errors.consent}</p>}
                     </div>
 
                     {/* Turnstile */}
-                    {/* Invisible salvo que Cloudflare desconfíe. */}
                     {hasCaptcha && (
-                      <div className="flex items-center justify-center">
+                      <div className="flex items-center justify-center py-2">
                         {captchaMounted ? (
                           <Turnstile
                             ref={captchaRef}
@@ -995,11 +948,11 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       </p>
                     )}
 
-                    {errors.submit && <p className="rounded-[6px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">{errors.submit}</p>}
+                    {errors.submit && <p className="rounded-[4px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">{errors.submit}</p>}
 
                     {/* Preview al final, lo último que se ve antes de enviar. */}
                     <div className="mt-2 border-t-2 border-dashed border-[#2C2550] pt-6">
-                      <p className="dot-matrix mb-4 text-lg leading-none text-[#E6E4DA]">
+                      <p className="dot-matrix mb-4 text-base leading-none text-[#F2A6F0]">
                         así se verá tu tarjeta en el directorio
                       </p>
                       <div className="mx-auto w-full max-w-[360px]">{previewCard}</div>
@@ -1010,29 +963,43 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
             </AnimatePresence>
 
             {/* Nav buttons */}
-            <div className={cn("flex items-center gap-3 border-t border-[#2C2550] px-6 py-4 sm:px-8", step === 0 ? "justify-end" : "justify-between")}>
+            <div className={cn("mt-6 flex items-center gap-3 border-t border-[#2C2550] pt-5", step === 0 ? "justify-end" : "justify-between")}>
               {step > 0 && (
-                <button type="button" onClick={goBack} className="flex items-center gap-2 rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-5 py-2.5 font-mono text-sm font-bold text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA] transition-all">
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="flex items-center gap-2 rounded-[4px] border border-[#2C2550] bg-[#090812] px-5 py-3 font-mono text-sm font-semibold text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA] transition-all"
+                >
                   <ChevronLeft className="h-4 w-4" /> {t.back}
                 </button>
               )}
               {step < 2 ? (
-                <button type="button" onClick={goNext} className="flex items-center gap-2 rounded-[6px] border border-[#613BB8] bg-[#422B78] px-6 py-2.5 font-mono text-sm font-bold text-white hover:bg-[#613BB8] transition-all">
+                <button
+                  type="button"
+                  onClick={goNext}
+                  className="flex items-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-3 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0"
+                >
                   {t.next} <ChevronRight className="h-4 w-4" />
                 </button>
               ) : (
-                <button type="submit" disabled={submitting || (hasCaptcha && !captchaToken)} className="flex items-center gap-2 rounded-[6px] bg-[#D85A30] px-6 py-2.5 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] hover:bg-[#D85A30]/90 disabled:opacity-50 transition-all">
+                <button
+                  type="submit"
+                  disabled={submitting || (hasCaptcha && !captchaToken)}
+                  className="flex items-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-3 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:opacity-50"
+                >
                   {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> {t.submitting}</> : t.submit}
                 </button>
               )}
             </div>
           </form>
+        </div>
+      </FormShell>
+    );
+  }
 
-          </div>{/* card */}
-        </div>{/* columna */}
-        </div>{/* ancho */}
-      </div>
-      )}
+  return (
+    <div className="min-h-screen bg-[#0E0E1A] pt-8 md:pt-0">
+      <CallForSpeakers />
     </div>
   );
 }

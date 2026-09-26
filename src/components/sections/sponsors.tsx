@@ -1,14 +1,13 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { BlockSection } from "@/components/ui/block-section";
 import { DotHeading } from "@/components/ui/dot-heading";
 import { HardButton } from "@/components/ui/hard-button";
-import { mailtoOf } from "@/components/ui/obfuscated-email";
 import { useEventConfig } from "@/components/providers/event-config-provider";
 import { sponsors } from "@/data/sponsors";
-import { basePath } from "@/lib/utils";
+import { basePath, localePath } from "@/lib/utils";
 
 /**
  * Sponsors al estilo del sitio nuevo de Platanus: bloque a sangre, letrero
@@ -60,6 +59,7 @@ function LogoRow({
 
 export function Sponsors() {
   const t = useTranslations("Sponsors");
+  const locale = useLocale();
   const { showSponsorsCta } = useEventConfig();
 
   const lead = sponsors.filter((s) => s.tier === "diamond" || s.tier === "platinum");
@@ -85,13 +85,9 @@ export function Sponsors() {
       {showSponsorsCta && (
         <ScrollReveal delay={0.25}>
           <div className="mt-16 text-center">
-            {/* Abre el correo de patrocinios. La dirección se arma al pulsar y
-                no va en un `href`, así que no queda en el HTML servido. */}
             <HardButton
               tone="block"
-              onClick={() => {
-                window.location.href = mailtoOf("sponsors", t("mail_subject"));
-              }}
+              href={localePath(locale, "/sponsors")}
             >
               {t("cta")}
             </HardButton>

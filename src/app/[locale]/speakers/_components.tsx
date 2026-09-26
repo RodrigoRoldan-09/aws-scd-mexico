@@ -35,18 +35,52 @@ export function FacebookIcon({ className }: { className?: string }) {
 }
 
 // ── Primitivas de formulario ──────────────────────────────────────────────────
-export function Field({ label, error, children, hint }: { label?: string; error?: string; children: React.ReactNode; hint?: string }) {
+export function Field({
+  label,
+  error,
+  children,
+  hint,
+  required,
+}: {
+  label?: string;
+  error?: string;
+  children: React.ReactNode;
+  hint?: string;
+  required?: boolean;
+}) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <span className="font-mono text-xs font-semibold text-[#E6E4DA]">{label}</span>}
+      {label && (
+        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">
+          {label} {required && <span className="text-[#C143BC]">*</span>}
+        </span>
+      )}
+      {hint && !error && <p className="m-0 -mt-0.5 font-mono text-[11px] text-[#8E8EA0]">{hint}</p>}
       {children}
-      {hint && !error && <p className="font-mono text-[10px] text-[#B4B2A9]">{hint}</p>}
-      {error && <p className="font-mono text-xs text-[#E24B4A]">{error}</p>}
+      {error && <p className="m-0 font-mono text-xs text-[#E24B4A]">{error}</p>}
     </div>
   );
 }
 
-export function TextInput({ value, onChange, onBlur, placeholder, maxLength, className, inputMode, autoComplete }: { value: string; onChange: (v: string) => void; onBlur?: () => void; placeholder?: string; maxLength?: number; className?: string; inputMode?: "text" | "email" | "numeric" | "url"; autoComplete?: string }) {
+export function TextInput({
+  value,
+  onChange,
+  onBlur,
+  placeholder,
+  maxLength,
+  className,
+  inputMode,
+  autoComplete,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onBlur?: () => void;
+  placeholder?: string;
+  maxLength?: number;
+  className?: string;
+  inputMode?: "text" | "email" | "numeric" | "url";
+  autoComplete?: string;
+}) {
   return (
     <div className="relative">
       <input
@@ -59,16 +93,31 @@ export function TextInput({ value, onChange, onBlur, placeholder, maxLength, cla
         inputMode={inputMode}
         autoComplete={autoComplete ?? "off"}
         spellCheck={false}
-        className={cn("w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all", className)}
+        className={cn(
+          "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+          className,
+        )}
       />
       {maxLength && value.length > maxLength * 0.8 && (
-        <span className="absolute right-3 top-3 font-mono text-[10px] text-[#73726C]">{value.length}/{maxLength}</span>
+        <span className="absolute right-3 top-2.5 font-mono text-[10px] text-[#73726C]">{value.length}/{maxLength}</span>
       )}
     </div>
   );
 }
 
-export function Textarea({ value, onChange, placeholder, maxLength, rows = 4 }: { value: string; onChange: (v: string) => void; placeholder?: string; maxLength?: number; rows?: number }) {
+export function Textarea({
+  value,
+  onChange,
+  placeholder,
+  maxLength,
+  rows = 4,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  maxLength?: number;
+  rows?: number;
+}) {
   return (
     <div className="relative">
       <textarea
@@ -78,10 +127,10 @@ export function Textarea({ value, onChange, placeholder, maxLength, rows = 4 }: 
         placeholder={placeholder}
         maxLength={maxLength}
         rows={rows}
-        className="w-full resize-none rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/30 transition-all"
+        className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40"
       />
       {maxLength && (
-        <span className={cn("absolute right-3 bottom-3 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-[#D85A30]" : "text-[#73726C]")}>
+        <span className={cn("absolute right-3 bottom-2.5 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-[#E24B4A]" : "text-[#73726C]")}>
           {value.length}/{maxLength}
         </span>
       )}
@@ -122,7 +171,7 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
         onClick={() => !uploading && inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) upload(f); }}
-        className={cn("relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[6px] border-2 border-dashed transition-all", className ?? "aspect-square w-full max-w-[200px]", value ? "border-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A] hover:border-[#C143BC] hover:bg-[#0E0E1A]/80", uploading && "pointer-events-none cursor-wait")}
+        className={cn("relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[4px] border-2 border-dashed transition-all", className ?? "aspect-square w-full max-w-[200px]", value ? "border-[#C143BC] bg-[#090812]" : "border-[#2C2550] bg-[#090812] hover:border-[#C143BC]/70 hover:shadow-[0_0_12px_rgba(193,67,188,0.15)]", uploading && "pointer-events-none cursor-wait")}
       >
         {value && !uploading && (
           <>
@@ -143,7 +192,7 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
         {uploading && (
           <div className="flex w-full flex-col items-center gap-2 p-4">
             <div className="h-1.5 w-3/4 overflow-hidden rounded-full bg-[#2C2550]">
-              <div className="h-full bg-[#D85A30] transition-all" style={{ width: `${progress}%` }} />
+              <div className="h-full bg-[#C143BC] transition-all" style={{ width: `${progress}%` }} />
             </div>
             <span className="font-mono text-xs text-[#B4B2A9]">{progress}%</span>
           </div>
@@ -190,29 +239,32 @@ export function CardSelector<T extends string>({
   const gridCols = cols ?? (options.length <= 2 ? 2 : 4);
   return (
     <div className={cn("grid gap-3", gridCols === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4")}>
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          disabled={opt.disabled}
-          aria-disabled={opt.disabled}
-          onClick={() => onChange(opt.value)}
-          className={cn(
-            "flex flex-col items-center gap-2 rounded-[6px] border p-4 text-center transition-all",
-            opt.disabled
-              ? "cursor-not-allowed border-dashed border-[#2C2550] bg-transparent text-[#73726C] [&>span:nth-child(2)]:line-through"
-              : value === opt.value
-                ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
-                : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
-          )}
-        >
-          <span className="flex h-8 w-8 items-center justify-center">
-            {opt.icon}
-          </span>
-          <span className="font-mono text-xs font-bold">{opt.label}</span>
-          <span className="font-mono text-[10px] opacity-70">{opt.desc}</span>
-        </button>
-      ))}
+      {options.map((opt) => {
+        const selected = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            disabled={opt.disabled}
+            aria-disabled={opt.disabled}
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "flex flex-col items-center gap-2 rounded-[4px] border p-4 text-center transition-all",
+              opt.disabled
+                ? "cursor-not-allowed border-dashed border-[#2C2550] bg-transparent text-[#73726C] [&>span:nth-child(2)]:line-through"
+                : selected
+                  ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                  : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
+            )}
+          >
+            <span className={cn("flex h-8 w-8 items-center justify-center transition-colors", selected ? "text-[#F2A6F0]" : "text-[#8E8EA0]")}>
+              {opt.icon}
+            </span>
+            <span className="font-mono text-xs font-bold">{opt.label}</span>
+            <span className="font-mono text-[10px] opacity-70">{opt.desc}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -8,12 +8,10 @@ import { cn } from "@/lib/utils";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Cáscara compartida por los formularios públicos (/registro, /voluntarios,
- * /speakers): bloque de color a sangre, tinta oscura y la hoja del formulario
- * como una caja dura.
- *
- * La clase `.form-block` reviste los campos y botones de adentro (ver
- * globals.css), así que las primitivas del admin siguen intactas.
+ * Cáscara compartida para los formularios públicos (/registro, /voluntarios, /speakers).
+ * Diseñada bajo la estética de hardware rack / sintetizador arcade:
+ * líneas de fondo cuadriculadas, marquesina superior, manijas laterales,
+ * marcos con brillo y deck inferior con controles táctiles.
  */
 export function FormShell({
   title,
@@ -35,9 +33,20 @@ export function FormShell({
   className?: string;
 }) {
   return (
-    <main className="flex min-h-screen flex-col bg-[#0E0E1A] text-[#E6E4DA] pt-28">
-      <div className={cn("mx-auto w-full max-w-6xl flex-1 px-5", className)}>
-        {/* Cabecera */}
+    <main className="relative flex min-h-screen flex-col bg-[#0A0A12] text-[#E6E4DA] pt-24">
+      {/* Líneas de fondo: Rejilla cuadriculada retro-electrónica */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 opacity-[0.14]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(193,67,188,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(193,67,188,0.45) 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+
+      <div className={cn("relative mx-auto w-full max-w-6xl flex-1 px-4 sm:px-6 z-10", className)}>
+        {/* Cabecera del formulario */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,7 +58,8 @@ export function FormShell({
               {title}
             </DotHeading>
             {lead && (
-              <p className="mt-4 max-w-[48ch] font-mono text-sm leading-relaxed text-[#B4B2A9]">
+              <p className="mt-4 max-w-[54ch] font-mono text-xs sm:text-sm leading-relaxed text-[#B4B2A9]">
+                {"// "}
                 {lead}
               </p>
             )}
@@ -60,39 +70,88 @@ export function FormShell({
         <div
           className={cn(
             "grid gap-10 pb-20",
-            preview ? "lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12" : "max-w-3xl",
+            preview ? "lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12" : "max-w-4xl mx-auto",
           )}
         >
-          {/* Hoja del formulario */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12, ease }}
-            className="relative rounded-[12px] p-5 sm:p-8"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(216,90,48,0.22) 0%, rgba(66,43,120,0.55) 38%, rgba(123,63,166,0.40) 68%, rgba(97,59,184,0.38) 100%)",
-              border: "1px solid",
-              borderImage:
-                "linear-gradient(135deg, rgba(216,90,48,0.60) 0%, rgba(123,63,166,0.60) 50%, rgba(97,59,184,0.65) 100%) 1",
-              boxShadow:
-                "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(216,90,48,0.16), inset 0 1px 0 rgba(216,90,48,0.14), 0 0 24px rgba(97,59,184,0.20)",
-            }}
-          >
-            {/* Línea decorativa naranja→morado en la parte superior de la tarjeta */}
+          {/* Estructura de Chasis Arcade / Sintetizador */}
+          <div className="relative">
+            {/* Manija / Bracket lateral izquierdo */}
             <div
               aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-[2px] rounded-t-[12px]"
-              style={{
-                background:
-                  "linear-gradient(90deg, #D85A30 0%, #7B3FA6 50%, #613BB8 100%)",
-                opacity: 0.85,
-              }}
+              className="absolute -left-3.5 top-6 bottom-6 w-4 sm:-left-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
             />
-            {children}
-          </motion.div>
 
-          {/* Preview: acompaña el scroll mientras se llena */}
+            {/* Manija / Bracket lateral derecho */}
+            <div
+              aria-hidden="true"
+              className="absolute -right-3.5 top-6 bottom-6 w-4 sm:-right-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
+            />
+
+            {/* Marquesina superior técnica */}
+            <div className="relative z-30 mx-auto -mb-3.5 w-fit max-w-[88%] border-2 border-[#C143BC] bg-[#9A3097] px-6 py-1.5 text-center shadow-[0_0_20px_rgba(193,67,188,0.4)]">
+              <span className="arcade-pixel text-xs font-bold text-[#E6E4DA] sm:text-sm">
+                {EVENT.name} · {EVENT.year} // {title}
+              </span>
+            </div>
+
+            {/* RECUADRO EXTERIOR DEL CHASIS */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.12, ease }}
+              className="relative border-2 border-[#C143BC] bg-[#0E0E1A]/95 p-3.5 sm:p-6 shadow-[0_0_40px_rgba(193,67,188,0.25)]"
+            >
+              {/* PANTALLA INTERIOR */}
+              <div className="relative border-2 border-[#C143BC]/70 bg-[#0B0B14] p-4 sm:p-7 shadow-[inset_0_0_25px_rgba(193,67,188,0.06)]">
+                {/* Scanlines CRT */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, rgba(193,67,188,0.25) 0px, rgba(193,67,188,0.25) 1px, transparent 1px, transparent 3px)",
+                  }}
+                />
+
+                <div className="relative z-10">{children}</div>
+              </div>
+
+              {/* DECK INFERIOR DE CONTROL (Sintetizador con faders y LEDs) */}
+              <div className="mt-3.5 border-2 border-[#C143BC] bg-[#0B0B14] px-6 py-3.5 shadow-[0_0_20px_rgba(193,67,188,0.25)]">
+                <div className="flex items-center justify-between sm:justify-center sm:gap-14">
+                  {/* Etiqueta técnica */}
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#C143BC]/80 sm:hidden">
+                    SYS · OK
+                  </span>
+
+                  {/* Faders verticales */}
+                  <div className="flex items-center gap-8">
+                    <div className="relative flex h-8 w-3 items-center justify-center">
+                      <div className="h-full w-0.5 bg-[#C143BC]/40" />
+                      <div className="absolute top-[40%] h-3 w-3 rounded-full border border-[#0E0E1A] bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" />
+                    </div>
+                    <div className="relative flex h-8 w-3 items-center justify-center">
+                      <div className="h-full w-0.5 bg-[#C143BC]/40" />
+                      <div className="absolute top-[60%] h-3 w-3 rounded-full border border-[#0E0E1A] bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" />
+                    </div>
+                  </div>
+
+                  {/* Matriz de LEDs */}
+                  <div className="grid grid-cols-4 gap-2">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <span
+                        key={i}
+                        className="h-2 w-2 rounded-full bg-[#C143BC]/50 shadow-[0_0_5px_rgba(193,67,188,0.4)]"
+                        style={{ animation: `pulse-subtle 2.4s ease-in-out ${i * 0.18}s infinite` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Preview lateral (cuando aplica) */}
           {preview && (
             <div className="hidden lg:block">
               <div className="sticky top-28">{preview}</div>
@@ -101,8 +160,8 @@ export function FormShell({
         </div>
       </div>
 
-      {/* Cinta al pie: cierra la sección en vez de estrangular el navbar */}
-      <div className="overflow-hidden border-t border-[#2C2550] bg-[#0E0E1A]" aria-hidden="true">
+      {/* Cinta al pie */}
+      <div className="relative z-10 overflow-hidden border-t border-[#2C2550] bg-[#0E0E1A]" aria-hidden="true">
         <div
           className="flex w-max items-center"
           style={{ animation: "marquee 34s linear infinite" }}
@@ -125,8 +184,7 @@ export function FormShell({
 }
 
 /**
- * Cada campo entra con un desfase pequeño al montar: el formulario se arma a la
- * vista en vez de aparecer de golpe, y se lee el orden de lo que hay que llenar.
+ * Cada campo entra con un desfase pequeño al montar.
  */
 export function FieldReveal({
   index = 0,

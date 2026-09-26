@@ -141,15 +141,16 @@ export function SearchSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         className={cn(
-          "flex w-full items-center justify-between gap-2 border-2 bg-white/55 px-4 py-3 text-left font-mono text-sm transition-all",
-          "hover:border-hack-ink focus:border-hack-ink focus:outline-none",
-          invalid ? "border-error" : "border-hack-ink/35",
-          selected ? "text-hack-ink" : "text-hack-ink/45",
+          "flex w-full items-center justify-between gap-2 rounded-[4px] border px-4 py-2.5 text-left font-mono text-xs sm:text-sm transition-all outline-none",
+          invalid
+            ? "border-[#E24B4A] bg-[#090812] text-[#E6E4DA]"
+            : "border-[#2C2550] bg-[#090812] hover:border-[#C143BC]/60 focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+          selected ? "text-[#E6E4DA]" : "text-[#73726C]",
         )}
       >
         <span className="min-w-0 truncate">{selected?.label ?? placeholder}</span>
         <ChevronDown
-          className={cn("h-4 w-4 shrink-0 transition-transform", open && "rotate-180")}
+          className={cn("h-4 w-4 shrink-0 text-[#8E8EA0] transition-transform", open && "rotate-180 text-[#C143BC]")}
           aria-hidden="true"
         />
       </button>
@@ -161,11 +162,11 @@ export function SearchSelect({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full z-30 mt-1 border-2 border-hack-ink bg-hack-block shadow-[6px_6px_0_0_rgba(0,0,0,0.35)]"
+            className="absolute left-0 right-0 top-full z-30 mt-1 overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_0_25px_rgba(193,67,188,0.35)]"
           >
-            <div className="relative border-b-2 border-hack-ink/25">
+            <div className="relative border-b border-[#2C2550] bg-[#090812]">
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-hack-ink/50"
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#73726C]"
                 aria-hidden="true"
               />
               <input
@@ -178,36 +179,38 @@ export function SearchSelect({
                 onKeyDown={onKeyDown}
                 placeholder={searchPlaceholder}
                 aria-label={searchPlaceholder}
-                className="w-full border-0 bg-white/55 py-2.5 pl-9 pr-3 font-mono text-sm text-hack-ink outline-none placeholder:text-hack-ink/40"
+                className="w-full border-0 bg-transparent py-2.5 pl-9 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
               />
             </div>
 
             <ul role="listbox" className="m-0 max-h-64 list-none overflow-y-auto p-0">
               {filtered.length === 0 && (
-                <li className="px-3 py-3 font-mono text-xs text-hack-ink/50">{emptyLabel}</li>
+                <li className="px-3 py-3 font-mono text-xs text-[#73726C]">{emptyLabel}</li>
               )}
               {rows.map(({ option: o, header }, i) => (
-                  <li key={o.value}>
-                    {header && (
-                      <p className="dot-matrix m-0 border-b border-hack-ink/15 bg-hack-ink/5 px-3 py-1.5 text-sm leading-none text-hack-deep">
-                        {header}
-                      </p>
+                <li key={o.value}>
+                  {header && (
+                    <p className="dot-matrix m-0 border-b border-[#2C2550] bg-[#16102A] px-3 py-1.5 text-xs uppercase tracking-wider text-[#F2A6F0]">
+                      {header}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={o.value === value}
+                    onMouseEnter={() => setActive(i)}
+                    onClick={() => pick(o.value)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-2 px-3 py-2 text-left font-mono text-xs sm:text-sm transition-colors",
+                      i === active || o.value === value
+                        ? "bg-[#C143BC]/20 text-[#F2A6F0]"
+                        : "text-[#E6E4DA] hover:bg-[#16102A]",
                     )}
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={o.value === value}
-                      onMouseEnter={() => setActive(i)}
-                      onClick={() => pick(o.value)}
-                      className={cn(
-                        "flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left font-mono text-sm transition-colors",
-                        i === active ? "bg-hack-ink text-hack-block" : "text-hack-ink",
-                      )}
-                    >
-                      <span className="min-w-0">{o.label}</span>
-                      {o.value === value && <Check className="h-3.5 w-3.5 shrink-0" />}
-                    </button>
-                  </li>
+                  >
+                    <span className="min-w-0 truncate">{o.label}</span>
+                    {o.value === value && <Check className="h-3.5 w-3.5 shrink-0 text-[#F2A6F0]" />}
+                  </button>
+                </li>
               ))}
             </ul>
           </motion.div>

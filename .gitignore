@@ -43,8 +43,10 @@ next-env.d.ts
 
 # claude code
 .claude/
+.agents/
 CLAUDE.md
 AGENTS.md
+GEMINI.md
 
 # scripts operacionales de un solo uso; se versionan sólo los de instalación
 /scripts/*

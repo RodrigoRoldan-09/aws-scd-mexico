@@ -93,23 +93,13 @@ const EMPTY: VolunteerValues = {
  * Fila de dos campos que se alinean entre sí: con `subgrid` las dos columnas
  * comparten las mismas cuatro filas (etiqueta, pista, control y error).
  */
-function Row({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto_auto] sm:gap-y-0">
-      {children}
-    </div>
-  );
-}
-
-/**
- * Un campo: etiqueta, pista, control y error.
- *
- * El espaciado va en márgenes y no en `gap` justamente para poder entrar en el
- * `subgrid` de `Row`: los huecos vacíos —el de la pista cuando no hay, el del
- * error cuando no hay— no deben ocupar nada.
- */
 function Field({
-  label, hint, error, required, htmlFor, children,
+  label,
+  hint,
+  error,
+  required,
+  htmlFor,
+  children,
 }: {
   label: string;
   hint?: string;
@@ -119,33 +109,28 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col sm:row-span-4 sm:grid sm:grid-rows-subgrid">
-      <label htmlFor={htmlFor} className="font-mono text-sm font-semibold text-[#E6E4DA]">
-        {label} {required && <span className="text-[#D85A30]">*</span>}
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={htmlFor} className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">
+        {label} {required && <span className="text-[#C143BC]">*</span>}
       </label>
-      {hint ? (
-        <p className="m-0 mt-1 font-mono text-xs text-[#B4B2A9]">{hint}</p>
-      ) : (
-        <span aria-hidden="true" />
-      )}
-      <div className="mt-2">{children}</div>
-      {error ? (
-        <p className="m-0 mt-1.5 font-mono text-xs text-[#E24B4A]">{error}</p>
-      ) : (
-        <span aria-hidden="true" />
-      )}
+      {hint && <p className="m-0 -mt-0.5 font-mono text-[11px] text-[#8E8EA0]">{hint}</p>}
+      {children}
+      {error && <p className="m-0 font-mono text-xs text-[#E24B4A]">{error}</p>}
     </div>
   );
 }
 
 const inputCls =
-  "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
+  "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] " +
   "placeholder:text-[#73726C] outline-none transition-all " +
-  "focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/30";
+  "focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40";
 
-/** Botonera de una sola opción. La elegida va en negro, como en el resto. */
 function Choice({
-  options, value, onChange, cols = 2, locale,
+  options,
+  value,
+  onChange,
+  cols = 2,
+  locale,
 }: {
   options: Option[];
   value: string;
@@ -154,31 +139,31 @@ function Choice({
   locale: Locale;
 }) {
   return (
-    <div className={cn("grid gap-3", cols === 3 ? "grid-cols-3" : "grid-cols-2")}>
-      {options.map((o) => (
-        <button
-          key={o.value}
-          type="button"
-          onClick={() => onChange(o.value)}
-          className={cn(
-            "rounded-[6px] border px-3 py-3.5 font-mono text-sm font-bold transition-all",
-            value === o.value
-              ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
-              : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
-          )}
-        >
-          {labelOf(o, locale)}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/** Separador de bloque, con el mismo letrero de puntos del resto del sitio. */
-function Bloque({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="border-t border-[#2C2550] pt-6">
-      <p className="m-0 dot-matrix text-base leading-none text-[#B4B2A9]">{children}</p>
+    <div className={cn("grid gap-3", cols === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2")}>
+      {options.map((o) => {
+        const selected = value === o.value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            onClick={() => onChange(o.value)}
+            className={cn(
+              "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
+              selected
+                ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
+            )}
+          >
+            <span>{labelOf(o, locale)}</span>
+            <span
+              className={cn(
+                "h-2 w-2 rounded-full",
+                selected ? "bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" : "bg-[#2C2550]",
+              )}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -397,506 +382,558 @@ export function VoluntariosForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
-        {/* ── Quién eres ── */}
-        <Row>
-          <Field label={t.firstName} required htmlFor="v-name" error={errors.firstName}>
-            <input
-              id="v-name"
-              value={v.firstName}
-              onChange={(e) => set("firstName", e.target.value)}
-              placeholder={t.firstName_ph}
-              maxLength={60}
-              className={cn(inputCls, errors.firstName && "border-[#7f1d1d]")}
-            />
-          </Field>
-          <Field label={t.lastName} required htmlFor="v-last" error={errors.lastName}>
-            <input
-              id="v-last"
-              value={v.lastName}
-              onChange={(e) => set("lastName", e.target.value)}
-              placeholder={t.lastName_ph}
-              maxLength={60}
-              className={cn(inputCls, errors.lastName && "border-[#7f1d1d]")}
-            />
-          </Field>
-        </Row>
+      {/* RECUADRO 01: IDENTIDAD & CONTACTO */}
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+          <span className="arcade-pixel text-xs text-[#F2A6F0]">
+            // 01 · Identidad & Contacto
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+            Requerido
+          </span>
+        </div>
 
-        <Field
-          label={t.email}
-          required
-          htmlFor="v-mail"
-          error={errors.email}
-          hint={t.email_hint}
-        >
-          <input
-            id="v-mail"
-            type="email"
-            inputMode="email"
-            value={v.email}
-            onChange={(e) => set("email", e.target.value)}
-            onBlur={() => {
-              if (!v.email.trim()) return;
-              const r = normalizeEmail(v.email);
-              setErrors((x) => ({ ...x, email: r.ok ? undefined : r.reason }));
-            }}
-            placeholder={t.email_ph}
-            className={cn(inputCls, errors.email && "border-[#7f1d1d]")}
-          />
-        </Field>
+        <div className="flex flex-col gap-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label={t.firstName} required htmlFor="v-name" error={errors.firstName}>
+              <input
+                id="v-name"
+                value={v.firstName}
+                onChange={(e) => set("firstName", e.target.value)}
+                placeholder={t.firstName_ph}
+                maxLength={60}
+                className={cn(inputCls, errors.firstName && "border-[#E24B4A]")}
+              />
+            </Field>
+            <Field label={t.lastName} required htmlFor="v-last" error={errors.lastName}>
+              <input
+                id="v-last"
+                value={v.lastName}
+                onChange={(e) => set("lastName", e.target.value)}
+                placeholder={t.lastName_ph}
+                maxLength={60}
+                className={cn(inputCls, errors.lastName && "border-[#E24B4A]")}
+              />
+            </Field>
+          </div>
 
-        {/* El teléfono va con indicativo, como en el formulario de speakers. */}
-        <PhoneInput
-          label={t.phone}
-          required
-          countryCode={v.phoneCountry}
-          onCountryChange={(code) => set("phoneCountry", code)}
-          value={v.phone}
-          onChange={(local) => set("phone", local)}
-          error={errors.phone}
-        />
-
-        <Row>
-          <Field label={t.docType} required htmlFor="v-doct" error={errors.documentType}>
-            <SearchSelect
-              id="v-doct"
-              options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
-              value={v.documentType}
-              onChange={(val) => set("documentType", val)}
-              placeholder={t.select}
-              searchPlaceholder={t.searchType}
-              invalid={!!errors.documentType}
-            />
-          </Field>
           <Field
-            label={t.docNumber}
+            label={t.email}
             required
-            htmlFor="v-docn"
-            error={errors.documentNumber}
-            hint={t.docNumber_hint}
+            htmlFor="v-mail"
+            error={errors.email}
+            hint={t.email_hint}
           >
             <input
-              id="v-docn"
-              value={v.documentNumber}
-              onChange={(e) => set("documentNumber", e.target.value)}
+              id="v-mail"
+              type="email"
+              inputMode="email"
+              value={v.email}
+              onChange={(e) => set("email", e.target.value)}
               onBlur={() => {
-                if (!docRule || !v.documentNumber.trim()) return;
-                const r = normalizeDocument(v.documentNumber, docRule);
-                setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
-                if (r.ok) set("documentNumber", r.value);
+                if (!v.email.trim()) return;
+                const r = normalizeEmail(v.email);
+                setErrors((x) => ({ ...x, email: r.ok ? undefined : r.reason }));
               }}
-              disabled={!v.documentType}
-              placeholder={docExample ?? ""}
-              maxLength={24}
-              className={cn(
-                inputCls,
-                errors.documentNumber && "border-[#7f1d1d]",
-                !v.documentType && "cursor-not-allowed opacity-50",
-              )}
+              placeholder={t.email_ph}
+              className={cn(inputCls, errors.email && "border-[#E24B4A]")}
             />
           </Field>
-        </Row>
 
-        {/* ── De dónde vienes ── */}
-        <Field label={t.role} required htmlFor="v-role" error={errors.role}>
-          <SearchSelect
-            id="v-role"
-            options={roleOptions}
-            value={v.role}
-            onChange={(val) => set("role", val)}
-            placeholder={t.role_ph}
-            searchPlaceholder={t.searchRole}
-            invalid={!!errors.role}
+          <PhoneInput
+            label={t.phone}
+            required
+            countryCode={v.phoneCountry}
+            onCountryChange={(code) => set("phoneCountry", code)}
+            value={v.phone}
+            onChange={(local) => set("phone", local)}
+            error={errors.phone}
           />
-        </Field>
 
-        <AnimatePresence initial={false}>
-          {needsRoleOther && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label={t.docType} required htmlFor="v-doct" error={errors.documentType}>
+              <SearchSelect
+                id="v-doct"
+                options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
+                value={v.documentType}
+                onChange={(val) => set("documentType", val)}
+                placeholder={t.select}
+                searchPlaceholder={t.searchType}
+                invalid={!!errors.documentType}
+              />
+            </Field>
+            <Field
+              label={t.docNumber}
+              required
+              htmlFor="v-docn"
+              error={errors.documentNumber}
+              hint={t.docNumber_hint}
             >
-              <Field label={t.which} required htmlFor="v-roleo" error={errors.roleOther}>
-                <input
-                  id="v-roleo"
-                  value={v.roleOther}
-                  onChange={(e) => set("roleOther", e.target.value)}
-                  placeholder={t.which_ph}
-                  maxLength={FREE_TEXT_MAX}
-                  className={cn(inputCls, errors.roleOther && "border-[#7f1d1d]")}
-                />
-              </Field>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <input
+                id="v-docn"
+                value={v.documentNumber}
+                onChange={(e) => set("documentNumber", e.target.value)}
+                onBlur={() => {
+                  if (!docRule || !v.documentNumber.trim()) return;
+                  const r = normalizeDocument(v.documentNumber, docRule);
+                  setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
+                  if (r.ok) set("documentNumber", r.value);
+                }}
+                disabled={!v.documentType}
+                placeholder={docExample ?? ""}
+                maxLength={24}
+                className={cn(
+                  inputCls,
+                  errors.documentNumber && "border-[#E24B4A]",
+                  !v.documentType && "cursor-not-allowed opacity-50",
+                )}
+              />
+            </Field>
+          </div>
+        </div>
+      </div>
 
-        <Field label={t.entity} required htmlFor="v-ent" error={errors.entityType}>
-          <SearchSelect
-            id="v-ent"
-            options={entityOptions}
-            value={v.entityType}
-            onChange={(val) => set("entityType", val)}
-            placeholder={t.entity_ph}
-            searchPlaceholder={t.search}
-            invalid={!!errors.entityType}
-          />
-        </Field>
+      {/* RECUADRO 02: PERFIL & COMUNIDAD SBG */}
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+          <span className="arcade-pixel text-xs text-[#F2A6F0]">
+            // 02 · Perfil & Comunidad SBG
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+            Comunidad Tech
+          </span>
+        </div>
 
-        <AnimatePresence initial={false}>
-          {needsEntityName && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <Field
-                label={`Nombre de tu ${entities.find((x) => x.value === v.entityType)?.label.toLowerCase() ?? "entidad"}`}
-                required
-                htmlFor="v-entn"
-                error={errors.entityName}
+        <div className="flex flex-col gap-5">
+          <Field label={t.role} required htmlFor="v-role" error={errors.role}>
+            <SearchSelect
+              id="v-role"
+              options={roleOptions}
+              value={v.role}
+              onChange={(val) => set("role", val)}
+              placeholder={t.role_ph}
+              searchPlaceholder={t.searchRole}
+              invalid={!!errors.role}
+            />
+          </Field>
+
+          <AnimatePresence initial={false}>
+            {needsRoleOther && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
               >
-                <input
-                  id="v-entn"
-                  value={v.entityName}
-                  onChange={(e) => set("entityName", e.target.value)}
-                  placeholder={t.entityName_ph}
-                  maxLength={FREE_TEXT_MAX}
-                  className={cn(inputCls, errors.entityName && "border-[#7f1d1d]")}
-                />
-              </Field>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <Field label={t.which} required htmlFor="v-roleo" error={errors.roleOther}>
+                  <input
+                    id="v-roleo"
+                    value={v.roleOther}
+                    onChange={(e) => set("roleOther", e.target.value)}
+                    placeholder={t.which_ph}
+                    maxLength={FREE_TEXT_MAX}
+                    className={cn(inputCls, errors.roleOther && "border-[#E24B4A]")}
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <Field
-          label={t.sbg}
-          required
-          htmlFor="v-sbg"
-          error={errors.sbg}
-        >
-          <SearchSelect
-            id="v-sbg"
-            options={sbgOptions}
-            value={v.sbg}
-            onChange={(val) => set("sbg", val)}
-            placeholder={t.select}
-            searchPlaceholder={t.searchSbg}
-            invalid={!!errors.sbg}
-          />
-        </Field>
+          <Field label={t.entity} required htmlFor="v-ent" error={errors.entityType}>
+            <SearchSelect
+              id="v-ent"
+              options={entityOptions}
+              value={v.entityType}
+              onChange={(val) => set("entityType", val)}
+              placeholder={t.entity_ph}
+              searchPlaceholder={t.search}
+              invalid={!!errors.entityType}
+            />
+          </Field>
 
-        <AnimatePresence initial={false}>
-          {needsSbgOther && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <Field label={t.which} required htmlFor="v-sbgo" error={errors.sbgOther}>
-                <input
-                  id="v-sbgo"
-                  value={v.sbgOther}
-                  onChange={(e) => set("sbgOther", e.target.value)}
-                  placeholder={t.sbgOther_ph}
-                  maxLength={VOLUNTEER_TEXT_MAX}
-                  className={cn(inputCls, errors.sbgOther && "border-[#7f1d1d]")}
-                />
-              </Field>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── El día del evento ── */}
-        <Bloque>{t.blockDay}</Bloque>
-
-        <Field label={t.availability} required error={errors.availability}>
-          <Choice
-            options={AVAILABILITY}
-            locale={locale}
-            value={v.availability}
-            onChange={(val) => set("availability", val)}
-            cols={3}
-          />
-        </Field>
-
-        <Field
-          label={t.areas}
-          required
-          error={errors.interestAreas}
-          hint={t.areas_hint}
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {INTEREST_AREAS.map((a) => {
-              const on = v.interestAreas.includes(a.value);
-              return (
-                <button
-                  key={a.value}
-                  type="button"
-                  onClick={() => toggleArea(a.value)}
-                  className={cn(
-                    "flex items-center gap-3 rounded-[6px] border px-4 py-3 text-left font-mono text-sm font-bold transition-all",
-                    on
-                      ? "border-[#D85A30] bg-[#D85A30]/15 text-[#D85A30] shadow-[0_0_16px_rgba(216,90,48,0.25)]"
-                      : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
-                  )}
+          <AnimatePresence initial={false}>
+            {needsEntityName && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <Field
+                  label={`Nombre de tu ${entities.find((x) => x.value === v.entityType)?.label.toLowerCase() ?? "entidad"}`}
+                  required
+                  htmlFor="v-entn"
+                  error={errors.entityName}
                 >
-                  <span
+                  <input
+                    id="v-entn"
+                    value={v.entityName}
+                    onChange={(e) => set("entityName", e.target.value)}
+                    placeholder={t.entityName_ph}
+                    maxLength={FREE_TEXT_MAX}
+                    className={cn(inputCls, errors.entityName && "border-[#E24B4A]")}
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Field
+            label={t.sbg}
+            required
+            htmlFor="v-sbg"
+            error={errors.sbg}
+          >
+            <SearchSelect
+              id="v-sbg"
+              options={sbgOptions}
+              value={v.sbg}
+              onChange={(val) => set("sbg", val)}
+              placeholder={t.select}
+              searchPlaceholder={t.searchSbg}
+              invalid={!!errors.sbg}
+            />
+          </Field>
+
+          <AnimatePresence initial={false}>
+            {needsSbgOther && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <Field label={t.which} required htmlFor="v-sbgo" error={errors.sbgOther}>
+                  <input
+                    id="v-sbgo"
+                    value={v.sbgOther}
+                    onChange={(e) => set("sbgOther", e.target.value)}
+                    placeholder={t.sbgOther_ph}
+                    maxLength={VOLUNTEER_TEXT_MAX}
+                    className={cn(inputCls, errors.sbgOther && "border-[#E24B4A]")}
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* RECUADRO 03: PARTICIPACIÓN & PREFERENCIAS */}
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+          <span className="arcade-pixel text-xs text-[#F2A6F0]">
+            // 03 · Participación & Preferencias
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+            Día del Evento
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <Field label={t.availability} required error={errors.availability}>
+            <Choice
+              options={AVAILABILITY}
+              locale={locale}
+              value={v.availability}
+              onChange={(val) => set("availability", val)}
+              cols={3}
+            />
+          </Field>
+
+          <Field
+            label={t.areas}
+            required
+            error={errors.interestAreas}
+            hint={t.areas_hint}
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              {INTEREST_AREAS.map((a) => {
+                const on = v.interestAreas.includes(a.value);
+                return (
+                  <button
+                    key={a.value}
+                    type="button"
+                    onClick={() => toggleArea(a.value)}
                     className={cn(
-                      "flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border",
-                      on ? "border-[#D85A30] bg-[#D85A30]" : "border-[#2C2550] bg-[#0E0E1A]",
+                      "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
+                      on
+                        ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                        : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
                     )}
                   >
-                    {on && (
-                      <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="#FFFFFF" strokeWidth="5">
-                        <path d="M20 6 9 17l-5-5" />
-                      </svg>
+                    <span>{labelOf(a, locale)}</span>
+                    <span
+                      className={cn(
+                        "flex h-4 w-4 shrink-0 items-center justify-center rounded-[2px] border transition-all",
+                        on ? "border-[#C143BC] bg-[#C143BC] text-[#0E0E1A]" : "border-[#2C2550] bg-[#090812]",
+                      )}
+                    >
+                      {on && (
+                        <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="4">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+
+          <Field label={t.experience} required error={errors.previousExperience}>
+            <Choice
+              options={PREVIOUS_EXPERIENCE}
+              locale={locale}
+              value={v.previousExperience}
+              onChange={(val) => set("previousExperience", val)}
+              cols={3}
+            />
+          </Field>
+
+          <Field
+            label={t.motivation}
+            htmlFor="v-motiv"
+            hint={t.motivation_hint}
+          >
+            <textarea
+              id="v-motiv"
+              value={v.motivation}
+              onChange={(e) => set("motivation", e.target.value)}
+              placeholder={t.motivation_ph}
+              maxLength={MOTIVATION_MAX}
+              rows={4}
+              className={cn(inputCls, "resize-y")}
+            />
+          </Field>
+        </div>
+      </div>
+
+      {/* RECUADRO 04: LOGÍSTICA & CONTACTO DE EMERGENCIA */}
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+          <span className="arcade-pixel text-xs text-[#F2A6F0]">
+            // 04 · Logística & Contacto de Emergencia
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+            Staff SCD
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <Field
+            label={t.shirt}
+            required
+            error={errors.shirtSize}
+            hint={t.shirt_hint}
+          >
+            <Choice
+              options={SHIRT_SIZES}
+              locale={locale}
+              value={v.shirtSize}
+              onChange={(val) => set("shirtSize", val)}
+              cols={3}
+            />
+          </Field>
+
+          <Field
+            label={t.dietary}
+            required
+            error={errors.dietary}
+            hint={t.dietary_hint}
+          >
+            <div className="grid gap-3 sm:grid-cols-3">
+              {DIETARY.map((d) => {
+                const selected = v.dietary === d.value;
+                return (
+                  <button
+                    key={d.value}
+                    type="button"
+                    onClick={() => set("dietary", d.value)}
+                    className={cn(
+                      "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
+                      selected
+                        ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
+                        : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
                     )}
-                  </span>
-                  {labelOf(a, locale)}
-                </button>
-              );
-            })}
-          </div>
-        </Field>
+                  >
+                    <span>{labelOf(d, locale)}</span>
+                    <span
+                      className={cn(
+                        "h-2 w-2 rounded-full",
+                        selected ? "bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" : "bg-[#2C2550]",
+                      )}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
 
-        <Field label={t.experience} required error={errors.previousExperience}>
-          <Choice
-            options={PREVIOUS_EXPERIENCE}
-            locale={locale}
-            value={v.previousExperience}
-            onChange={(val) => set("previousExperience", val)}
-            cols={3}
-          />
-        </Field>
-
-        <Field
-          label={t.motivation}
-          htmlFor="v-motiv"
-          hint={t.motivation_hint}
-        >
-          <textarea
-            id="v-motiv"
-            value={v.motivation}
-            onChange={(e) => set("motivation", e.target.value)}
-            placeholder={t.motivation_ph}
-            maxLength={MOTIVATION_MAX}
-            rows={4}
-            className={cn(inputCls, "resize-y")}
-          />
-        </Field>
-
-        {/* ── Logística ── */}
-        <Bloque>{t.blockReady}</Bloque>
-
-        <Field
-          label={t.shirt}
-          required
-          error={errors.shirtSize}
-          hint={t.shirt_hint}
-        >
-          <Choice
-            options={SHIRT_SIZES}
-            locale={locale}
-            value={v.shirtSize}
-            onChange={(val) => set("shirtSize", val)}
-            cols={3}
-          />
-        </Field>
-
-        <Field
-          label={t.dietary}
-          required
-          error={errors.dietary}
-          hint={t.dietary_hint}
-        >
-          <div className="grid gap-3 sm:grid-cols-3">
-            {DIETARY.map((d) => (
-              <button
-                key={d.value}
-                type="button"
-                onClick={() => set("dietary", d.value)}
-                className={cn(
-                  "border-2 px-3 py-3 font-mono text-sm font-bold transition-all",
-                  v.dietary === d.value
-                    ? "border-[#D85A30] bg-[#D85A30] text-white shadow-[0_0_14px_rgba(216,90,48,0.3)]"
-                    : "border-[#2C2550] bg-[#0E0E1A] text-[#B4B2A9] hover:border-[#D85A30]/60 hover:text-[#E6E4DA]",
-                )}
+          <AnimatePresence initial={false}>
+            {needsDietaryOther && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
               >
-                {labelOf(d, locale)}
-              </button>
+                <Field label={t.which} required htmlFor="v-dieto" error={errors.dietaryOther}>
+                  <input
+                    id="v-dieto"
+                    value={v.dietaryOther}
+                    onChange={(e) => set("dietaryOther", e.target.value)}
+                    placeholder={t.dietaryOther_ph}
+                    maxLength={VOLUNTEER_TEXT_MAX}
+                    className={cn(inputCls, errors.dietaryOther && "border-[#E24B4A]")}
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Field
+            label={t.emergency}
+            required
+            htmlFor="v-emn"
+            error={errors.emergencyName}
+            hint={t.emergency_hint}
+          >
+            <input
+              id="v-emn"
+              value={v.emergencyName}
+              onChange={(e) => set("emergencyName", e.target.value)}
+              placeholder={t.emergency_ph}
+              maxLength={80}
+              className={cn(inputCls, errors.emergencyName && "border-[#E24B4A]")}
+            />
+          </Field>
+
+          <PhoneInput
+            label={t.emergencyPhone}
+            required
+            countryCode={v.emergencyCountry}
+            onCountryChange={(code) => set("emergencyCountry", code)}
+            value={v.emergencyPhone}
+            onChange={(local) => set("emergencyPhone", local)}
+            error={errors.emergencyPhone}
+          />
+        </div>
+      </div>
+
+      {/* RECUADRO 05: COMPROMISOS & ENVÍO */}
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
+          <span className="arcade-pixel text-xs text-[#F2A6F0]">
+            // 05 · Compromisos & Envío
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
+            Confirmación
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
+            {(
+              [
+                ["coc", acceptCoc, setAcceptCoc, t.coc_text, t.coc_link, "/codigo-conducta"],
+                ["privacy", acceptPrivacy, setAcceptPrivacy, t.privacy_text, t.privacy_link, "/privacidad"],
+              ] as const
+            ).map(([key, checked, setter, text, linkText, href]) => (
+              <div key={key} className="flex flex-col gap-1">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => {
+                      setter(e.target.checked);
+                      if (errors[key]) setErrors((err) => ({ ...err, [key]: undefined }));
+                    }}
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                  />
+                  <span className="font-mono text-xs leading-relaxed text-[#B4B2A9]">
+                    {text}{" "}
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#F2A6F0] underline underline-offset-4 hover:text-[#E6E4DA]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {linkText}
+                    </a>
+                    . <span className="text-[#C143BC]">*</span>
+                  </span>
+                </label>
+                {errors[key] && (
+                  <p className="m-0 pl-7 font-mono text-xs text-[#E24B4A]">{errors[key]}</p>
+                )}
+              </div>
             ))}
           </div>
-        </Field>
 
-        <AnimatePresence initial={false}>
-          {needsDietaryOther && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <Field label={t.which} required htmlFor="v-dieto" error={errors.dietaryOther}>
-                <input
-                  id="v-dieto"
-                  value={v.dietaryOther}
-                  onChange={(e) => set("dietaryOther", e.target.value)}
-                  placeholder={t.dietaryOther_ph}
-                  maxLength={VOLUNTEER_TEXT_MAX}
-                  className={cn(inputCls, errors.dietaryOther && "border-[#7f1d1d]")}
-                />
-              </Field>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <Field
-          label={t.emergency}
-          required
-          htmlFor="v-emn"
-          error={errors.emergencyName}
-          hint={t.emergency_hint}
-        >
-          <input
-            id="v-emn"
-            value={v.emergencyName}
-            onChange={(e) => set("emergencyName", e.target.value)}
-placeholder={t.emergency_ph}
-            maxLength={80}
-            className={cn(inputCls, errors.emergencyName && "border-[#7f1d1d]")}
-          />
-        </Field>
-
-        <PhoneInput
-          label={t.emergencyPhone}
-          required
-          countryCode={v.emergencyCountry}
-          onCountryChange={(code) => set("emergencyCountry", code)}
-          value={v.emergencyPhone}
-          onChange={(local) => set("emergencyPhone", local)}
-          error={errors.emergencyPhone}
-        />
-
-        {/* ── Consentimientos ── */}
-        <div className="flex flex-col gap-3 border-t border-[#2C2550] pt-6">
-          {(
-            [
-              ["coc", acceptCoc, setAcceptCoc, t.coc_text, t.coc_link, "/codigo-conducta"],
-              ["privacy", acceptPrivacy, setAcceptPrivacy, t.privacy_text, t.privacy_link, "/privacidad"],
-            ] as const
-          ).map(([key, checked, setter, text, linkText, href]) => (
-            <div key={key} className="flex flex-col gap-1">
-              <label className="flex cursor-pointer items-start gap-3">
-                <button
-                  type="button"
-                  role="checkbox"
-                  aria-checked={checked}
-                  onClick={() => {
-                    setter(!checked);
-                    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
-                  }}
-                  className={cn(
-                    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border transition-all",
-                    checked ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]",
-                    errors[key] && "border-[#E24B4A]",
-                  )}
-                >
-                  {checked && (
-                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#FFFFFF" strokeWidth="4">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                  )}
-                </button>
-                <span className="font-mono text-xs leading-relaxed text-[#B4B2A9]">
-                  {text}
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-bold text-[#378ADD] underline underline-offset-4 hover:text-[#3DD6D0]"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {linkText}
-                  </a>
-                  . <span className="text-[#D85A30]">*</span>
-                </span>
-              </label>
-              {errors[key] && (
-                <p className="m-0 pl-8 font-mono text-xs text-[#E24B4A]">{errors[key]}</p>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Quién se equivocó de formulario.
-            Las dos confusiones son reales y de ida y vuelta: quien sólo quiere
-            asistir y llegó acá, y quien ya se registró de asistente y ahora
-            quiere sumarse al equipo. Ese segundo caso no se arregla solo — no
-            se puede estar en las dos listas — así que en vez de dejarlo
-            postularse y que le rebote, se le dice a quién escribir. */}
-        <div className="flex flex-col gap-2 rounded-[6px] border border-[#3DD6D0]/30 bg-[#3DD6D0]/10 px-4 py-3.5">
-          <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
-            {t.notice1a}
-            <strong className="font-bold text-[#3DD6D0]">{t.notice1b}</strong>
-            {t.notice1c}
-            <Link href="/registro" className="font-bold text-[#3DD6D0] underline underline-offset-4 hover:brightness-110">
-              {t.notice1link}
-            </Link>
-            .
-          </p>
-          <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
-            {t.notice2a}
-            <ObfuscatedEmail
-              box="contacto"
-              subject="Quiero pasar de asistente a voluntario"
-              className="font-bold text-[#3DD6D0] underline underline-offset-4 hover:brightness-110"
-            />
-            {t.notice2b}
-          </p>
-        </div>
-
-        {siteKey && (
-          <div className="flex items-center justify-center">
-            {captchaMounted ? (
-              <Turnstile
-                ref={captchaRef}
-                siteKey={siteKey}
-                theme="dark"
-                appearance="interaction-only"
-                onVerify={setCaptchaToken}
-                onExpire={() => setCaptchaToken("")}
-                onError={() => setCaptchaToken("")}
-              />
-            ) : null}
+          <div className="flex flex-col gap-2 rounded-[4px] border border-[#C143BC]/30 bg-[#16102A]/60 px-4 py-3.5">
+            <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
+              {t.notice1a}{" "}
+              <strong className="font-bold text-[#F2A6F0]">{t.notice1b}</strong>
+              {t.notice1c}{" "}
+              <Link href="/registro" className="font-bold text-[#F2A6F0] underline underline-offset-4 hover:brightness-110">
+                {t.notice1link}
+              </Link>
+              .
+            </p>
+            <p className="m-0 font-mono text-xs leading-relaxed text-[#E6E4DA]">
+              {t.notice2a}{" "}
+              <ObfuscatedEmail
+                box="contacto"
+                subject="Quiero pasar de asistente a voluntario"
+                className="font-bold text-[#F2A6F0] underline underline-offset-4 hover:brightness-110"
+              />{" "}
+              {t.notice2b}
+            </p>
           </div>
-        )}
 
-        {formError && (
-          <p className="m-0 rounded-[6px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">
-            {formError}
-          </p>
-        )}
+          {siteKey && (
+            <div className="flex items-center justify-center py-2">
+              {captchaMounted ? (
+                <Turnstile
+                  ref={captchaRef}
+                  siteKey={siteKey}
+                  theme="dark"
+                  appearance="interaction-only"
+                  onVerify={setCaptchaToken}
+                  onExpire={() => setCaptchaToken("")}
+                  onError={() => setCaptchaToken("")}
+                />
+              ) : null}
+            </div>
+          )}
 
-        {siteKey && !captchaToken && !formError && (
-          <p className="m-0 text-center font-mono text-xs text-[#73726C]">
-            {t.captcha}
-          </p>
-        )}
+          {formError && (
+            <p className="m-0 rounded-[4px] border border-[#E24B4A] bg-[#E24B4A]/10 px-4 py-3 font-mono text-sm text-[#E24B4A]">
+              {formError}
+            </p>
+          )}
 
-        <button
-          type="submit"
-          disabled={submitting || (!!siteKey && !captchaToken)}
-          className="w-full rounded-[6px] bg-[#D85A30] px-6 py-4 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
-        >
-          {submitting ? t.sending : t.submit}
-        </button>
+          {siteKey && !captchaToken && !formError && (
+            <p className="m-0 text-center font-mono text-xs text-[#73726C]">
+              {t.captcha}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={submitting || (!!siteKey && !captchaToken)}
+            className="w-full rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] py-3.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? t.sending : t.submit}
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

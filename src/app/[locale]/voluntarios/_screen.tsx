@@ -88,8 +88,12 @@ export function VoluntariosScreen({
       {isOpen ? (
         <VoluntariosForm sbgs={sbgs} onSubmit={handleSubmit} />
       ) : (
-        <div className="py-12 text-center">
-          <p className="font-mono text-sm text-hack-ink/70">{closedTitle}</p>
+        <div className="py-10 text-center flex flex-col items-center justify-center">
+          <div className="border border-[#C143BC]/60 bg-[#16102A]/80 px-10 py-6 text-center shadow-[inset_0_0_15px_rgba(193,67,188,0.15)] rounded-[4px] max-w-md w-full">
+            <span className="arcade-pixel text-lg font-bold text-[#F2A6F0] block">
+              {closedTitle}
+            </span>
+          </div>
         </div>
       )}
     </FormShell>
