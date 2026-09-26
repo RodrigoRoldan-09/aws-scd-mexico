@@ -7,6 +7,7 @@ import  CoinLogo  from "@/components/effects/coin-logo";
 import { MarqueeStrip } from "@/components/ui/marquee-strip";
 import { HardButton } from "@/components/ui/hard-button";
 import { useCountdown } from "@/hooks/use-countdown";
+import { TalaveraHalo } from "@/components/effects/talavera-halo";
 import { EVENT, SOCIAL } from "@/lib/constants";
 import { localePath } from "@/lib/utils";
 
@@ -121,14 +122,18 @@ export function Hero() {
     >
       <div className="relative z-10 mx-auto grid w-full max-w-[1240px] flex-1 grid-cols-1 items-center gap-8 px-6 pb-10 pt-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
         <div className="order-2 lg:order-1">
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="font-mono text-sm tracking-widest text-[#C143BC] uppercase md:text-base"
+            className="inline-flex items-center gap-2"
           >
-            méxico-cdmx [26]
-          </motion.p>
+            <span className="h-2 w-2 rotate-45 border border-[#3DD6D0] bg-[#C143BC]" />
+            <p className="font-mono text-sm tracking-widest text-[#C143BC] uppercase md:text-base">
+              méxico-cdmx [26]
+            </p>
+            <span className="h-1.5 w-6 border-y border-[#3DD6D0]/60" />
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -257,6 +262,9 @@ export function Hero() {
           className="order-1 lg:order-2"
         >
           <div className="relative mx-auto w-full max-w-[560px]">
+            {/* Halo concéntrico de Talavera Poblana en versión Cyber-Neon */}
+            <TalaveraHalo className="-top-8 -bottom-8 -left-8 -right-8" />
+
             {/* Resplandor de fondo detrás de la moneda */}
             <div
               aria-hidden="true"

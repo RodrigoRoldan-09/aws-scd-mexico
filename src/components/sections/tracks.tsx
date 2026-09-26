@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { DotHeading } from "@/components/ui/dot-heading";
+import { TalaveraFrameCorners } from "@/components/ui/talavera-corner";
 import { cn } from "@/lib/utils";
 import { tracks, type StageTrack } from "@/data/tracks";
 
@@ -19,7 +20,13 @@ function StageCard({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <article className="group flex flex-col justify-between overflow-hidden rounded-[16px] border-2 border-[#2C2550] bg-[#1E1838] p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C143BC] hover:shadow-[6px_6px_0_0_var(--color-hack-dim)]">
+    <article className="group relative flex flex-col justify-between overflow-hidden rounded-[16px] border-2 border-[#2C2550] bg-[#1E1838] p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#C143BC] hover:shadow-[6px_6px_0_0_var(--color-hack-dim)]">
+      {/* Esquineros de azulejo Talavera en estética neon */}
+      <TalaveraFrameCorners
+        size={22}
+        color="#C143BC"
+        className="opacity-40 transition-opacity duration-300 group-hover:opacity-100"
+      />
       <div>
         {/* Cabecera: número y badge de etapa */}
         <div className="flex items-center justify-between gap-2 border-b border-[#2C2550]/60 pb-3">

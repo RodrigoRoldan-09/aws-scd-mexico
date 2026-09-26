@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/sections/hero";
 import { Strip } from "@/components/sections/strips";
+import { TalaveraGreca } from "@/components/effects/talavera-greca";
 import { About } from "@/components/sections/about";
 import { WhyAttend } from "@/components/sections/why-attend";
 import { Tracks } from "@/components/sections/tracks";
@@ -25,12 +26,14 @@ export default async function HomePage({
   return (
     <main>
       <Hero />
+      <TalaveraGreca variant="hybrid" height={20} />
       <About />
       <Strip k="hybrid" tone="ink" duration={34} reverse />
 
       <WhyAttend />
       <Tracks />
 
+      <TalaveraGreca variant="cyan" height={20} />
       <Strip k="event" tone="ink" duration={36} reverse />
 
       <Agenda />
@@ -41,6 +44,7 @@ export default async function HomePage({
       <FAQ />
 
       <Strip k="date" tone="block" duration={30} />
+      <TalaveraGreca variant="pink" height={20} />
       <RegistrationCTA />
     </main>
   );

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { CodeLines, type CodeParagraph } from "@/components/effects/code-lines";
 import { CountPictogram } from "@/components/effects/count-pictogram";
+import { TalaveraTile } from "@/components/effects/talavera-tile";
 import { BlockSection } from "@/components/ui/block-section";
 import { DotHeading } from "@/components/ui/dot-heading";
 
@@ -78,13 +79,16 @@ export function About() {
           ))}
 
           <ScrollReveal delay={0.4}>
-            <div className="mt-2 inline-flex items-baseline gap-4 border-t-2 border-hack-ink pt-5">
-              <span className="font-display text-6xl font-medium leading-none text-hack-ink md:text-7xl">
-                $0
-              </span>
-              <span className="dot-matrix text-2xl leading-none text-hack-ink md:text-3xl">
-                {t("stat_cost")}
-              </span>
+            <div className="mt-2 flex items-center justify-between border-t-2 border-hack-ink pt-5">
+              <div className="inline-flex items-baseline gap-4">
+                <span className="font-display text-6xl font-medium leading-none text-hack-ink md:text-7xl">
+                  $0
+                </span>
+                <span className="dot-matrix text-2xl leading-none text-hack-ink md:text-3xl">
+                  {t("stat_cost")}
+                </span>
+              </div>
+              <TalaveraTile size={64} variant="hybrid" className="hidden sm:block opacity-85" />
             </div>
           </ScrollReveal>
         </div>

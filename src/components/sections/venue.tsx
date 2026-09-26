@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { MapPin, Users } from "lucide-react";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { WireCdmx } from "@/components/effects/wire-cdmx";
+import { TalaveraFrameCorners } from "@/components/ui/talavera-corner";
 import { DotHeading } from "@/components/ui/dot-heading";
 import { BlockSection } from "@/components/ui/block-section";
 import { HardButton } from "@/components/ui/hard-button";
@@ -61,12 +62,13 @@ export function Venue() {
         </div>
 
         <ScrollReveal delay={0.2} from="scale">
-          <div className="relative mx-auto w-full max-w-[520px]">
+          <div className="relative mx-auto w-full max-w-[520px] rounded-[16px] border border-[#2C2550] bg-[#1E1838]/40 p-3 sm:p-5">
+            <TalaveraFrameCorners size={28} color="#3DD6D0" className="opacity-70" />
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 rounded-full bg-[#C143BC]/10 blur-3xl"
             />
-            <WireCdmx className="relative h-[420px] w-full md:h-[520px]" />
+            <WireCdmx className="relative h-[400px] w-full md:h-[500px]" />
             <p className="font-mono mt-1 text-center text-[11px] text-[#8B84A0] sm:text-xs">
               ángel de la independencia · popocatépetl · iztaccíhuatl
             </p>
