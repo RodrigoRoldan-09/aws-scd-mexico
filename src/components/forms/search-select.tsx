@@ -133,7 +133,7 @@ export function SearchSelect({
   );
 
   return (
-    <div ref={rootRef} className={cn("relative", className)}>
+    <div ref={rootRef} className={cn("relative", open && "z-30", className)}>
       <button
         id={id}
         type="button"
@@ -141,7 +141,7 @@ export function SearchSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-[4px] border px-4 py-2.5 text-left font-mono text-xs sm:text-sm transition-all outline-none",
+          "flex w-full items-center justify-between gap-2 rounded-[4px] border px-4 py-2.5 min-h-11 text-left font-mono text-xs sm:text-sm transition-all outline-none",
           invalid
             ? "border-[#E24B4A] bg-[#090812] text-[#E6E4DA]"
             : "border-[#2C2550] bg-[#090812] hover:border-[#C143BC]/60 focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
@@ -162,7 +162,7 @@ export function SearchSelect({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full z-30 mt-1 overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_0_25px_rgba(193,67,188,0.35)]"
+            className="absolute left-0 right-0 top-full z-40 mt-1 overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_4px_25px_rgba(193,67,188,0.4)]"
           >
             <div className="relative border-b border-[#2C2550] bg-[#090812]">
               <Search
@@ -179,11 +179,11 @@ export function SearchSelect({
                 onKeyDown={onKeyDown}
                 placeholder={searchPlaceholder}
                 aria-label={searchPlaceholder}
-                className="w-full border-0 bg-transparent py-2.5 pl-9 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
+                className="w-full border-0 bg-transparent py-2.5 min-h-10 pl-9 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
               />
             </div>
 
-            <ul role="listbox" className="m-0 max-h-64 list-none overflow-y-auto p-0">
+            <ul role="listbox" className="m-0 max-h-60 list-none overflow-y-auto p-0">
               {filtered.length === 0 && (
                 <li className="px-3 py-3 font-mono text-xs text-[#73726C]">{emptyLabel}</li>
               )}
@@ -201,7 +201,7 @@ export function SearchSelect({
                     onMouseEnter={() => setActive(i)}
                     onClick={() => pick(o.value)}
                     className={cn(
-                      "flex w-full items-center justify-between gap-2 px-3 py-2 text-left font-mono text-xs sm:text-sm transition-colors",
+                      "flex w-full items-center justify-between gap-2 px-3 py-2.5 min-h-10 text-left font-mono text-xs sm:text-sm transition-colors",
                       i === active || o.value === value
                         ? "bg-[#C143BC]/20 text-[#F2A6F0]"
                         : "text-[#E6E4DA] hover:bg-[#16102A]",

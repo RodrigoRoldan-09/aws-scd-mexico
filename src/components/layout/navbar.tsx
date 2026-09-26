@@ -357,7 +357,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-colors hover:border-[#613BB8] hover:text-[#C143BC] md:hidden"
+              className="flex h-11 w-11 min-h-11 min-w-11 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-colors hover:border-[#613BB8] hover:text-[#C143BC] md:hidden"
               aria-label="Abrir menú"
             >
               <svg

@@ -33,7 +33,7 @@ export function FormShell({
   className?: string;
 }) {
   return (
-    <main className="relative flex min-h-screen flex-col bg-[#0A0A12] text-[#E6E4DA] pt-24">
+    <main className="relative flex min-h-screen flex-col bg-[#0A0A12] text-[#E6E4DA] pt-24 overflow-x-hidden">
       {/* Líneas de fondo: Rejilla cuadriculada retro-electrónica */}
       <div
         aria-hidden="true"
@@ -75,21 +75,21 @@ export function FormShell({
         >
           {/* Estructura de Chasis Arcade / Sintetizador */}
           <div className="relative">
-            {/* Manija / Bracket lateral izquierdo */}
+            {/* Manija / Bracket lateral izquierdo (visible en sm en adelante para no desbordar en móvil) */}
             <div
               aria-hidden="true"
-              className="absolute -left-3.5 top-6 bottom-6 w-4 sm:-left-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
+              className="hidden sm:block absolute -left-5 top-6 bottom-6 w-4 sm:-left-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
             />
 
-            {/* Manija / Bracket lateral derecho */}
+            {/* Manija / Bracket lateral derecho (visible en sm en adelante para no desbordar en móvil) */}
             <div
               aria-hidden="true"
-              className="absolute -right-3.5 top-6 bottom-6 w-4 sm:-right-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
+              className="hidden sm:block absolute -right-5 top-6 bottom-6 w-4 sm:-right-6 sm:w-5 rounded-[2px] border-l-2 border-r-2 border-[#C143BC] bg-[#852781] shadow-[0_0_16px_rgba(193,67,188,0.35)] z-20"
             />
 
-            {/* Marquesina superior técnica */}
-            <div className="relative z-30 mx-auto -mb-3.5 w-fit max-w-[88%] border-2 border-[#C143BC] bg-[#9A3097] px-6 py-1.5 text-center shadow-[0_0_20px_rgba(193,67,188,0.4)]">
-              <span className="arcade-pixel text-xs font-bold text-[#E6E4DA] sm:text-sm">
+            {/* Marquesina superior técnica - sin margen negativo abrupto en móvil para evitar que se encime */}
+            <div className="relative z-30 mx-auto mb-1 sm:-mb-3.5 w-fit max-w-[94%] border-2 border-[#C143BC] bg-[#9A3097] px-3.5 py-1.5 sm:px-6 text-center shadow-[0_0_20px_rgba(193,67,188,0.4)]">
+              <span className="arcade-pixel text-[11px] sm:text-sm font-bold text-[#E6E4DA] leading-snug block">
                 {EVENT.name} · {EVENT.year} // {title}
               </span>
             </div>
@@ -99,10 +99,10 @@ export function FormShell({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.12, ease }}
-              className="relative border-2 border-[#C143BC] bg-[#0E0E1A]/95 p-3.5 sm:p-6 shadow-[0_0_40px_rgba(193,67,188,0.25)]"
+              className="relative border-2 border-[#C143BC] bg-[#0E0E1A]/95 p-2.5 sm:p-6 shadow-[0_0_40px_rgba(193,67,188,0.25)]"
             >
               {/* PANTALLA INTERIOR */}
-              <div className="relative border-2 border-[#C143BC]/70 bg-[#0B0B14] p-4 sm:p-7 shadow-[inset_0_0_25px_rgba(193,67,188,0.06)]">
+              <div className="relative border-2 border-[#C143BC]/70 bg-[#0B0B14] p-3 sm:p-7 shadow-[inset_0_0_25px_rgba(193,67,188,0.06)]">
                 {/* Scanlines CRT */}
                 <div
                   aria-hidden="true"
@@ -117,7 +117,7 @@ export function FormShell({
               </div>
 
               {/* DECK INFERIOR DE CONTROL (Sintetizador con faders y LEDs) */}
-              <div className="mt-3.5 border-2 border-[#C143BC] bg-[#0B0B14] px-6 py-3.5 shadow-[0_0_20px_rgba(193,67,188,0.25)]">
+              <div className="mt-3.5 border-2 border-[#C143BC] bg-[#0B0B14] px-4 sm:px-6 py-3 sm:py-3.5 shadow-[0_0_20px_rgba(193,67,188,0.25)]">
                 <div className="flex items-center justify-between sm:justify-center sm:gap-14">
                   {/* Etiqueta técnica */}
                   <span className="font-mono text-[10px] uppercase tracking-wider text-[#C143BC]/80 sm:hidden">

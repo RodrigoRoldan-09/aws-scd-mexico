@@ -88,7 +88,7 @@ export function LoginForm() {
   }, []);
 
   const fieldClass =
-    "w-full rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
+    "w-full min-h-11 rounded-[6px] border border-[#2C2550] bg-[#0E0E1A] px-4 py-3 font-mono text-sm text-[#E6E4DA] " +
     "placeholder:text-[#73726C] outline-none transition-all " +
     "focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/30";
 
@@ -184,7 +184,7 @@ export function LoginForm() {
                   // lector de pantalla anuncia el estado sin que la etiqueta baile.
                   aria-pressed={showPassword}
                   aria-label="Mostrar contraseña"
-                  className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center text-[#B4B2A9] transition-colors hover:text-[#E6E4DA]"
+                  className="absolute right-0 top-1/2 flex h-11 w-11 min-h-11 min-w-11 -translate-y-1/2 items-center justify-center text-[#B4B2A9] transition-colors hover:text-[#E6E4DA]"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -225,7 +225,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="w-full rounded-[6px] bg-[#D85A30] px-6 py-3.5 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
+              className="flex min-h-11 w-full items-center justify-center rounded-[6px] bg-[#D85A30] px-6 py-3.5 font-mono text-sm font-bold text-white shadow-[0_4px_14px_rgba(216,90,48,0.35)] transition-all hover:bg-[#D85A30]/90 active:scale-[0.99] disabled:opacity-50"
             >
               {loading ? "Verificando…" : "Iniciar sesión"}
             </button>

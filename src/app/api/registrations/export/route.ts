@@ -28,6 +28,8 @@ const PERSON_COLUMNS: { label: string; value: (r: IRegistration) => string }[] =
   { label: "Rol", value: (r) => roleLabelOf(r.role, r.roleOther) },
   { label: "Tipo de entidad", value: (r) => entityLabelOf(r.entityType) },
   { label: "Entidad", value: (r) => r.entityName ?? "" },
+  { label: "Pertenece a comunidad", value: (r) => (r.fromCommunity ? "Sí" : "No") },
+  { label: "Nombre de comunidad", value: (r) => r.communityName ?? "" },
   {
     label: "Aceptó código de conducta",
     value: (r) => (r.consent?.codeOfConduct ? r.consent.codeOfConduct.toISOString() : ""),

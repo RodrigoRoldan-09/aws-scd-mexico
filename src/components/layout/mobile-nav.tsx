@@ -50,6 +50,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         { label: "Acerca de", href: resolveHref("#about"), icon: Info },
         { label: "Speakers", href: localePath(locale, "/directorio"), icon: Users },
         { label: "Agenda", href: resolveHref("#agenda"), icon: Calendar },
+        { label: "Comunidades", href: localePath(locale, "/comunidades"), icon: Rocket },
         { label: "Sponsors & Contacto", href: localePath(locale, "/sponsors"), icon: HeartHandshake },
       ],
     },
@@ -103,7 +104,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-colors hover:border-[#613BB8] hover:text-[#C143BC]"
+              className="flex h-11 w-11 min-h-11 min-w-11 items-center justify-center rounded-[6px] border border-[#2C2550] bg-[#1E1838] text-[#B4B2A9] transition-colors hover:border-[#613BB8] hover:text-[#C143BC]"
               aria-label="Cerrar menú"
             >
               <X className="h-4 w-4" />
@@ -163,7 +164,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                         key={item.label}
                         href={item.href}
                         onClick={onClose}
-                        className="group flex items-center gap-3 rounded-[8px] border border-[#2C2550] bg-[#1E1838] p-2.5 transition-colors hover:border-[#613BB8]"
+                        className="group flex min-h-11 items-center gap-3 rounded-[8px] border border-[#2C2550] bg-[#1E1838] p-2.5 transition-colors hover:border-[#613BB8]"
                       >
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E] text-[#C143BC]">
                           <Icon className="h-3.5 w-3.5" />

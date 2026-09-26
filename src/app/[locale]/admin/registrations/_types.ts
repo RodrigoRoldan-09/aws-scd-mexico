@@ -17,6 +17,8 @@ export interface RegistrationRow {
   roleOther: string | null;
   entityType: string;
   entityName: string | null;
+  fromCommunity?: boolean;
+  communityName?: string | null;
   consent?: {
     codeOfConduct: string | null;
     privacy: string | null;

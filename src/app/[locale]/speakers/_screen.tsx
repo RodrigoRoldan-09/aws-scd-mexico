@@ -512,7 +512,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
         </div>
 
         {/* Recuadro del paso actual */}
-        <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
           <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
             <span className="arcade-pixel text-xs text-[#F2A6F0]">
               // 0{step + 1} · {step === 0 ? t.step1 : step === 1 ? t.step2 : t.step3}
@@ -586,7 +586,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                         {([["es", t.lang_es], ["en", t.lang_en]] as const).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => set("language", val)}
                             className={cn(
-                              "flex-1 rounded-[4px] border py-3 font-mono text-xs font-bold transition-all",
+                              "flex-1 rounded-[4px] border py-3 px-2 min-h-11 flex items-center justify-center font-mono text-xs font-bold transition-all",
                               form.language === val
                                 ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
                                 : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
@@ -651,7 +651,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       </AnimatePresence>
                     </Field>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
                       <Field label={t.firstName} error={errors.firstName} required>
                         <TextInput value={form.firstName} onChange={(v) => { set("firstName", v); clearErr("firstName"); }} placeholder={t.firstName_ph} maxLength={80} />
                       </Field>
@@ -710,7 +710,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                         {([true, false] as const).map((val) => (
                           <button key={String(val)} type="button" onClick={() => { set("firstTimeSpeaker", val); clearErr("firstTimeSpeaker"); }}
                             className={cn(
-                              "flex-1 rounded-[4px] border py-3 font-mono text-sm font-bold transition-all",
+                              "flex-1 rounded-[4px] border py-3 px-2 min-h-11 flex items-center justify-center font-mono text-sm font-bold transition-all",
                               form.firstTimeSpeaker === val
                                 ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
                                 : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
@@ -745,7 +745,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               inputMode="url"
                               aria-label={label}
                               className={cn(
-                                "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] py-2.5 pl-10 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+                                "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] py-2.5 min-h-11 pl-10 pr-3 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
                                 socialErrors[key] && "border-[#E24B4A]",
                               )}
                             />
@@ -792,7 +792,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                             <button
                               type="button"
                               onClick={() => setForm((f) => ({ ...f, coSpeakers: f.coSpeakers.filter((_, j) => j !== i) }))}
-                              className="shrink-0 rounded-[2px] border border-red-500/40 px-2.5 py-1 font-mono text-[10px] font-bold text-red-400 transition-colors hover:bg-red-500/20"
+                              className="shrink-0 min-h-8 px-2.5 py-1 flex items-center justify-center rounded-[2px] border border-red-500/40 font-mono text-[10px] font-bold text-red-400 transition-colors hover:bg-red-500/20"
                             >
                               {t.coSpeaker_remove}
                             </button>
@@ -809,17 +809,17 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                           </div>
 
                           {/* Name row */}
-                          <div className="mb-3 grid grid-cols-2 gap-3">
+                          <div className="mb-3 grid gap-3 sm:grid-cols-2">
                             <div className="flex flex-col gap-1">
                               <input value={cs.firstName} onChange={(e) => { updateCoSpeaker(i, { firstName: e.target.value }); clearErr(`cs_${i}_firstName`); }}
                                 placeholder={t.coSpeaker_firstName_ph} maxLength={80}
-                                className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                                className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                               {errors[`cs_${i}_firstName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_firstName`]}</p>}
                             </div>
                             <div className="flex flex-col gap-1">
                               <input value={cs.lastName} onChange={(e) => { updateCoSpeaker(i, { lastName: e.target.value }); clearErr(`cs_${i}_lastName`); }}
                                 placeholder={t.coSpeaker_lastName_ph} maxLength={80}
-                                className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                                className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                               {errors[`cs_${i}_lastName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_lastName`]}</p>}
                             </div>
                           </div>
@@ -832,7 +832,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               placeholder={t.coSpeaker_email_ph}
                               type="text" inputMode="email" autoComplete="off" spellCheck={false}
                               maxLength={200}
-                              className="w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                              className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                             {errors[`cs_${i}_email`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_email`]}</p>}
                           </div>
 
@@ -840,7 +840,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                           <div className="mb-3 relative">
                             <textarea value={cs.bio} onChange={(e) => updateCoSpeaker(i, { bio: e.target.value })}
                               placeholder={t.coSpeaker_bio_ph} maxLength={400} rows={3}
-                              className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                              className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
                             <span className={cn("absolute right-3 bottom-2.5 font-mono text-[10px]", cs.bio.length > 360 ? "text-[#E24B4A]" : "text-[#73726C]")}>
                               {cs.bio.length}/400
                             </span>
@@ -867,7 +867,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                                     inputMode="url"
                                     aria-label={`${label} — ${t.coSpeaker_label} ${i + 1}`}
                                     className={cn(
-                                      "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] py-2 pl-8 pr-2.5 font-mono text-xs text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all",
+                                      "w-full min-h-10 rounded-[4px] border border-[#2C2550] bg-[#090812] py-2 pl-8 pr-2.5 font-mono text-xs text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all",
                                       errors[`cs_${i}_${key}`] && "border-[#E24B4A]",
                                     )}
                                   />
@@ -884,7 +884,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       ))}
                       {form.coSpeakers.length < 3 && (
                         <button type="button" onClick={() => setForm((f) => ({ ...f, coSpeakers: [...f.coSpeakers, emptyCoSpeaker()] }))}
-                          className="flex w-full items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#2C2550] bg-[#090812] py-3.5 font-mono text-xs font-bold text-[#B4B2A9] transition-all hover:border-[#C143BC] hover:text-[#F2A6F0]">
+                          className="flex w-full min-h-11 items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#2C2550] bg-[#090812] py-3.5 font-mono text-xs font-bold text-[#B4B2A9] transition-all hover:border-[#C143BC] hover:text-[#F2A6F0]">
                           {t.coSpeaker_add}
                         </button>
                       )}
@@ -893,12 +893,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     {/* Legal agreements */}
                     <div className="flex flex-col gap-3">
                       {/* Code of conduct */}
-                      <label className="flex cursor-pointer items-start gap-3">
+                      <label className="flex cursor-pointer items-start gap-3 py-1">
                         <input
                           type="checkbox"
                           checked={form.codeOfConduct}
                           onChange={(e) => { set("codeOfConduct", e.target.checked); clearErr("codeOfConduct"); }}
-                          className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                          className="mt-0.5 h-5 w-5 min-h-5 min-w-5 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
                         />
                         <span className="font-mono text-xs text-[#B4B2A9] leading-relaxed">
                           {t.consent_conduct}{" "}
@@ -909,12 +909,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       {errors.codeOfConduct && <p className="m-0 pl-7 font-mono text-xs text-[#E24B4A]">{errors.codeOfConduct}</p>}
 
                       {/* Privacy */}
-                      <label className="flex cursor-pointer items-start gap-3">
+                      <label className="flex cursor-pointer items-start gap-3 py-1">
                         <input
                           type="checkbox"
                           checked={form.consent}
                           onChange={(e) => { set("consent", e.target.checked); clearErr("consent"); }}
-                          className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                          className="mt-0.5 h-5 w-5 min-h-5 min-w-5 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
                         />
                         <span className="font-mono text-xs text-[#B4B2A9] leading-relaxed">
                           {t.consent_privacy}{" "}
@@ -968,7 +968,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 <button
                   type="button"
                   onClick={goBack}
-                  className="flex items-center gap-2 rounded-[4px] border border-[#2C2550] bg-[#090812] px-5 py-3 font-mono text-sm font-semibold text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA] transition-all"
+                  className="flex min-h-11 items-center justify-center gap-2 rounded-[4px] border border-[#2C2550] bg-[#090812] px-5 py-2.5 font-mono text-sm font-semibold text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA] transition-all"
                 >
                   <ChevronLeft className="h-4 w-4" /> {t.back}
                 </button>
@@ -977,7 +977,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 <button
                   type="button"
                   onClick={goNext}
-                  className="flex items-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-3 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0"
+                  className="flex min-h-11 items-center justify-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-2.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0"
                 >
                   {t.next} <ChevronRight className="h-4 w-4" />
                 </button>
@@ -985,7 +985,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 <button
                   type="submit"
                   disabled={submitting || (hasCaptcha && !captchaToken)}
-                  className="flex items-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-3 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:opacity-50"
+                  className="flex min-h-11 items-center justify-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-2.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:opacity-50"
                 >
                   {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> {t.submitting}</> : t.submit}
                 </button>

@@ -112,8 +112,8 @@ export function SuccessScreen({
   };
 
   return (
-    <main className="form-block flex min-h-screen flex-col bg-hack-block pt-28">
-      <div className="mx-auto w-full max-w-5xl flex-1 px-5 pb-20">
+    <main className="form-block flex min-h-screen flex-col overflow-x-hidden bg-hack-block pt-20 sm:pt-28">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 sm:px-5 pb-20">
         {/* El avión entra girando: es lo primero que se mueve al cargar, y
             sigue el ratón de arriba abajo. */}
         <motion.div
@@ -165,7 +165,7 @@ export function SuccessScreen({
             transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-14 grid max-w-3xl gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end"
           >
-            <div className="border-2 border-hack-ink shadow-[10px_10px_0_0_rgba(0,0,0,0.3)]">
+            <div className="border-2 border-hack-ink shadow-[6px_6px_0_0_rgba(0,0,0,0.3)] sm:shadow-[10px_10px_0_0_rgba(0,0,0,0.3)]">
               {card.canvas}
             </div>
 
@@ -174,7 +174,7 @@ export function SuccessScreen({
                 type="button"
                 onClick={card.download}
                 disabled={!card.ready}
-                className="btn-hard inline-flex items-center justify-center gap-2 px-6 py-3.5 font-mono text-sm"
+                className="btn-hard inline-flex min-h-11 items-center justify-center gap-2 px-6 py-3.5 font-mono text-sm"
               >
                 <Download className="h-4 w-4" />
                 {t("success_download")}
@@ -196,7 +196,7 @@ export function SuccessScreen({
                   type="button"
                   onClick={() => share(id)}
                   className={cn(
-                    "inline-flex items-center justify-center gap-2 border-2 border-hack-ink px-6 py-3",
+                    "inline-flex min-h-11 items-center justify-center gap-2 border-2 border-hack-ink px-6 py-3",
                     "font-mono text-sm font-bold text-hack-ink transition-all",
                     "hover:bg-hack-ink hover:text-hack-block",
                   )}
