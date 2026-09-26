@@ -23,13 +23,31 @@ export function About() {
   // dentro del bloque numerado.
   const paragraphs = useMemo<CodeParagraph[]>(
     () => [
+      // 1. Primer párrafo (Descripción)
       [{ text: t("description") }],
+      
+      // 2. Segundo párrafo (La edición 2026...)
       [
         { text: t("code_p2_pre") },
         { text: t("code_p2_em"), accent: true },
         { text: t("code_p2_post") },
       ],
-      [{ text: t("code_p3_pre") }, { text: t("code_p3_em"), accent: true }],
+      
+      // 3. Tercer párrafo (Hackathon, escenarios, etc.)
+      [
+        { text: t("code_p3_1") },
+        { text: t("code_p3_em1"), accent: true },
+        { text: t("code_p3_2") },
+        { text: t("code_p3_em2"), accent: true },
+        { text: t("code_p3_3") },
+        { text: t("code_p3_em3"), accent: true },
+        { text: t("code_p3_4") },
+        { text: t("code_p3_em4"), accent: true },
+        { text: t("code_p3_5") },
+        { text: t("code_p3_em5"), accent: true },
+        { text: t("code_p3_6") },
+        { text: t("code_p3_em6"), accent: true },
+      ],
     ],
     [t],
   );
