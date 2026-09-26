@@ -48,19 +48,23 @@ type FieldKey =
   | "role"
   | "roleOther"
   | "entityType"
-  | "entityName";
+  | "entityName"
+  | "fromCommunity"
+  | "communityName";
 
 const EMPTY: Record<FieldKey, string> = {
   firstName: "",
   lastName: "",
   email: "",
-  attendance: "",
+  attendance: "in-person",
   documentType: "",
   documentNumber: "",
   role: "",
   roleOther: "",
   entityType: "",
   entityName: "",
+  fromCommunity: "no",
+  communityName: "",
 };
 
 function Field({
@@ -91,7 +95,7 @@ function Field({
 }
 
 const inputCls =
-  "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] " +
+  "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm text-[#E6E4DA] " +
   "placeholder:text-[#73726C] outline-none transition-all " +
   "focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40";
 
@@ -129,8 +133,6 @@ export function RegistroForm({
     if (formError) setFormError("");
   };
 
-  // Se compara con el código, no con el texto: el texto cambia de idioma.
-  const isVirtual = v.attendance === "online";
   const docTypes = DOC_TYPES[COUNTRY];
   const roles = ROLES[COUNTRY];
   const entities = ENTITY_TYPES[COUNTRY];
@@ -165,18 +167,12 @@ export function RegistroForm({
     const mail = normalizeEmail(v.email);
     if (!mail.ok) e.email = mail.reason ?? t.e_email;
 
-    if (!v.attendance) e.attendance = t.e_attendance;
-
-    // El documento sólo se le pide a quien va presencialmente: es para el
-    // control de acceso a la sede. A quien se conecta desde su casa no hay
-    // nada que verificarle en una puerta.
-    if (!isVirtual) {
-      if (!v.documentType) e.documentType = t.e_docType;
-      else {
-        const rule = docTypes.find((d) => d.value === v.documentType)!.rule;
-        const doc = normalizeDocument(v.documentNumber, rule);
-        if (!doc.ok) e.documentNumber = doc.reason;
-      }
+    // Documento obligatorio por ser evento 100% presencial en sede
+    if (!v.documentType) e.documentType = t.e_docType;
+    else {
+      const rule = docTypes.find((d) => d.value === v.documentType)!.rule;
+      const doc = normalizeDocument(v.documentNumber, rule);
+      if (!doc.ok) e.documentNumber = doc.reason;
     }
 
     if (!v.role) e.role = t.e_role;
@@ -186,6 +182,10 @@ export function RegistroForm({
     if (!v.entityType) e.entityType = t.e_entityType;
     if (needsEntityName && !cleanWhitespace(v.entityName)) {
       e.entityName = t.e_entityName;
+    }
+
+    if (v.fromCommunity === "yes" && !cleanWhitespace(v.communityName)) {
+      e.communityName = t.e_communityName;
     }
 
     if (!acceptCoc) e.coc = t.e_coc;
@@ -203,18 +203,18 @@ export function RegistroForm({
       firstName: cleanWhitespace(v.firstName),
       lastName: cleanWhitespace(v.lastName),
       email: normalizeEmail(v.email).value,
-      // Códigos, no etiquetas: es lo que guarda el modelo, y así cambiar el
-      // texto de una opción no toca los registros ya guardados.
-      attendance: isVirtual ? "online" : "in-person",
+      attendance: "in-person",
       role: v.role,
       roleOther: needsRoleOther ? cleanWhitespace(v.roleOther) : "",
       entityType: v.entityType,
       entityName: needsEntityName ? cleanWhitespace(v.entityName) : "",
+      fromCommunity: v.fromCommunity === "yes" ? "true" : "false",
+      communityName: v.fromCommunity === "yes" ? cleanWhitespace(v.communityName) : "",
       acceptCoc: "true",
       acceptPrivacy: "true",
     };
 
-    if (!isVirtual && doc?.ok) {
+    if (doc?.ok) {
       out.documentType = v.documentType;
       out.documentNumber = doc.value;
     }
@@ -245,8 +245,8 @@ export function RegistroForm({
   const summaryRows: SummaryRow[] = [
     { label: t.r_name, value: `${v.firstName} ${v.lastName}`.trim() },
     { label: t.r_email, value: v.email },
-    { label: t.r_mode, value: isVirtual ? t.online : t.inPerson },
-    ...(!isVirtual && v.documentNumber
+    { label: t.r_mode, value: t.inPerson },
+    ...(v.documentNumber
       ? [{ label: t.r_doc, value: `${docType ? labelOf(docType, locale) : ""} ${v.documentNumber}`.trim() }]
       : []),
     {
@@ -260,17 +260,21 @@ export function RegistroForm({
     },
     {
       label: t.r_entity,
-      value: v.entityName || (() => {
-        const e = entities.find((x) => x.value === v.entityType);
-        return e ? labelOf(e, locale) : "";
-      })(),
+      value: needsEntityName
+        ? `${v.entityName} (${entities.find((x) => x.value === v.entityType) ? labelOf(entities.find((x) => x.value === v.entityType)!, locale) : ""})`.trim()
+        : entities.find((x) => x.value === v.entityType)
+          ? labelOf(entities.find((x) => x.value === v.entityType)!, locale)
+          : "",
     },
+    ...(v.fromCommunity === "yes" && v.communityName
+      ? [{ label: t.r_community, value: v.communityName }]
+      : []),
   ];
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
       {/* RECUADRO 01: IDENTIDAD & CONTACTO */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 01 · Identidad & Contacto
@@ -324,7 +328,7 @@ export function RegistroForm({
       </div>
 
       {/* RECUADRO 02: MODALIDAD & CONTROL DE ACCESO */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 02 · Modalidad & Acceso At IPN
@@ -335,84 +339,69 @@ export function RegistroForm({
         </div>
 
         <div className="flex flex-col gap-5">
-          {/* Modalidad */}
-          <Field label={t.attendance} required error={errors.attendance}>
-            <div className="grid grid-cols-2 gap-3">
-              {([["in-person", t.inPerson], ["online", t.online]] as const).map(([code, texto]) => (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => set("attendance", code)}
-                  className={cn(
-                    "rounded-[4px] border py-3 font-mono text-xs sm:text-sm font-bold transition-all",
-                    v.attendance === code
-                      ? "border-2 border-[#C143BC] bg-[#C143BC]/20 text-[#F2A6F0] shadow-[0_0_16px_rgba(193,67,188,0.3)]"
-                      : "border-[#2C2550] bg-[#0A0A14] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
-                  )}
-                >
-                  {texto}
-                </button>
-              ))}
+          {/* Modalidad 100% presencial */}
+          <Field label={t.attendance}>
+            <div className="rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC]/10 p-3 sm:p-3.5">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[#F2A6F0] animate-pulse" />
+                <span className="font-mono text-xs sm:text-sm font-bold text-[#F2A6F0]">
+                  {t.inPerson}
+                </span>
+                <span className="ml-auto rounded-[2px] border border-[#C143BC]/60 bg-[#090812] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#F2A6F0]">
+                  {t.inPerson_badge}
+                </span>
+              </div>
+              <p className="mt-2 m-0 font-mono text-[11px] leading-relaxed text-[#B4B2A9]">
+                {t.inPerson_note}
+              </p>
             </div>
           </Field>
 
-          {/* Documento: sólo presencial */}
-          <AnimatePresence initial={false}>
-            {v.attendance === "in-person" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="overflow-visible"
-              >
-                <div className="grid gap-5 sm:grid-cols-[1fr_1fr]">
-                  <Field label={t.docType} required htmlFor="f-doct" error={errors.documentType}>
-                    <SearchSelect
-                      id="f-doct"
-                      options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
-                      value={v.documentType}
-                      onChange={(val) => set("documentType", val)}
-                      placeholder={t.select}
-                      searchPlaceholder={t.searchType}
-                      invalid={!!errors.documentType}
-                    />
-                  </Field>
-                  <Field
-                    label={t.docNumber}
-                    required
-                    htmlFor="f-docn"
-                    error={errors.documentNumber}
-                  >
-                    <input
-                      id="f-docn"
-                      value={v.documentNumber}
-                      onChange={(e) => set("documentNumber", e.target.value)}
-                      onBlur={() => {
-                        if (!docRule || !v.documentNumber.trim()) return;
-                        const r = normalizeDocument(v.documentNumber, docRule);
-                        setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
-                        if (r.ok) set("documentNumber", r.value);
-                      }}
-                      disabled={!v.documentType}
-                      placeholder={(locale === "en" ? docExampleEn ?? docExample : docExample) ?? ""}
-                      maxLength={24}
-                      className={cn(
-                        inputCls,
-                        errors.documentNumber && "border-[#E24B4A]",
-                        !v.documentType && "cursor-not-allowed opacity-50",
-                      )}
-                    />
-                  </Field>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Documento: obligatorio por ser evento presencial */}
+          <div className="grid gap-5 sm:grid-cols-[1fr_1fr]">
+            <Field label={t.docType} required htmlFor="f-doct" error={errors.documentType}>
+              <SearchSelect
+                id="f-doct"
+                options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
+                value={v.documentType}
+                onChange={(val) => set("documentType", val)}
+                placeholder={t.select}
+                searchPlaceholder={t.searchType}
+                invalid={!!errors.documentType}
+              />
+            </Field>
+            <Field
+              label={t.docNumber}
+              required
+              htmlFor="f-docn"
+              error={errors.documentNumber}
+            >
+              <input
+                id="f-docn"
+                value={v.documentNumber}
+                onChange={(e) => set("documentNumber", e.target.value)}
+                onBlur={() => {
+                  if (!docRule || !v.documentNumber.trim()) return;
+                  const r = normalizeDocument(v.documentNumber, docRule);
+                  setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
+                  if (r.ok) set("documentNumber", r.value);
+                }}
+                disabled={!v.documentType}
+                placeholder={(locale === "en" ? docExampleEn ?? docExample : docExample) ?? ""}
+                maxLength={24}
+                className={cn(
+                  inputCls,
+                  errors.documentNumber && "border-[#E24B4A]",
+                  !v.documentType && "cursor-not-allowed opacity-50",
+                )}
+              />
+            </Field>
+          </div>
         </div>
       </div>
 
       {/* RECUADRO 03: PERFIL & AFILIACIÓN */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 03 · Perfil & Organización
@@ -503,11 +492,59 @@ export function RegistroForm({
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* ¿Vienes de alguna comunidad? */}
+          <div className="flex flex-col gap-2 pt-2 border-t border-[#2C2550]/60">
+            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">
+              {t.fromCommunity}
+            </span>
+            <div className="grid grid-cols-2 gap-3">
+              {(["no", "yes"] as const).map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => set("fromCommunity", opt)}
+                  className={cn(
+                    "rounded-[4px] border py-2.5 px-3 min-h-11 flex items-center justify-center font-mono text-xs sm:text-sm font-bold transition-all",
+                    v.fromCommunity === opt
+                      ? "border-2 border-[#C143BC] bg-[#C143BC]/20 text-[#F2A6F0] shadow-[0_0_14px_rgba(193,67,188,0.25)]"
+                      : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
+                  )}
+                >
+                  {opt === "yes" ? t.fromCommunity_yes : t.fromCommunity_no}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Campo de texto ¿Cuál? cuando v.fromCommunity === "yes" */}
+          <AnimatePresence initial={false}>
+            {v.fromCommunity === "yes" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <Field label={t.communityName} required htmlFor="f-community" error={errors.communityName}>
+                  <input
+                    id="f-community"
+                    value={v.communityName}
+                    onChange={(e) => set("communityName", e.target.value)}
+                    placeholder={t.communityName_ph}
+                    maxLength={100}
+                    className={cn(inputCls, errors.communityName && "border-[#E24B4A]")}
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       {/* RECUADRO 04: VALIDACIÓN, CONSENTIMIENTOS & CONFIRMACIÓN */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 04 · Confirmación de Acceso
@@ -527,7 +564,7 @@ export function RegistroForm({
               ] as const
             ).map(([key, checked, setter, text, linkText, href]) => (
               <div key={key} className="flex flex-col gap-1">
-                <label className="flex cursor-pointer items-start gap-3">
+                <label className="flex cursor-pointer items-start gap-3 py-1">
                   <button
                     type="button"
                     role="checkbox"
@@ -537,7 +574,7 @@ export function RegistroForm({
                       if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
                     }}
                     className={cn(
-                      "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border transition-all",
+                      "mt-0.5 flex h-6 w-6 sm:h-5 sm:w-5 min-h-6 min-w-6 shrink-0 items-center justify-center rounded-[4px] border transition-all",
                       checked ? "border-[#C143BC] bg-[#C143BC]" : "border-[#2C2550] bg-[#0E0E1A]",
                       errors[key] && "border-[#E24B4A]",
                     )}

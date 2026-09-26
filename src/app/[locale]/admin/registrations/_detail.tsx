@@ -130,6 +130,11 @@ export function RegistrationDetail({
           <Dato label="Rol" value={roleLabelOf(reg.role, reg.roleOther)} />
           <Dato label="Tipo de entidad" value={entityLabelOf(reg.entityType)} />
           <Dato label="Entidad" value={reg.entityName} wide />
+          <Dato
+            label="Comunidad"
+            value={reg.fromCommunity ? (reg.communityName || "Sí (sin nombre)") : "No"}
+            wide
+          />
         </Datos>
       </Panel>
 

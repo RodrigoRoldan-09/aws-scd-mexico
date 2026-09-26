@@ -94,7 +94,7 @@ export function TextInput({
         autoComplete={autoComplete ?? "off"}
         spellCheck={false}
         className={cn(
-          "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+          "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
           className,
         )}
       />
@@ -127,7 +127,7 @@ export function Textarea({
         placeholder={placeholder}
         maxLength={maxLength}
         rows={rows}
-        className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40"
+        className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40"
       />
       {maxLength && (
         <span className={cn("absolute right-3 bottom-2.5 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-[#E24B4A]" : "text-[#73726C]")}>
@@ -249,7 +249,7 @@ export function CardSelector<T extends string>({
             aria-disabled={opt.disabled}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex flex-col items-center gap-2 rounded-[4px] border p-4 text-center transition-all",
+              "flex flex-col items-center justify-center gap-1.5 rounded-[4px] border p-2.5 sm:p-4 min-h-[5.5rem] text-center transition-all",
               opt.disabled
                 ? "cursor-not-allowed border-dashed border-[#2C2550] bg-transparent text-[#73726C] [&>span:nth-child(2)]:line-through"
                 : selected
@@ -257,11 +257,11 @@ export function CardSelector<T extends string>({
                   : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
             )}
           >
-            <span className={cn("flex h-8 w-8 items-center justify-center transition-colors", selected ? "text-[#F2A6F0]" : "text-[#8E8EA0]")}>
+            <span className={cn("flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center transition-colors", selected ? "text-[#F2A6F0]" : "text-[#8E8EA0]")}>
               {opt.icon}
             </span>
-            <span className="font-mono text-xs font-bold">{opt.label}</span>
-            <span className="font-mono text-[10px] opacity-70">{opt.desc}</span>
+            <span className="font-mono text-xs font-bold leading-tight">{opt.label}</span>
+            <span className="font-mono text-[10px] opacity-70 leading-tight">{opt.desc}</span>
           </button>
         );
       })}

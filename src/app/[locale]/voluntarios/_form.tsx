@@ -80,13 +80,13 @@ export type VolunteerValues = {
 const COUNTRY = countryCodeOf(EVENT.country);
 
 const EMPTY: VolunteerValues = {
-  firstName: "", lastName: "", email: "", phone: "", phoneCountry: "CL",
+  firstName: "", lastName: "", email: "", phone: "", phoneCountry: COUNTRY,
   documentType: "", documentNumber: "",
   role: "", roleOther: "", entityType: "", entityName: "",
   sbg: "", sbgOther: "",
   availability: "", interestAreas: [], previousExperience: "", motivation: "",
   shirtSize: "", dietary: "", dietaryOther: "",
-  emergencyName: "", emergencyPhone: "", emergencyCountry: "CL",
+  emergencyName: "", emergencyPhone: "", emergencyCountry: COUNTRY,
 };
 
 /**
@@ -121,7 +121,7 @@ function Field({
 }
 
 const inputCls =
-  "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] " +
+  "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm text-[#E6E4DA] " +
   "placeholder:text-[#73726C] outline-none transition-all " +
   "focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40";
 
@@ -129,17 +129,17 @@ function Choice({
   options,
   value,
   onChange,
-  cols = 2,
+  className,
   locale,
 }: {
   options: Option[];
   value: string;
   onChange: (v: string) => void;
-  cols?: 2 | 3;
+  className?: string;
   locale: Locale;
 }) {
   return (
-    <div className={cn("grid gap-3", cols === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2")}>
+    <div className={cn("grid gap-3", className ?? "grid-cols-1 sm:grid-cols-3")}>
       {options.map((o) => {
         const selected = value === o.value;
         return (
@@ -148,16 +148,16 @@ function Choice({
             type="button"
             onClick={() => onChange(o.value)}
             className={cn(
-              "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
+              "flex items-center justify-between rounded-[4px] border p-3 min-h-11 text-left font-mono text-xs sm:text-sm font-bold transition-all",
               selected
                 ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
                 : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
             )}
           >
-            <span>{labelOf(o, locale)}</span>
+            <span className="leading-snug">{labelOf(o, locale)}</span>
             <span
               className={cn(
-                "h-2 w-2 rounded-full",
+                "h-2 w-2 shrink-0 rounded-full ml-2",
                 selected ? "bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" : "bg-[#2C2550]",
               )}
             />
@@ -240,7 +240,6 @@ export function VoluntariosForm({
   const needsRoleOther = v.role === "other";
   const needsEntityName = !!v.entityType && v.entityType !== "none";
   const needsSbgOther = v.sbg === "other";
-  const needsDietaryOther = v.dietary === "other";
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
@@ -274,10 +273,6 @@ export function VoluntariosForm({
     if (!v.previousExperience) e.previousExperience = t.e_experience;
 
     if (!v.shirtSize) e.shirtSize = t.e_shirt;
-    if (!v.dietary) e.dietary = t.e_dietary;
-    if (needsDietaryOther && !cleanWhitespace(v.dietaryOther)) {
-      e.dietaryOther = t.e_dietaryOther;
-    }
     if (!cleanWhitespace(v.emergencyName)) e.emergencyName = t.e_emergency;
     const emTel = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
     if (!emTel.ok) e.emergencyPhone = emTel.reason;
@@ -315,8 +310,8 @@ export function VoluntariosForm({
       previousExperience: v.previousExperience,
       motivation: cleanWhitespace(v.motivation),
       shirtSize: v.shirtSize,
-      dietary: v.dietary,
-      dietaryOther: needsDietaryOther ? cleanWhitespace(v.dietaryOther) : "",
+      dietary: "none",
+      dietaryOther: "",
       emergencyName: cleanWhitespace(v.emergencyName),
       emergencyPhone: emTel.ok ? emTel.value : "",
       acceptCoc: "true",
@@ -371,10 +366,6 @@ export function VoluntariosForm({
     { label: t.r_areas, value: interestAreasLabelOf(v.interestAreas, locale) },
     { label: t.r_shirt, value: opt(SHIRT_SIZES, v.shirtSize) },
     {
-      label: t.r_dietary,
-      value: needsDietaryOther ? v.dietaryOther : opt(DIETARY, v.dietary),
-    },
-    {
       label: t.r_emergency,
       value: `${v.emergencyName} · ${telEmergencia.ok ? telEmergencia.value : v.emergencyPhone}`.trim(),
     },
@@ -383,7 +374,7 @@ export function VoluntariosForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
       {/* RECUADRO 01: IDENTIDAD & CONTACTO */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 01 · Identidad & Contacto
@@ -494,7 +485,7 @@ export function VoluntariosForm({
       </div>
 
       {/* RECUADRO 02: PERFIL & COMUNIDAD SBG */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 02 · Perfil & Comunidad SBG
@@ -623,7 +614,7 @@ export function VoluntariosForm({
       </div>
 
       {/* RECUADRO 03: PARTICIPACIÓN & PREFERENCIAS */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 03 · Participación & Preferencias
@@ -640,7 +631,7 @@ export function VoluntariosForm({
               locale={locale}
               value={v.availability}
               onChange={(val) => set("availability", val)}
-              cols={3}
+              className="grid-cols-1 sm:grid-cols-3"
             />
           </Field>
 
@@ -659,7 +650,7 @@ export function VoluntariosForm({
                     type="button"
                     onClick={() => toggleArea(a.value)}
                     className={cn(
-                      "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
+                      "flex items-center justify-between rounded-[4px] border p-3.5 min-h-11 text-left font-mono text-xs sm:text-sm font-bold transition-all",
                       on
                         ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
                         : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
@@ -690,7 +681,7 @@ export function VoluntariosForm({
               locale={locale}
               value={v.previousExperience}
               onChange={(val) => set("previousExperience", val)}
-              cols={3}
+              className="grid-cols-1 sm:grid-cols-3"
             />
           </Field>
 
@@ -713,7 +704,7 @@ export function VoluntariosForm({
       </div>
 
       {/* RECUADRO 04: LOGÍSTICA & CONTACTO DE EMERGENCIA */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 04 · Logística & Contacto de Emergencia
@@ -735,66 +726,9 @@ export function VoluntariosForm({
               locale={locale}
               value={v.shirtSize}
               onChange={(val) => set("shirtSize", val)}
-              cols={3}
+              className="grid-cols-3 sm:grid-cols-6"
             />
           </Field>
-
-          <Field
-            label={t.dietary}
-            required
-            error={errors.dietary}
-            hint={t.dietary_hint}
-          >
-            <div className="grid gap-3 sm:grid-cols-3">
-              {DIETARY.map((d) => {
-                const selected = v.dietary === d.value;
-                return (
-                  <button
-                    key={d.value}
-                    type="button"
-                    onClick={() => set("dietary", d.value)}
-                    className={cn(
-                      "flex items-center justify-between rounded-[4px] border p-3.5 text-left font-mono text-xs sm:text-sm font-bold transition-all",
-                      selected
-                        ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
-                        : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
-                    )}
-                  >
-                    <span>{labelOf(d, locale)}</span>
-                    <span
-                      className={cn(
-                        "h-2 w-2 rounded-full",
-                        selected ? "bg-[#F2A6F0] shadow-[0_0_8px_#C143BC]" : "bg-[#2C2550]",
-                      )}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </Field>
-
-          <AnimatePresence initial={false}>
-            {needsDietaryOther && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <Field label={t.which} required htmlFor="v-dieto" error={errors.dietaryOther}>
-                  <input
-                    id="v-dieto"
-                    value={v.dietaryOther}
-                    onChange={(e) => set("dietaryOther", e.target.value)}
-                    placeholder={t.dietaryOther_ph}
-                    maxLength={VOLUNTEER_TEXT_MAX}
-                    className={cn(inputCls, errors.dietaryOther && "border-[#E24B4A]")}
-                  />
-                </Field>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           <Field
             label={t.emergency}
@@ -826,7 +760,7 @@ export function VoluntariosForm({
       </div>
 
       {/* RECUADRO 05: COMPROMISOS & ENVÍO */}
-      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-4 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+      <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
             // 05 · Compromisos & Envío
@@ -845,7 +779,7 @@ export function VoluntariosForm({
               ] as const
             ).map(([key, checked, setter, text, linkText, href]) => (
               <div key={key} className="flex flex-col gap-1">
-                <label className="flex cursor-pointer items-start gap-3">
+                <label className="flex cursor-pointer items-start gap-3 py-1">
                   <input
                     type="checkbox"
                     checked={checked}
@@ -853,7 +787,7 @@ export function VoluntariosForm({
                       setter(e.target.checked);
                       if (errors[key]) setErrors((err) => ({ ...err, [key]: undefined }));
                     }}
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
+                    className="mt-0.5 h-6 w-6 sm:h-5 sm:w-5 min-h-6 min-w-6 shrink-0 rounded-[2px] border-[#2C2550] bg-[#090812] text-[#C143BC] accent-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40"
                   />
                   <span className="font-mono text-xs leading-relaxed text-[#B4B2A9]">
                     {text}{" "}
@@ -928,7 +862,7 @@ export function VoluntariosForm({
           <button
             type="submit"
             disabled={submitting || (!!siteKey && !captchaToken)}
-            className="w-full rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] py-3.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] py-3.5 min-h-11 flex items-center justify-center font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? t.sending : t.submit}
           </button>

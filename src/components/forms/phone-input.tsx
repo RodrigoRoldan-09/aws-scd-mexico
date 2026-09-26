@@ -117,7 +117,7 @@ export function PhoneInput({
         </label>
       )}
 
-      <div ref={boxRef} className="relative flex">
+      <div ref={boxRef} className={cn("relative flex", open && "z-30")}>
         {/* Indicativo */}
         <button
           type="button"
@@ -126,7 +126,7 @@ export function PhoneInput({
           aria-haspopup="listbox"
           aria-expanded={open}
           className={cn(
-            "flex shrink-0 items-center gap-2 rounded-l-[4px] border border-r-0 px-3 py-2.5 font-mono text-xs sm:text-sm transition-all outline-none",
+            "flex shrink-0 items-center gap-2 rounded-l-[4px] border border-r-0 px-3 py-2.5 min-h-11 font-mono text-xs sm:text-sm transition-all outline-none",
             error
               ? "border-[#E24B4A] bg-[#090812] text-[#E6E4DA]"
               : "border-[#2C2550] bg-[#090812] text-[#E6E4DA] hover:border-[#C143BC]/60 focus:border-[#C143BC]",
@@ -159,7 +159,7 @@ export function PhoneInput({
           placeholder={"0".repeat(Array.isArray(country.digits) ? country.digits[0] : country.digits)}
           aria-label={label ?? t("phone_label")}
           className={cn(
-            "w-full rounded-r-[4px] border bg-[#090812] px-4 py-2.5 font-mono text-xs sm:text-sm tabular-nums text-[#E6E4DA] outline-none transition-all",
+            "w-full rounded-r-[4px] border bg-[#090812] px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm tabular-nums text-[#E6E4DA] outline-none transition-all",
             "placeholder:text-[#73726C] focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
             error ? "border-[#E24B4A]" : "border-[#2C2550]",
           )}
@@ -173,7 +173,7 @@ export function PhoneInput({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-0 top-full z-30 mt-1 w-[min(20rem,100%)] overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_0_25px_rgba(193,67,188,0.35)]"
+              className="absolute left-0 top-full z-40 mt-1 w-72 sm:w-80 max-w-[calc(100vw-2.5rem)] overflow-hidden rounded-[4px] border-2 border-[#C143BC] bg-[#0E0E1A] shadow-[0_4px_25px_rgba(193,67,188,0.4)]"
             >
               <input
                 ref={searchRef}
@@ -185,7 +185,7 @@ export function PhoneInput({
                 onKeyDown={onKeyDown}
                 placeholder={t("phone_search")}
                 aria-label={t("phone_search_aria")}
-                className="w-full border-b border-[#2C2550] bg-[#090812] px-3 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
+                className="w-full border-b border-[#2C2550] bg-[#090812] px-3 py-2.5 min-h-10 font-mono text-xs sm:text-sm text-[#E6E4DA] outline-none placeholder:text-[#73726C]"
               />
               <ul role="listbox" className="max-h-60 overflow-y-auto">
                 {filtered.length === 0 && (
@@ -200,7 +200,7 @@ export function PhoneInput({
                       onMouseEnter={() => setActive(i)}
                       onClick={() => pick(c)}
                       className={cn(
-                        "flex w-full items-center gap-3 px-3 py-2 text-left font-mono text-xs sm:text-sm transition-colors",
+                        "flex w-full items-center gap-3 px-3 py-2.5 min-h-10 text-left font-mono text-xs sm:text-sm transition-colors",
                         i === active || c.code === country.code
                           ? "bg-[#C143BC]/20 text-[#F2A6F0]"
                           : "text-[#E6E4DA] hover:bg-[#16102A]",

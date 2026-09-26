@@ -35,6 +35,9 @@ export interface IRegistration extends Document {
   roleOther: string | null;
   entityType: string;
   entityName: string | null;
+  /** Si la persona asiste representando o formando parte de alguna comunidad técnica. */
+  fromCommunity: boolean;
+  communityName: string | null;
 
   /**
    * Consentimientos, con la fecha en que se dieron.
@@ -95,6 +98,8 @@ const registrationSchema = new Schema<IRegistration>(
     roleOther: { type: String, default: null },
     entityType: { type: String, required: true },
     entityName: { type: String, default: null, index: true },
+    fromCommunity: { type: Boolean, default: false, index: true },
+    communityName: { type: String, default: null, trim: true },
 
     consent: {
       codeOfConduct: { type: Date, default: null },

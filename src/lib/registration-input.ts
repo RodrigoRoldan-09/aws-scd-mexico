@@ -34,6 +34,8 @@ export type RegistrationInput = {
   roleOther: string | null;
   entityType: string;
   entityName: string | null;
+  fromCommunity: boolean;
+  communityName: string | null;
   consent: { codeOfConduct: Date | null; privacy: Date | null };
 };
 
@@ -55,31 +57,26 @@ export function parseRegistrationInput(
   const mail = normalizeEmail(str(raw.email, 200));
   if (!mail.ok) return { error: mail.reason ?? "El correo no es válido." };
 
-  // Se acepta el código y también la etiqueta, porque el alta manual del panel
-  // trabaja con lo que ve el operador.
+  // El evento es 100% presencial en sede IPN.
   const rawAttendance = str(raw.attendance, 20).toLowerCase();
-  const attendance: Attendance | null = rawAttendance.startsWith("virtual")
-    || rawAttendance === "online"
-    ? "online"
-    : rawAttendance.startsWith("presencial") || rawAttendance === "in-person"
-      ? "in-person"
-      : null;
-  if (!attendance) return { error: "Falta indicar si asiste presencial u online." };
+  if (!opts.manual && (rawAttendance === "online" || rawAttendance.startsWith("virtual"))) {
+    return { error: "El evento es 100% presencial. No hay modalidad en línea disponible." };
+  }
 
-  // ── Documento: sólo presencial ──
+  const attendance: Attendance = "in-person";
+
+  // ── Documento: obligatorio por ser presencial ──
   let documentType: string | null = null;
   let documentNumber: string | null = null;
-  if (attendance === "in-person") {
-    const wanted = str(raw.documentType, 40);
-    const doc = DOC_TYPES[COUNTRY].find((d) => d.value === wanted || d.label === wanted);
-    if (!doc) return { error: "Falta el tipo de documento." };
+  const wanted = str(raw.documentType, 40);
+  const doc = DOC_TYPES[COUNTRY].find((d) => d.value === wanted || d.label === wanted);
+  if (!doc) return { error: "Falta el tipo de documento." };
 
-    const checked = normalizeDocument(str(raw.documentNumber, 30), doc.rule);
-    if (!checked.ok) return { error: checked.reason };
+  const checked = normalizeDocument(str(raw.documentNumber, 30), doc.rule);
+  if (!checked.ok) return { error: checked.reason };
 
-    documentType = doc.value;
-    documentNumber = checked.value;
-  }
+  documentType = doc.value;
+  documentNumber = checked.value;
 
   // ── Rol ──
   const wantedRole = str(raw.role, 80);
@@ -107,6 +104,14 @@ export function parseRegistrationInput(
     return { error: "Falta el nombre de la entidad." };
   }
 
+  // ── Comunidad ──
+  const rawFromComm = raw.fromCommunity;
+  const fromCommunity = rawFromComm === true || rawFromComm === "true" || rawFromComm === "yes" || rawFromComm === "si" || rawFromComm === "sí";
+  const communityName = fromCommunity ? (str(raw.communityName, FREE_TEXT_MAX) || null) : null;
+  if (fromCommunity && !communityName) {
+    return { error: "Falta indicar el nombre de tu comunidad." };
+  }
+
   // ── Consentimientos ──
   // En el alta manual los da por buenos el staff: la persona ya aceptó en
   // papel o presencialmente, y bloquear el alta ahí sería quedarse sin poder
@@ -131,6 +136,8 @@ export function parseRegistrationInput(
       roleOther,
       entityType: entity.value,
       entityName,
+      fromCommunity,
+      communityName,
       consent: { codeOfConduct: now, privacy: now },
     },
   };

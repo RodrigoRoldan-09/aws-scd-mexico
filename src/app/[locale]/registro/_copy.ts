@@ -20,8 +20,10 @@ export const COPY = {
     email_hint: "Ahí te llega la confirmación.",
     email_ph: "tu@correo.com",
 
-    attendance: "¿Asistirás de manera presencial o virtual?",
-    inPerson: "Presencial",
+    attendance: "Modalidad de asistencia",
+    inPerson: "Presencial (100% en sede IPN)",
+    inPerson_badge: "Evento 100% Presencial",
+    inPerson_note: "Todas las ponencias, talleres y actividades se llevarán a cabo de forma presencial en IPN-Casco Santo Tomas.",
     online: "Virtual",
 
     docType: "Tipo de documento",
@@ -40,6 +42,12 @@ export const COPY = {
     search: "Buscar…",
     entityName: (tipo: string) => `Nombre de tu ${tipo}`,
     entityName_ph: "Escríbelo completo",
+
+    fromCommunity: "¿Vienes de alguna comunidad?",
+    fromCommunity_yes: "Sí",
+    fromCommunity_no: "No",
+    communityName: "¿De cuál comunidad vienes?",
+    communityName_ph: "Nombre de tu comunidad (ej. AWS User Group, Club de Código...)",
 
     coc_text: "He leído y acepto el ",
     coc_link: "Código de Conducta",
@@ -62,6 +70,7 @@ export const COPY = {
     r_doc: "documento",
     r_role: "rol",
     r_entity: "entidad",
+    r_community: "comunidad",
 
     // Errores
     e_firstName: "Escribe tu nombre.",
@@ -73,6 +82,7 @@ export const COPY = {
     e_roleOther: "Cuéntanos cuál.",
     e_entityType: "Elige una opción.",
     e_entityName: "Escribe el nombre.",
+    e_communityName: "Escribe el nombre de tu comunidad.",
     e_coc: "Necesitamos que aceptes el código de conducta.",
     e_privacy: "Necesitamos tu autorización para tratar tus datos.",
   },
@@ -85,8 +95,10 @@ export const COPY = {
     email_hint: "This is where your confirmation lands.",
     email_ph: "you@email.com",
 
-    attendance: "Will you attend in person or online?",
-    inPerson: "In person",
+    attendance: "Attendance mode",
+    inPerson: "In person (100% on-site at IPN)",
+    inPerson_badge: "100% In-Person Event",
+    inPerson_note: "All talks, workshops, and activities will take place in person at IPN-Casco Santo Tomas.",
     online: "Online",
 
     docType: "ID type",
@@ -105,6 +117,12 @@ export const COPY = {
     search: "Search…",
     entityName: (tipo: string) => `Name of your ${tipo}`,
     entityName_ph: "Write it in full",
+
+    fromCommunity: "Do you belong to any tech community?",
+    fromCommunity_yes: "Yes",
+    fromCommunity_no: "No",
+    communityName: "Which community do you come from?",
+    communityName_ph: "Community name (e.g. AWS User Group, Code Club...)",
 
     coc_text: "I have read and accept the ",
     coc_link: "Code of Conduct",
@@ -126,6 +144,7 @@ export const COPY = {
     r_doc: "id",
     r_role: "role",
     r_entity: "organisation",
+    r_community: "community",
 
     e_firstName: "Enter your first name.",
     e_lastName: "Enter your last name.",
@@ -136,6 +155,7 @@ export const COPY = {
     e_roleOther: "Tell us which one.",
     e_entityType: "Choose an option.",
     e_entityName: "Enter the name.",
+    e_communityName: "Please write your community name.",
     e_coc: "You need to accept the code of conduct.",
     e_privacy: "We need your authorisation to process your data.",
   },
