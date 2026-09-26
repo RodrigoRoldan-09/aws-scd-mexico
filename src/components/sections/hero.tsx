@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from "next-intl";
 import { motion, type Variants } from "motion/react";
 import { useEventConfig } from "@/components/providers/event-config-provider";
-import { WireGlobe } from "@/components/effects/wire-globe";
+import  CoinLogo  from "@/components/effects/coin-logo";
 import { MarqueeStrip } from "@/components/ui/marquee-strip";
 import { HardButton } from "@/components/ui/hard-button";
 import { useCountdown } from "@/hooks/use-countdown";
@@ -134,13 +134,13 @@ export function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.08, ease }}
-            className="mt-3 font-display text-[13vw] font-bold lowercase leading-[0.85] tracking-tighter text-[#E6E4DA] sm:text-[10vw] lg:text-[6.4vw] xl:text-[86px]"
+            className="mt-3 font-display text-[13vw] font-bold leading-[0.85] tracking-tighter text-[#E6E4DA] sm:text-[10vw] lg:text-[6.4vw] xl:text-[86px]"
           >
-            <BouncyWord word="aws" />{" "}
-            <BouncyWord word="student" />
+            <BouncyWord word="AWS" />{" "}
+            <BouncyWord word="Student" />
             <br />
-            <BouncyWord word="community" />{" "}
-            <BouncyWord word="day" />
+            <BouncyWord word="Community" />{" "}
+            <BouncyWord word="Day" />
           </motion.h1>
 
           <motion.h2
@@ -257,18 +257,23 @@ export function Hero() {
           className="order-1 lg:order-2"
         >
           <div className="relative mx-auto w-full max-w-[560px]">
+            {/* Resplandor de fondo detrás de la moneda */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-8 bottom-10 top-16 rounded-full bg-[#C143BC]/10 blur-3xl"
+              className="pointer-events-none absolute inset-x-8 bottom-10 top-16 rounded-full bg-[#C143BC]/15 blur-[80px]"
             />
-            <WireGlobe
-              marker={{ lat: 19.43, lon: -99.13 }}
-              label="CDMX"
-              className="relative aspect-square w-full min-h-[320px]"
+            
+            <CoinLogo />
+
+            {/* Sombra 3D de la moneda en el suelo */}
+            <motion.div 
+              className="mx-auto -mt-4 mb-4 h-[12px] w-[50%] max-w-[220px] rounded-[100%] bg-[#C143BC]/40 blur-[10px] pointer-events-none"
+              animate={{
+                scale: [1, 0.85, 1], // Se encoge cuando la moneda sube
+                opacity: [0.6, 0.3, 0.6], // Se desvanece cuando la moneda sube
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
-            <p className="font-mono mt-1 text-center text-[11px] text-surface-400 sm:text-xs">
-              19°26′n 99°08′o · arrástralo
-            </p>
           </div>
         </motion.div>
       </div>
