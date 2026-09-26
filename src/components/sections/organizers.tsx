@@ -1,10 +1,12 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
+import { HardButton } from "@/components/ui/hard-button";
 import { avatarUrl } from "@/lib/avatar";
+import { localePath } from "@/lib/utils";
 import { organizers } from "@/data/organizers";
 import type { Organizer } from "@/types";
 
@@ -119,10 +121,11 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
 
 export function Organizers() {
   const t = useTranslations("Organizers");
+  const locale = useLocale();
   // Se respeta el orden de `src/data/organizers.ts` tal cual: la lista es
   // curada, no aleatoria.
   return (
-    <section id="organizers" className="py-24 px-6">
+    <section id="organizers" className="py-24 px-6 border-t border-[#2C2550]/40">
       <div className="mx-auto max-w-7xl">
         <ScrollReveal>
           <div className="mb-5 flex items-center justify-center">
@@ -147,6 +150,18 @@ export function Organizers() {
             {organizers.map((org) => (
               <OrganizerCard key={org.id} org={org} />
             ))}
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.2}>
+          <div className="mt-14 flex justify-center">
+            <HardButton
+              tone="ink"
+              href={localePath(locale, "/voluntarios")}
+              sub={t("volunteer_cta_sub")}
+            >
+              {t("volunteer_cta")}
+            </HardButton>
           </div>
         </ScrollReveal>
       </div>

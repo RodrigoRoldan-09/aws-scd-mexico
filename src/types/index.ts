@@ -59,13 +59,38 @@ export interface Organizer {
   };
 }
 
+export interface Community {
+  id: string;
+  name: string;
+  category: string;
+  badge?: string;
+  description?: string;
+  logo?: string;
+  url?: string;
+  social?: {
+    meetup?: string;
+    linkedin?: string;
+    github?: string;
+    instagram?: string;
+    twitter?: string;
+    discord?: string;
+  };
+}
+
+export interface FAQButton {
+  labelKey: string;
+  url: string;
+}
+
 export interface FAQItem {
   id: string;
   questionKey: string;
   answerKey: string;
+  buttons?: FAQButton[];
 }
 
 export interface NavItem {
   labelKey: string;
   href: string;
 }
+

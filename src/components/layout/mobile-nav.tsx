@@ -59,7 +59,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       items: [
         { label: "Workshops", href: resolveHref("#tracks"), icon: Terminal },
         { label: "Proyectos", href: resolveHref("#about"), icon: Rocket },
-        { label: "Comunidad", href: resolveHref("#about"), icon: HeartHandshake },
+        { label: "Comunidad", href: resolveHref("#communities"), icon: HeartHandshake },
         { label: "Aula", href: resolveHref("#agenda"), icon: GraduationCap },
         { label: "Equipo", href: resolveHref("#organizers"), icon: ShieldCheck },
         { label: "Blog", href: resolveHref("#about"), icon: FileText },

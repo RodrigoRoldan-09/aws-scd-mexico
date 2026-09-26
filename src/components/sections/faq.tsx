@@ -7,6 +7,7 @@ import { WireSolid } from "@/components/effects/wire-solid";
 import { Accordion } from "@/components/ui/accordion";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { faqItems } from "@/data/faq";
+import { localePath } from "@/lib/utils";
 import type { FaqDTO } from "@/lib/data/faq";
 
 export function FAQView({ faqs }: { faqs: FaqDTO[] }) {
@@ -22,13 +23,17 @@ export function FAQView({ faqs }: { faqs: FaqDTO[] }) {
           answer: locale === "en" ? faq.answerEn : faq.answerEs,
           buttons: (faq.buttons || []).map((btn) => ({
             label: locale === "en" ? btn.labelEn : btn.labelEs,
-            url: btn.url,
+            url: btn.url.startsWith("http") ? btn.url : localePath(locale, btn.url),
           })),
         }))
       : faqItems.map((item) => ({
           id: item.id,
           question: t(item.questionKey),
           answer: t(item.answerKey),
+          buttons: (item.buttons || []).map((btn) => ({
+            label: t(btn.labelKey),
+            url: btn.url.startsWith("http") ? btn.url : localePath(locale, btn.url),
+          })),
         }));
 
   return (

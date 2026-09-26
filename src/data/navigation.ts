@@ -7,6 +7,7 @@ export const navItems: NavItem[] = [
   { labelKey: "agenda", href: "#agenda" },
   { labelKey: "venue", href: "#venue" },
   { labelKey: "sponsors", href: "/sponsors" },
+  { labelKey: "communities", href: "#communities" },
   { labelKey: "organizers", href: "#organizers" },
   { labelKey: "faq", href: "#faq" },
 ];

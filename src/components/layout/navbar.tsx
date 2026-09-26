@@ -116,7 +116,7 @@ export function Navbar() {
     {
       title: "Comunidad",
       description: "Builders, mentores y networking",
-      href: resolveHref("#about"),
+      href: resolveHref("#communities"),
       icon: HeartHandshake,
     },
     {

@@ -1,29 +1,64 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 function renderAnswer(text: string): React.ReactNode[] {
   const lines = text.split(/\n/);
+  // Match markdown links [text](url) OR raw URLs https?://...
+  const tokenRegex = /(\[[^\]]+\]\([^)]+\)|https?:\/\/[^\s]+)/g;
+
   return lines.flatMap((line, li) => {
-    const parts: React.ReactNode[] = line
-      .split(/(https?:\/\/[^\s]+)/g)
-      .map((part, i) =>
-        /^https?:\/\//.test(part) ? (
+    const parts: React.ReactNode[] = line.split(tokenRegex).map((part, i) => {
+      if (!part) return null;
+
+      const mdMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (mdMatch) {
+        const [, label, url] = mdMatch;
+        const isExternal = url.startsWith("http");
+        if (isExternal) {
+          return (
+            <a
+              key={`${li}-${i}`}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-[#F2A6F0] underline underline-offset-4 decoration-[#C143BC] transition-colors hover:text-[#FFFFFF]"
+            >
+              {label}
+            </a>
+          );
+        }
+        return (
+          <Link
+            key={`${li}-${i}`}
+            href={url}
+            className="font-bold text-[#F2A6F0] underline underline-offset-4 decoration-[#C143BC] transition-colors hover:text-[#FFFFFF]"
+          >
+            {label}
+          </Link>
+        );
+      }
+
+      if (/^https?:\/\//.test(part)) {
+        return (
           <a
             key={`${li}-${i}`}
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-[#378ADD] underline underline-offset-2 break-all transition-colors hover:text-[#C143BC]"
+            className="font-bold text-[#F2A6F0] underline underline-offset-4 decoration-[#C143BC] break-all transition-colors hover:text-[#FFFFFF]"
           >
             {part}
           </a>
-        ) : (
-          <React.Fragment key={`${li}-${i}`}>{part}</React.Fragment>
-        ),
-      );
+        );
+      }
+
+      return <React.Fragment key={`${li}-${i}`}>{part}</React.Fragment>;
+    });
+
     if (li < lines.length - 1) parts.push(<br key={`br-${li}`} />);
     return parts;
   });
@@ -107,18 +142,31 @@ export function Accordion({ items, className }: AccordionProps) {
                     {renderAnswer(item.answer)}
                   </p>
                   {item.buttons && item.buttons.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pb-6 pl-11">
-                      {item.buttons.map((btn) => (
-                        <a
-                          key={btn.url}
-                          href={btn.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-[6px] border border-[#613BB8] px-4 py-1.5 font-mono text-sm text-[#E6E4DA] transition-colors hover:bg-[#613BB8] hover:text-[#FFFFFF]"
-                        >
-                          {btn.label}
-                        </a>
-                      ))}
+                    <div className="flex flex-wrap gap-3 pb-6 pl-11">
+                      {item.buttons.map((btn) => {
+                        const isExternal = btn.url.startsWith("http");
+                        const btnClass =
+                          "inline-flex min-h-11 items-center justify-center gap-2 border-2 border-[#C143BC] bg-[#1E1838] px-5 py-2 font-mono text-xs font-bold uppercase tracking-wider text-[#E6E4DA] shadow-[3px_3px_0_0_var(--color-hack-dim)] transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-[#F2A6F0] hover:bg-[#C143BC] hover:text-[#000000] hover:shadow-[5px_5px_0_0_var(--color-hack-dim)] active:translate-x-0 active:translate-y-0 active:shadow-none";
+
+                        if (isExternal) {
+                          return (
+                            <a
+                              key={btn.url}
+                              href={btn.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={btnClass}
+                            >
+                              {btn.label}
+                            </a>
+                          );
+                        }
+                        return (
+                          <Link key={btn.url} href={btn.url} className={btnClass}>
+                            {btn.label}
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </motion.div>

@@ -7,6 +7,7 @@ import { Tracks } from "@/components/sections/tracks";
 import { Agenda } from "@/components/sections/agenda-section";
 import { Venue } from "@/components/sections/venue";
 import { Sponsors } from "@/components/sections/sponsors";
+import { Communities } from "@/components/sections/communities";
 import { Organizers } from "@/components/sections/organizers";
 import { FAQ } from "@/components/sections/faq-section";
 import { RegistrationCTA } from "@/components/sections/registration-cta";
@@ -35,6 +36,7 @@ export default async function HomePage({
       <Agenda />
       <Venue />
       <Sponsors />
+      <Communities />
       <Organizers />
       <FAQ />
 
