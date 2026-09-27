@@ -18,6 +18,7 @@ export interface StageTrack {
   keywords: string[];
   ctaKey: string;
   ctaHref: string;
+  image: string;
 }
 
 export const tracks: StageTrack[] = [
@@ -39,6 +40,7 @@ export const tracks: StageTrack[] = [
     keywords: ["Conferencias", "Workshops", "Laboratorios", "Charlas técnicas"],
     ctaKey: "stage1_cta",
     ctaHref: "#agenda",
+    image: "/images/tracks/card1_cal.png",
   },
   {
     id: "expande",
@@ -58,6 +60,7 @@ export const tracks: StageTrack[] = [
     keywords: ["Stands", "Comunidades", "Cursos", "Certificaciones", "Networking"],
     ctaKey: "stage2_cta",
     ctaHref: "#communities",
+    image: "/images/tracks/card2_cal.png",
   },
   {
     id: "preparate",
@@ -77,6 +80,7 @@ export const tracks: StageTrack[] = [
     keywords: ["CV en vivo", "Entrevistas", "Foto LinkedIn", "Marca personal"],
     ctaKey: "stage3_cta",
     ctaHref: "#register",
+    image: "/images/tracks/card3_cal.png",
   },
   {
     id: "conquista",
@@ -96,5 +100,6 @@ export const tracks: StageTrack[] = [
     keywords: ["Reclutamiento", "Pasantías", "Prácticas", "Estancias internacionales"],
     ctaKey: "stage4_cta",
     ctaHref: "#sponsors",
+    image: "/images/tracks/card4_cal.png",
   },
 ];

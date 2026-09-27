@@ -156,12 +156,12 @@
     "card_learn_title": "Learn by Doing",
     "card_learn_desc": "Hands-on workshops and labs with real AWS services. From basic concepts to advanced architectures.",
     "card_network_title": "Connect & Network",
-    "card_network_desc": "Meet students, professionals, and AWS experts. Build relationships that boost your cloud career.",
-    "card_recognition_title": "Earn Recognition",
-    "card_recognition_desc": "Participation certificates, AWS certification info, and professional growth opportunities.",
+    "card_network_desc": "Meet students, professionals, and industry experts. Build relationships that boost your cloud career.",
+    "card_recognition_title": "Sharpen your profile",
+    "card_recognition_desc": "Live CV reviews with recruiters, technical and behavioral mock interviews, and a professional headshot station.",
     "why_01_tag": "Hands-on Labs",
     "why_02_tag": "Community",
-    "why_03_tag": "Certifications",
+    "why_03_tag": "Professional Development",
     "code_p2_pre": "In 2026, the Mexico City edition arrives: an in-person experience at Centro Histórico y Cultural Juan de Dios Bátiz (IPN). A meeting point for communities and professionals ready to ",
     "code_p2_em": "take their careers",
     "code_p2_post": " to the next level.",
@@ -396,7 +396,7 @@
     "heading": "Organizing Team",
     "subheading": "The Student Builder Group Leaders and volunteers behind this event",
     "volunteer_cta": "Apply as Volunteer",
-    "volunteer_cta_sub": "// Open call for student volunteers"
+    "volunteer_cta_sub": "// Open call for everyone"
   },
   "FAQ": {
     "heading": "Frequently Asked Questions",

@@ -156,12 +156,12 @@
     "card_learn_title": "Aprende Haciendo",
     "card_learn_desc": "Talleres prácticos y laboratorios con servicios reales de AWS. Desde conceptos básicos hasta arquitecturas avanzadas.",
     "card_network_title": "Conecta & Networking",
-    "card_network_desc": "Conoce estudiantes, profesionales y expertos de AWS. Construye relaciones que impulsen tu carrera en la nube.",
-    "card_recognition_title": "Gana Reconocimiento",
-    "card_recognition_desc": "Certificados de participación, información sobre certificaciones AWS y oportunidades de crecimiento profesional.",
+    "card_network_desc": "Conoce estudiantes, profesionales y expertos de la industria. Construye relaciones que impulsen tu carrera en la nube.",
+    "card_recognition_title": "Afila tu perfil",
+    "card_recognition_desc": "Revisión de CV en vivo con reclutadores, simulación de entrevistas técnicas y de comportamiento, y estación de fotografía profesional.",
     "why_01_tag": "Hands-on Labs",
     "why_02_tag": "Comunidad",
-    "why_03_tag": "Certificaciones",
+    "why_03_tag": "Desarrollo Profesional",
     "code_p2_pre": "Este 2026 llega la edición de la Ciudad de México: una experiencia presencial en el Centro Histórico y Cultural Juan de Dios Bátiz (IPN). Un punto de encuentro para comunidades y profesionales listos para ",
     "code_p2_em": "llevar su carrera",
     "code_p2_post": " al siguiente nivel.",
@@ -396,7 +396,7 @@
     "heading": "Equipo Organizador",
     "subheading": "Los Student Builder Group Leaders y voluntarios detrás de este evento",
     "volunteer_cta": "Postúlate como Voluntario",
-    "volunteer_cta_sub": "// Convocatoria abierta para estudiantes"
+    "volunteer_cta_sub": "// Convocatoria abierta para todo público"
   },
   "FAQ": {
     "heading": "Preguntas Frecuentes",

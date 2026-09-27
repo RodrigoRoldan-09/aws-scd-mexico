@@ -83,7 +83,7 @@ export const organizers: Organizer[] = [
     aws: true,
     photo: "/images/equipo/rod_ramirez.jpeg",
     social: {
-      linkedin: "https://www.linkedin.com/in/raar2225",
+      linkedin: "https://www.linkedin.com/in/raar225",
       github: "https://github.com/Rod0225",
       instagram: "https://www.instagram.com/rodrigoramirez6178/",
     },
@@ -94,8 +94,12 @@ export const organizers: Organizer[] = [
     role: "Promotion Lead",
     country: "MX",
     aws: true,
-    photo: "/images/equipo/meme.jpeg",
-    social: {},
+    photo: "/images/equipo/irving.jpeg",
+    social: {
+      linkedin: "https://www.linkedin.com/in/irving-soriano/",
+      instagram: "https://www.instagram.com/mind_0t/",
+      awsBuilder: "https://builder.aws.com/community/@irvinsoriano?tab=badges",
+    },
   },
   {
     id: "lizette-cruz",
