@@ -19,11 +19,11 @@ export interface ReminderEventEmailProps {
   tips?: string[];
 }
 
-// 4 nov 2026, 08:00–18:00 CDMX (UTC-6) = 14:00–00:00 UTC
+// 4 nov 2026, 10:00–18:00 CDMX (UTC-6) = 16:00–00:00 UTC
 const CALENDAR_URL =
   "https://calendar.google.com/calendar/render?action=TEMPLATE" +
   "&text=AWS+Student+Community+Day+M%C3%A9xico+2026" +
-  "&dates=20261104T140000Z/20261105T000000Z" +
+  "&dates=20261104T160000Z/20261105T000000Z" +
   "&location=" + encodeURIComponent(`${EVT.venue}, ${EVT.address}`) +
   "&details=%C2%A1Tu+registro+est%C3%A1+confirmado%21";
 
@@ -85,7 +85,7 @@ export function ReminderEventEmail({
 
       {daysLeft === 1 && (
         <Callout title="llega temprano">
-          Puertas 7:30 AM, arranque 8:00 AM en punto. El check-in con mucha gente
+          Puertas 9:30 AM, arranque 10:00 AM en punto. El check-in con mucha gente
           toma su rato — venir con margen te ahorra la fila.
         </Callout>
       )}

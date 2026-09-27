@@ -74,6 +74,9 @@ export const COPY = {
     notice2a: "¿Ya te registraste como asistente y quieres ser parte del equipo? No puedes estar en las dos listas: escríbenos a ",
     notice2b: " y un organizador te mueve.",
 
+    warning_title: "Aviso importante sobre tu postulación",
+    warning_participation: "El envío de este formulario o correo no confirma tu participación como voluntario/a. Tu participación solo quedará confirmada si eres contactado/a directamente por parte del equipo organizador.",
+
     captcha: "Comprobando que no eres un robot…",
     submit: "Postularme",
     sending: "Enviando…",
@@ -180,6 +183,9 @@ export const COPY = {
     notice1link: "register as an attendee here",
     notice2a: "Already registered as an attendee and want to join the team? You cannot be on both lists: write to ",
     notice2b: " and an organiser will move you.",
+
+    warning_title: "Important application notice",
+    warning_participation: "Submitting this form or email does not confirm your participation as a volunteer. Your participation is only confirmed if you are contacted directly by the organizing team.",
 
     captcha: "Checking you are not a robot…",
     submit: "Apply to the team",

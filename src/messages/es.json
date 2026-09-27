@@ -14,7 +14,8 @@
     "kiro": "Kiro",
     "register": "Regístrate",
     "cfp": "CFP",
-    "register_closed": "Registro cerrado"
+    "register_closed": "Próximamente",
+    "coming_soon": "Próximamente"
   },
   "Strip": {
     "event": "AWS STUDENT COMMUNITY DAY MÉXICO-CDMX 2026",
@@ -98,7 +99,7 @@
     "booth_heading": "Estaremos contigo todo el día",
     "booth_desc": "Acércate a conocer a Kiro en el AWS Student Community Day. Conoce, prueba y disfruta.",
     "booth_date": "4 de noviembre, 2026",
-    "booth_time": "Desde las 8:00 a.m.",
+    "booth_time": "Desde las 10:00 a.m.",
     "booth_place": "Ciudad de México, México-CDMX",
     "resources_heading": "Empieza con Kiro",
     "resources_sub": "Guías rápidas para construir tu primer proyecto.",
@@ -136,8 +137,8 @@
     "cta_instagram": "Síguenos",
     "cta_notify": "Notifícame del 2027",
     "cta_speaker": "Ser speaker",
-    "cta_register_closed": "Cerrado",
-    "cta_register_closed_sub": "el registro ya cerró",
+    "cta_register_closed": "Próximamente",
+    "cta_register_closed_sub": "registro próximamente",
     "cta_volunteer": "Ser voluntario",
     "tagline_short": "presencial at IPN"
   },
@@ -289,7 +290,7 @@
     "format_talk_desc": "Sesiones teóricas o demostrativas, dirigidas a toda la audiencia en sitio at IPN.",
     "format_workshop_title": "Talleres prácticos / hands-on",
     "format_workshop_duration": "60 – 90 min",
-    "format_workshop_desc": "Sesiones 100% prácticas en nuestras dos salas de laboratorio equipadas con computadores, donde los asistentes rotan para construir soluciones paso a paso.",
+    "format_workshop_desc": "Sesiones 100% prácticas en salas de talleres donde los asistentes construyen soluciones paso a paso. Es indispensable llevar tu propia laptop para participar en las actividades.",
     "criteria_heading": "Criterios de selección",
     "criteria_anonymous_title": "Evaluación anónima",
     "criteria_anonymous_desc": "Solo revisamos título, nivel de la sesión y abstract. Evita nombres, marcas personales o datos identificables dentro del resumen.",
@@ -337,10 +338,10 @@
     "venue_tba": "Centro Histórico y Cultural \"Juan de Dios Bátiz\"",
     "venue_tba_desc": "Manuel Carpio, Agricultura, Miguel Hidalgo, 11360 Ciudad de México, CDMX (At IPN).",
     "mode_onsite": "Presencial",
-    "mode_onsite_desc": "Charlas y salas de laboratorio con computadoras.",
+    "mode_onsite_desc": "Charlas y talleres prácticos (recuerda llevar tu propia laptop).",
     "mode_online": "at IPN",
     "mode_online_desc": "Sesiones presenciales en IPN-Casco Santo Tomas.",
-    "date_label": "Miércoles 4 de noviembre, 2026 · 8:00 AM CST",
+    "date_label": "Miércoles 4 de noviembre, 2026 · 10:00 AM CST",
     "directions": "Cómo llegar"
   },
   "Sponsors": {
@@ -386,7 +387,11 @@
     "heading": "Comunidades Aliadas",
     "subheading": "Comunidades tecnológicas y grupos estudiantiles que impulsan la nube y el talento en México",
     "cta": "Postula a tu Comunidad",
-    "cta_sub": "// Convocatoria abierta de comunidades aliadas",
+    "cta_sub": "// Convocatoria abierta para comunidades",
+    "empty_badge": "Próximamente",
+    "empty_title": "Espacio Disponible",
+    "empty_category": "Comunidad Aliada",
+    "empty_desc": "Convocatoria abierta para comunidades tecnológicas y estudiantiles.",
     "badge_host": "Host",
     "badge_user_group": "User Group",
     "badge_student": "Estudiantes",
@@ -407,7 +412,7 @@
     "q3": "¿Es gratis?",
     "a3": "Sí, el evento es completamente gratuito. Solo necesitas registrarte para reservar tu lugar ya que el cupo es limitado.",
     "q4": "¿Qué debo llevar?",
-    "a4": "Tu laptop (si quieres participar en laboratorios prácticos), cargador, y muchas ganas de aprender. Recomendamos crear una cuenta de AWS Free Tier antes del evento.",
+    "a4": "Es necesario que lleves tu propia laptop (y cargador) si quieres participar en los talleres y actividades prácticas, ya que no se proporcionarán computadoras en el evento. Te recomendamos crear una cuenta de AWS Free Tier antes del evento.",
     "q5": "¿Habrá comida?",
     "a5": "Se proporcionarán snacks y bebidas durante los breaks. Los detalles de catering se confirmarán más adelante.",
     "q6": "¿Cómo llego a la sede?",
@@ -439,8 +444,8 @@
     "free": "Registro gratuito",
     "coming_soon": "Registro próximamente",
     "coming_soon_desc": "El registro se abrirá pronto. Síguenos en redes sociales para ser el primero en enterarte.",
-    "cta_closed": "Registro cerrado",
-    "closed_note": "el registro ya cerró"
+    "cta_closed": "Próximamente",
+    "closed_note": "El registro de asistencia abrirá próximamente."
   },
   "Footer": {
     "brand_tagline_highlight": "El evento de tecnología cloud más grande para estudiantes en México-CDMX.",

@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Turnstile, type TurnstileHandle } from "@/components/ui/turnstile";
 import { SearchSelect, type SelectOption } from "@/components/forms/search-select";
@@ -10,7 +11,6 @@ import { PhoneInput } from "@/components/forms/phone-input";
 import { ObfuscatedEmail } from "@/components/ui/obfuscated-email";
 import { useHydrated } from "@/hooks/use-hydrated";
 import {
-  DOC_TYPES,
   ENTITY_TYPES,
   FREE_TEXT_MAX,
   ROLES,
@@ -34,7 +34,6 @@ import { EVENT } from "@/lib/constants";
 import {
   cleanWhitespace,
   findCountry,
-  normalizeDocument,
   normalizeEmail,
   normalizePhone,
 } from "@/lib/normalize";
@@ -213,7 +212,6 @@ export function VoluntariosForm({
     set("interestAreas", next);
   };
 
-  const docTypes = DOC_TYPES[COUNTRY];
   const roles = ROLES[COUNTRY];
   const entities = ENTITY_TYPES[COUNTRY];
 
@@ -234,9 +232,6 @@ export function VoluntariosForm({
     [sbgs, locale],
   );
 
-  const docRule = docTypes.find((d) => d.value === v.documentType)?.rule;
-  const docExample = docTypes.find((d) => d.value === v.documentType)?.example;
-
   const needsRoleOther = v.role === "other";
   const needsEntityName = !!v.entityType && v.entityType !== "none";
   const needsSbgOther = v.sbg === "other";
@@ -252,14 +247,6 @@ export function VoluntariosForm({
     const tel = normalizePhone(v.phone, findCountry(v.phoneCountry));
     if (!tel.ok) e.phone = tel.reason;
 
-    // El documento no es opcional acá: el voluntariado es presencial y el
-    // equipo entra a la sede antes que el público.
-    if (!v.documentType) e.documentType = t.e_docType;
-    else {
-      const rule = docTypes.find((d) => d.value === v.documentType)!.rule;
-      const doc = normalizeDocument(v.documentNumber, rule);
-      if (!doc.ok) e.documentNumber = doc.reason;
-    }
 
     if (!v.role) e.role = t.e_role;
     if (needsRoleOther && !cleanWhitespace(v.roleOther)) e.roleOther = t.e_roleOther;
@@ -286,7 +273,6 @@ export function VoluntariosForm({
 
   /** Lo que se envía: códigos ya normalizados, no etiquetas. */
   const build = (): Record<string, unknown> => {
-    const doc = docRule ? normalizeDocument(v.documentNumber, docRule) : null;
     const tel = normalizePhone(v.phone, findCountry(v.phoneCountry));
     const emTel = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
     return {
@@ -296,8 +282,8 @@ export function VoluntariosForm({
       // Los teléfonos viajan con indicativo, en un solo campo: es como se
       // marcan y como los va a copiar quien coordine el día del evento.
       phone: tel.ok ? tel.value : "",
-      documentType: v.documentType,
-      documentNumber: doc?.ok ? doc.value : v.documentNumber,
+      documentType: "",
+      documentNumber: "",
       role: v.role,
       roleOther: needsRoleOther ? cleanWhitespace(v.roleOther) : "",
       entityType: v.entityType,
@@ -340,10 +326,6 @@ export function VoluntariosForm({
     void send();
   };
 
-  const docLabel = (() => {
-    const d = docTypes.find((x) => x.value === v.documentType);
-    return d ? labelOf(d, locale) : "";
-  })();
   const telefono = normalizePhone(v.phone, findCountry(v.phoneCountry));
   const telEmergencia = normalizePhone(v.emergencyPhone, findCountry(v.emergencyCountry));
 
@@ -356,7 +338,6 @@ export function VoluntariosForm({
     { label: t.r_name, value: `${v.firstName} ${v.lastName}`.trim() },
     { label: t.r_email, value: v.email },
     { label: t.r_phone, value: telefono.ok ? telefono.value : v.phone },
-    { label: t.r_doc, value: `${docLabel} ${v.documentNumber}`.trim() },
     {
       label: t.r_entity,
       value: v.entityName || opt(entities, v.entityType),
@@ -440,47 +421,6 @@ export function VoluntariosForm({
             onChange={(local) => set("phone", local)}
             error={errors.phone}
           />
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field label={t.docType} required htmlFor="v-doct" error={errors.documentType}>
-              <SearchSelect
-                id="v-doct"
-                options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
-                value={v.documentType}
-                onChange={(val) => set("documentType", val)}
-                placeholder={t.select}
-                searchPlaceholder={t.searchType}
-                invalid={!!errors.documentType}
-              />
-            </Field>
-            <Field
-              label={t.docNumber}
-              required
-              htmlFor="v-docn"
-              error={errors.documentNumber}
-              hint={t.docNumber_hint}
-            >
-              <input
-                id="v-docn"
-                value={v.documentNumber}
-                onChange={(e) => set("documentNumber", e.target.value)}
-                onBlur={() => {
-                  if (!docRule || !v.documentNumber.trim()) return;
-                  const r = normalizeDocument(v.documentNumber, docRule);
-                  setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
-                  if (r.ok) set("documentNumber", r.value);
-                }}
-                disabled={!v.documentType}
-                placeholder={docExample ?? ""}
-                maxLength={24}
-                className={cn(
-                  inputCls,
-                  errors.documentNumber && "border-[#E24B4A]",
-                  !v.documentType && "cursor-not-allowed opacity-50",
-                )}
-              />
-            </Field>
-          </div>
         </div>
       </div>
 
@@ -829,6 +769,19 @@ export function VoluntariosForm({
               />{" "}
               {t.notice2b}
             </p>
+          </div>
+
+          {/* Advertencia de confirmación de participación */}
+          <div className="flex items-start gap-3 rounded-[4px] border border-[#D85A30]/60 bg-[#D85A30]/10 px-4 py-3.5 shadow-[0_0_15px_rgba(216,90,48,0.1)]">
+            <AlertTriangle className="h-5 w-5 shrink-0 text-[#D85A30] mt-0.5" />
+            <div className="font-mono text-xs leading-relaxed text-[#E6E4DA]">
+              <strong className="block font-bold uppercase tracking-wider text-[#D85A30] mb-0.5">
+                {t.warning_title}
+              </strong>
+              <p className="m-0 text-[#E6E4DA]/90">
+                {t.warning_participation}
+              </p>
+            </div>
           </div>
 
           {siteKey && (

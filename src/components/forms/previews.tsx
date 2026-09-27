@@ -238,7 +238,7 @@ export function VolunteerPreview({
       {/* Cinta del cordón */}
       <div className="flex items-center justify-center border-b-2 border-hack-block bg-hack-block py-1.5">
         <span className="dot-matrix text-[11px] leading-none text-hack-ink">
-          staff · cdmx 2026
+          staff · CDMX 2026
         </span>
       </div>
 
@@ -270,7 +270,7 @@ export function VolunteerPreview({
         {[
           ["acceso", "total"],
           ["jornada", availability ? availability.toLowerCase() : "—"],
-          ["sede", "cdmx"],
+          ["sede", "CDMX"],
         ].map(([k, v]) => (
           <div key={k} className="border-r border-surface-700 px-2 py-3 last:border-r-0">
             <p className="dot-matrix m-0 text-[9px] text-white/45">{k}</p>

@@ -32,12 +32,12 @@ export function BadgePickupEmail({ name }: BadgePickupEmailProps) {
       <HardButton href={EVT.mapsUrl}>Cómo llegar</HardButton>
 
       <Callout title="si no puedes hoy">
-        No pasa nada — te esperamos mañana a las 7:30 AM y te la entregamos en la
+        No pasa nada — te esperamos mañana a las 9:30 AM y te la entregamos en la
         entrada. Sólo llega con margen.
       </Callout>
 
       <Paragraph muted>
-        Mañana arrancamos a las 8:00 AM en punto.
+        Mañana arrancamos a las 10:00 AM en punto.
       </Paragraph>
     </EmailLayout>
   );

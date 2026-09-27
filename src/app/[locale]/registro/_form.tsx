@@ -167,12 +167,13 @@ export function RegistroForm({
     const mail = normalizeEmail(v.email);
     if (!mail.ok) e.email = mail.reason ?? t.e_email;
 
-    // Documento obligatorio por ser evento 100% presencial en sede
-    if (!v.documentType) e.documentType = t.e_docType;
-    else {
-      const rule = docTypes.find((d) => d.value === v.documentType)!.rule;
-      const doc = normalizeDocument(v.documentNumber, rule);
-      if (!doc.ok) e.documentNumber = doc.reason;
+    // Documento: deshabilitado / opcional
+    if (v.documentType && v.documentNumber) {
+      const rule = docTypes.find((d) => d.value === v.documentType)?.rule;
+      if (rule) {
+        const doc = normalizeDocument(v.documentNumber, rule);
+        if (!doc.ok) e.documentNumber = doc.reason;
+      }
     }
 
     if (!v.role) e.role = t.e_role;
@@ -357,9 +358,9 @@ export function RegistroForm({
             </div>
           </Field>
 
-          {/* Documento: obligatorio por ser evento presencial */}
+          {/* Documento: número de documento deshabilitado */}
           <div className="grid gap-5 sm:grid-cols-[1fr_1fr]">
-            <Field label={t.docType} required htmlFor="f-doct" error={errors.documentType}>
+            <Field label={t.docType} htmlFor="f-doct" error={errors.documentType}>
               <SearchSelect
                 id="f-doct"
                 options={docTypes.map((d) => ({ value: d.value, label: labelOf(d, locale) }))}
@@ -372,27 +373,18 @@ export function RegistroForm({
             </Field>
             <Field
               label={t.docNumber}
-              required
               htmlFor="f-docn"
               error={errors.documentNumber}
             >
               <input
                 id="f-docn"
-                value={v.documentNumber}
-                onChange={(e) => set("documentNumber", e.target.value)}
-                onBlur={() => {
-                  if (!docRule || !v.documentNumber.trim()) return;
-                  const r = normalizeDocument(v.documentNumber, docRule);
-                  setErrors((x) => ({ ...x, documentNumber: r.ok ? undefined : r.reason }));
-                  if (r.ok) set("documentNumber", r.value);
-                }}
-                disabled={!v.documentType}
-                placeholder={(locale === "en" ? docExampleEn ?? docExample : docExample) ?? ""}
-                maxLength={24}
+                disabled
+                value=""
+                readOnly
+                placeholder={locale === "en" ? "Disabled" : "Deshabilitado"}
                 className={cn(
                   inputCls,
-                  errors.documentNumber && "border-[#E24B4A]",
-                  !v.documentType && "cursor-not-allowed opacity-50",
+                  "cursor-not-allowed opacity-50 bg-[#0E0E1A]/40 border-[#2C2550] text-[#73726C]",
                 )}
               />
             </Field>

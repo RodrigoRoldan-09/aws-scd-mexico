@@ -224,7 +224,7 @@ export default function ConfirmarPage() {
                     <div style={{ height: 1, background: "rgba(255,255,255,.05)", margin: "12px 0" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <Clock size={17} color="#C143BC" strokeWidth={2.2} style={{ flexShrink: 0 }} />
-                      <span style={{ color: "#E6E4DA", fontSize: 13, fontWeight: 600 }}>8:00 AM · Check-In y escarapela</span>
+                      <span style={{ color: "#E6E4DA", fontSize: 13, fontWeight: 600 }}>10:00 AM · Check-In y escarapela</span>
                     </div>
                     <div style={{ height: 1, background: "rgba(255,255,255,.05)", margin: "12px 0" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -252,12 +252,14 @@ export default function ConfirmarPage() {
               {/* ───── EXPIRED ───── */}
               {isExpiredState && (
                 <div style={{ textAlign: "center", animation: "fade-up .5s ease both" }}>
-                  <p style={{ fontSize: 44, margin: 0 }}>⏰</p>
+                  <div style={{ display: "flex", justifyContent: "center", margin: "8px 0" }}>
+                    <Clock size={40} color="#C143BC" strokeWidth={2} />
+                  </div>
                   <h2 style={{ color: "#E6E4DA", fontSize: 19, fontWeight: 800, margin: "8px 0 8px" }}>
                     La confirmación de registros terminó
                   </h2>
                   <p style={{ color: "#B4B2A9", fontSize: 13, lineHeight: 1.7, fontFamily: "monospace", margin: 0 }}>
-                    Te esperamos el <strong style={{ color: "#C143BC" }}>{EVENT_OPS.weekday} 4 de noviembre a las 8:00 AM</strong> para que confirmes tu asistencia directamente en Registro.
+                    Te esperamos el <strong style={{ color: "#C143BC" }}>{EVENT_OPS.weekday} 4 de noviembre a las 10:00 AM</strong> para que confirmes tu asistencia directamente en Registro.
                   </p>
                 </div>
               )}

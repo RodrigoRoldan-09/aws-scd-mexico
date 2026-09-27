@@ -14,7 +14,8 @@
     "kiro": "Kiro",
     "register": "Register",
     "cfp": "CFP",
-    "register_closed": "Registration closed"
+    "register_closed": "Coming soon",
+    "coming_soon": "Coming soon"
   },
   "Strip": {
     "event": "AWS STUDENT COMMUNITY DAY MEXICO-CDMX 2026",
@@ -98,7 +99,7 @@
     "booth_heading": "We'll be with you all day",
     "booth_desc": "Come meet Kiro at the AWS Student Community Day. Explore, try it, enjoy.",
     "booth_date": "November 4, 2026",
-    "booth_time": "From 8:00 a.m.",
+    "booth_time": "From 10:00 a.m.",
     "booth_place": "Mexico City, Mexico-CDMX",
     "resources_heading": "Get started with Kiro",
     "resources_sub": "Quick guides to build your first project.",
@@ -136,8 +137,8 @@
     "cta_instagram": "Follow Us",
     "cta_notify": "Notify me of 2027",
     "cta_speaker": "Be a speaker",
-    "cta_register_closed": "Closed",
-    "cta_register_closed_sub": "registration has closed",
+    "cta_register_closed": "Coming soon",
+    "cta_register_closed_sub": "registration opens soon",
     "cta_volunteer": "Volunteer",
     "tagline_short": "on site at IPN"
   },
@@ -289,7 +290,7 @@
     "format_talk_desc": "Conceptual or demo-driven sessions, delivered to the audience on site at IPN.",
     "format_workshop_title": "Hands-on workshops",
     "format_workshop_duration": "60 – 90 min",
-    "format_workshop_desc": "Fully practical sessions in our two computer-equipped lab rooms, where attendees rotate to build solutions step by step.",
+    "format_workshop_desc": "Fully practical sessions in workshop rooms where attendees build solutions step by step. You must bring your own laptop to participate in activities.",
     "criteria_heading": "Selection criteria",
     "criteria_anonymous_title": "Anonymous review",
     "criteria_anonymous_desc": "We only review the title, session level, and abstract. Avoid names, personal branding, or identifying details in your summary.",
@@ -337,10 +338,10 @@
     "venue_tba": "Centro Histórico y Cultural \"Juan de Dios Bátiz\"",
     "venue_tba_desc": "Manuel Carpio, Agricultura, Miguel Hidalgo, 11360 Mexico City, CDMX (At IPN).",
     "mode_onsite": "On site",
-    "mode_onsite_desc": "Talks and lab rooms with computers.",
+    "mode_onsite_desc": "Talks and hands-on workshops (remember to bring your own laptop).",
     "mode_online": "at IPN",
     "mode_online_desc": "In-person sessions at IPN-Casco Santo Tomas.",
-    "date_label": "Wednesday, November 4, 2026 · 8:00 AM CST",
+    "date_label": "Wednesday, November 4, 2026 · 10:00 AM CST",
     "directions": "Get directions"
   },
   "Sponsors": {
@@ -386,7 +387,11 @@
     "heading": "Partner Communities",
     "subheading": "Tech communities and student groups empowering cloud innovation and talent in Mexico",
     "cta": "Apply as a Community",
-    "cta_sub": "// Open call for partner communities",
+    "cta_sub": "// Open call for communities",
+    "empty_badge": "Coming Soon",
+    "empty_title": "Available Space",
+    "empty_category": "Partner Community",
+    "empty_desc": "Open call for tech and student communities.",
     "badge_host": "Host",
     "badge_user_group": "User Group",
     "badge_student": "Students",
@@ -407,7 +412,7 @@
     "q3": "Is it free?",
     "a3": "Yes, the event is completely free. You just need to register to reserve your spot as seating is limited.",
     "q4": "What should I bring?",
-    "a4": "Your laptop (if you want to participate in hands-on labs), charger, and a great attitude to learn. We recommend creating an AWS Free Tier account before the event.",
+    "a4": "You must bring your own laptop (and charger) if you want to participate in workshops and hands-on activities, as computers will not be provided at the event. We recommend creating an AWS Free Tier account before the event.",
     "q5": "Will there be food?",
     "a5": "Snacks and beverages will be provided during breaks. Catering details will be confirmed later.",
     "q6": "How do I get to the venue?",
@@ -439,8 +444,8 @@
     "free": "Free registration",
     "coming_soon": "Registration coming soon",
     "coming_soon_desc": "Registration will open soon. Follow us on social media to be the first to know.",
-    "cta_closed": "Registration closed",
-    "closed_note": "registration has closed"
+    "cta_closed": "Coming soon",
+    "closed_note": "Attendee registration will open soon."
   },
   "Footer": {
     "brand_tagline_highlight": "The largest cloud technology event for students in Mexico-CDMX.",

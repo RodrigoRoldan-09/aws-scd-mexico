@@ -150,6 +150,54 @@ export function CommunityCard({ comm }: { comm: Community }) {
   );
 }
 
+export function EmptyCommunityCard({
+  badge,
+  title,
+  category,
+  desc,
+}: {
+  badge: string;
+  title: string;
+  category: string;
+  desc: string;
+}) {
+  return (
+    <div className="group flex w-full max-w-[260px] flex-col justify-between overflow-hidden rounded-[16px] border border-dashed border-[#2C2550] bg-[#1E1838]/40 transition-all duration-300 hover:border-[#C143BC]/60 hover:bg-[#1E1838]/70">
+      <div>
+        {/* Placeholder visual */}
+        <div className="relative aspect-square w-full overflow-hidden border-b border-dashed border-[#2C2550] bg-[#0E0E1A]/60 p-6 flex flex-col items-center justify-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-[#2C2550] bg-[#120E22] transition-colors group-hover:border-[#C143BC]/40">
+            <Users className="h-8 w-8 text-[#5D5677] transition-colors group-hover:text-[#F2A6F0]" />
+          </div>
+          <span className="absolute right-2 top-2 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-2 py-0.5 font-mono text-[10px] font-bold leading-none text-[#F2A6F0]">
+            {badge}
+          </span>
+        </div>
+
+        {/* Datos del placeholder */}
+        <div className="px-4 py-4 text-center">
+          <p className="m-0 font-display text-base font-bold leading-tight text-[#8B84A0] transition-colors group-hover:text-[#E6E4DA]">
+            {title}
+          </p>
+          <p className="mt-1 font-mono text-xs leading-snug text-[#C143BC]/80">
+            {category}
+          </p>
+          <p className="mt-2.5 font-mono text-[11px] leading-relaxed text-[#73726C]">
+            {desc}
+          </p>
+        </div>
+      </div>
+
+      {/* Pie del placeholder */}
+      <div className="border-t border-dashed border-[#2C2550]/60 px-4 py-3 text-center">
+        <span className="font-mono text-[10px] tracking-widest text-[#5D5677]">
+          -- · --
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function Communities() {
   const t = useTranslations("Communities");
   const locale = useLocale();
@@ -171,17 +219,29 @@ export function Communities() {
 
         <ScrollReveal delay={0.1} from="scale">
           <div className="flex flex-wrap justify-center gap-4">
-            {communities.map((comm) => (
-              <CommunityCard key={comm.id} comm={comm} />
-            ))}
+            {communities.length > 0 ? (
+              communities.map((comm) => (
+                <CommunityCard key={comm.id} comm={comm} />
+              ))
+            ) : (
+              [0, 1, 2, 3].map((idx) => (
+                <EmptyCommunityCard
+                  key={idx}
+                  badge={t("empty_badge")}
+                  title={t("empty_title")}
+                  category={t("empty_category")}
+                  desc={t("empty_desc")}
+                />
+              ))
+            )}
           </div>
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
           <div className="mt-14 flex justify-center">
             <HardButton
-              tone="ink"
               href={localePath(locale, "/comunidades")}
+              tone="ink"
               sub={t("cta_sub")}
             >
               {t("cta")}

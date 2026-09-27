@@ -74,14 +74,17 @@ export function parseVolunteerInput(
   const mail = normalizeEmail(str(raw.email, 200));
   if (!mail.ok) return { error: mail.reason ?? "El correo no es válido." };
 
-  // ── Documento ──
-  // Acá sí es obligatorio: el voluntariado es presencial y el equipo entra a la
-  // sede antes que el público.
+  // ── Documento (opcional) ──
   const wantedDoc = str(raw.documentType, 40);
   const doc = DOC_TYPES[COUNTRY].find((d) => d.value === wantedDoc || d.label === wantedDoc);
-  if (!doc) return { error: "Falta el tipo de documento." };
-  const checked = normalizeDocument(str(raw.documentNumber, 30), doc.rule);
-  if (!checked.ok) return { error: checked.reason };
+  const rawDocNumber = str(raw.documentNumber, 30);
+  let documentType = doc ? doc.value : "";
+  let documentNumber = "";
+  if (doc && rawDocNumber) {
+    const checked = normalizeDocument(rawDocNumber, doc.rule);
+    if (!checked.ok) return { error: checked.reason };
+    documentNumber = checked.value;
+  }
 
   // ── Rol y entidad ──
   const wantedRole = str(raw.role, 80);
@@ -160,8 +163,8 @@ export function parseVolunteerInput(
       lastName,
       email: mail.value,
       phone: str(raw.phone, 40),
-      documentType: doc.value,
-      documentNumber: checked.value,
+      documentType,
+      documentNumber,
       role: roleValue,
       roleOther,
       entityType: entity.value,

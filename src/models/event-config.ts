@@ -1,12 +1,12 @@
 import { Schema, model, models, Document } from "mongoose";
 
 export const DEFAULT_TIPS = [
-  "💧 Trae tu botella de agua",
-  "💵 Lleva efectivo o tarjeta — hay restaurantes cerca",
-  "🕗 Registro abre a las 8:00 AM — llega puntual",
-  "📱 Ten tu código QR listo desde que llegas",
-  "📷 Carga bien tu teléfono — vas a querer documentar todo",
-  "👕 Ropa cómoda — es un día largo y muy emocionante",
+  "Trae tu botella de agua",
+  "Lleva efectivo o tarjeta — hay restaurantes cerca",
+  "Registro abre a las 9:30 AM — llega puntual",
+  "Ten tu código QR listo desde que llegas",
+  "Carga bien tu teléfono — vas a querer documentar todo",
+  "Ropa cómoda — es un día largo y muy emocionante",
 ];
 
 export interface IEventConfig extends Document {

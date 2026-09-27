@@ -65,18 +65,22 @@ export function parseRegistrationInput(
 
   const attendance: Attendance = "in-person";
 
-  // ── Documento: obligatorio por ser presencial ──
+  // ── Documento: deshabilitado / opcional ──
   let documentType: string | null = null;
   let documentNumber: string | null = null;
   const wanted = str(raw.documentType, 40);
-  const doc = DOC_TYPES[COUNTRY].find((d) => d.value === wanted || d.label === wanted);
-  if (!doc) return { error: "Falta el tipo de documento." };
-
-  const checked = normalizeDocument(str(raw.documentNumber, 30), doc.rule);
-  if (!checked.ok) return { error: checked.reason };
-
-  documentType = doc.value;
-  documentNumber = checked.value;
+  if (wanted) {
+    const doc = DOC_TYPES[COUNTRY].find((d) => d.value === wanted || d.label === wanted);
+    if (doc) {
+      documentType = doc.value;
+      if (raw.documentNumber) {
+        const checked = normalizeDocument(str(raw.documentNumber, 30), doc.rule);
+        if (checked.ok) {
+          documentNumber = checked.value;
+        }
+      }
+    }
+  }
 
   // ── Rol ──
   const wantedRole = str(raw.role, 80);

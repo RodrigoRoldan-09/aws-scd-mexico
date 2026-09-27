@@ -41,6 +41,9 @@ const BUZONES = {
 export type Buzon = keyof typeof BUZONES;
 
 function addressOf(box: Buzon): string {
+  if (box === "sponsors") {
+    return rot13("pyhovcamnp@tznvy.pbz");
+  }
   return `${rot13(BUZONES[box])}@${SITE_HOST}`;
 }
 

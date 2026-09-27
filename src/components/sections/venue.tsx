@@ -25,7 +25,7 @@ export function Venue() {
         <div>
           <ScrollReveal>
             <p className="font-mono text-xs uppercase tracking-widest text-[#8B84A0]">{t("coords")}</p>
-            <h3 className="mt-2 font-display text-5xl font-bold lowercase leading-[0.95] tracking-tighter text-[#E6E4DA] md:text-6xl">
+            <h3 className="mt-2 font-display text-5xl font-bold leading-[0.95] tracking-tighter text-[#E6E4DA] md:text-6xl">
               {t("city")}
             </h3>
             <p className="mt-4 max-w-[42ch] font-mono text-base leading-relaxed text-surface-300">

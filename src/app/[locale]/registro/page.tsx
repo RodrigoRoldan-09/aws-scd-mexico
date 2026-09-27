@@ -25,11 +25,10 @@ export default async function RegistroPage({ params }: Props) {
       Form.findOne({ formType: "attendee" }).select("isOpen").lean<{ isOpen?: boolean }>(),
       Form.findOne({ formType: "volunteer" }).select("isOpen").lean<{ isOpen?: boolean }>(),
     ]);
-    isOpen = form ? !!form.isOpen : (process.env.NODE_ENV === "development");
+    isOpen = false;
     volunteersOpen = volunteerForm ? !!volunteerForm.isOpen : (process.env.NODE_ENV === "development");
   } catch {
-    // En desarrollo local, se abre para visualización inmediata si la BD no está disponible
-    isOpen = process.env.NODE_ENV === "development";
+    isOpen = false;
     volunteersOpen = false;
   }
 

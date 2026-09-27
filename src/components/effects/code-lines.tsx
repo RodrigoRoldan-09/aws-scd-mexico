@@ -70,12 +70,22 @@ export function CodeLines({
         };
 
         for (const { word, accent } of words) {
-          const candidate = plain ? `${plain} ${word}` : word;
-          if (plain && !fits(candidate)) push();
-          plain = plain ? `${plain} ${word}` : word;
+          const isPunctuation = /^[,\.;:!?\)\]%]/.test(word);
+          const sep = plain && !isPunctuation ? " " : "";
+          const candidate = plain ? `${plain}${sep}${word}` : word;
+          if (plain && !isPunctuation && !fits(candidate)) push();
+
+          const currentSep = plain && !isPunctuation ? " " : "";
+          plain = plain ? `${plain}${currentSep}${word}` : word;
           const last = segments[segments.length - 1];
-          if (last && !!last.accent === !!accent) last.text += ` ${word}`;
-          else segments.push({ text: segments.length ? ` ${word}` : word, accent });
+          if (last && !!last.accent === !!accent) {
+            last.text += `${currentSep}${word}`;
+          } else {
+            segments.push({
+              text: segments.length ? `${currentSep}${word}` : word,
+              accent,
+            });
+          }
         }
         push();
 

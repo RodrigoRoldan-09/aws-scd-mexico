@@ -159,6 +159,27 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {section.items.map((item) => {
                     const Icon = item.icon;
+                    const isSbg = section.group === "SBG";
+                    if (isSbg) {
+                      return (
+                        <div
+                          key={item.label}
+                          className="group flex min-h-11 items-center justify-between gap-3 rounded-[8px] border border-[#2C2550] bg-[#1E1838]/60 p-2.5 opacity-80 cursor-not-allowed"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E]/60 text-[#C143BC]/70">
+                              <Icon className="h-3.5 w-3.5" />
+                            </div>
+                            <span className="font-display text-sm font-bold text-[#E6E4DA] truncate">
+                              {item.label}
+                            </span>
+                          </div>
+                          <span className="shrink-0 rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/15 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-[#F2A6F0]">
+                            {t("coming_soon")}
+                          </span>
+                        </div>
+                      );
+                    }
                     return (
                       <a
                         key={item.label}

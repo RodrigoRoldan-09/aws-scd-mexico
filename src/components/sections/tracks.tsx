@@ -14,10 +14,8 @@ function StageCard({
   t: ReturnType<typeof useTranslations>;
 }) {
   return (
-    <a
-      href={track.ctaHref}
-      // Aquí se mantiene el resplandor rosa y el pequeño salto hacia arriba
-      className="group block relative mx-auto w-full max-w-[280px] overflow-hidden rounded-[16px] border-2 border-[#2C2550] bg-[#1E1838] transition-all duration-300 hover:-translate-y-2 hover:border-[#C143BC] hover:shadow-[0_0_30px_rgba(193,67,188,0.3)]"
+    <div
+      className="group relative mx-auto w-full max-w-[280px] overflow-hidden rounded-[16px] border-2 border-[#2C2550] bg-[#1E1838] transition-all duration-300 hover:border-[#C143BC] hover:shadow-[0_0_30px_rgba(193,67,188,0.3)]"
       aria-label={t(track.titleKey)}
     >
       <div className="relative aspect-[9/16] w-full overflow-hidden">
@@ -26,12 +24,10 @@ function StageCard({
           alt={t(track.titleKey)}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          // Eliminamos el group-hover:scale para que la imagen se quede quieta.
-          // (Si recortaste las fotos, puedes quitar el scale-[1.03] y dejar solo "object-cover")
           className="object-cover scale-[1.03]"
         />
       </div>
-    </a>
+    </div>
   );
 }
 

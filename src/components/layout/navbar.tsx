@@ -289,24 +289,27 @@ export function Navbar() {
                       {sbgItems.map((item) => {
                         const Icon = item.icon;
                         return (
-                          <a
+                          <div
                             key={item.title}
-                            href={item.href}
-                            onClick={() => setActiveDropdown(null)}
-                            className="group flex items-start gap-2.5 rounded-[8px] border border-[#2C2550] bg-[#0E0E1A] p-2.5 text-left transition-colors hover:border-[#613BB8]"
+                            className="group flex items-start gap-2.5 rounded-[8px] border border-[#2C2550] bg-[#0E0E1A]/60 p-2.5 text-left opacity-80 cursor-not-allowed"
                           >
-                            <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E] text-[#C143BC] transition-transform group-hover:scale-105">
+                            <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[6px] bg-[#2A1F5E]/60 text-[#C143BC]/70">
                               <Icon className="h-4 w-4" />
                             </div>
-                            <div className="flex min-w-0 flex-col">
-                              <span className="font-display text-xs font-bold leading-tight text-[#E6E4DA] group-hover:text-white">
-                                {item.title}
-                              </span>
-                              <span className="font-mono text-[11px] leading-snug text-[#73726C] group-hover:text-[#B4B2A9]">
+                            <div className="flex min-w-0 flex-1 flex-col">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="font-display text-xs font-bold leading-tight text-[#E6E4DA]">
+                                  {item.title}
+                                </span>
+                                <span className="rounded-[4px] border border-[#C143BC]/40 bg-[#C143BC]/15 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-[#F2A6F0]">
+                                  {t("coming_soon")}
+                                </span>
+                              </div>
+                              <span className="font-mono text-[11px] leading-snug text-[#73726C]">
                                 {item.description}
                               </span>
                             </div>
-                          </a>
+                          </div>
                         );
                       })}
                     </div>
