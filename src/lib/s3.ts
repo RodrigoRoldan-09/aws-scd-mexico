@@ -1,9 +1,9 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const REGION = process.env.AWS_REGION!;
-const BUCKET = process.env.AWS_S3_BUCKET!;
-export const S3_PUBLIC_URL = process.env.AWS_S3_PUBLIC_URL!;
+const REGION = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1";
+const BUCKET = process.env.S3_BUCKET || process.env.AWS_S3_BUCKET!;
+export const S3_PUBLIC_URL = process.env.S3_PUBLIC_URL || process.env.AWS_S3_PUBLIC_URL!;
 
 // Carpeta de uploads cuando el bucket se comparte con otro país (p. ej.
 // S3_PREFIX=mx → todo va bajo "mx/..."). Con bucket propio se deja vacío.

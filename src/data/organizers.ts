@@ -55,7 +55,8 @@ export const organizers: Organizer[] = [
     role: "Content & Speakers Lead",
     country: "MX",
     aws: true,
-    photo: "/images/equipo/rod_roldan.jpeg",
+    // Foto anterior preservada: "/images/equipo/rod_roldan.jpeg"
+    photo: "/images/equipo/rod_roldan_new.jpeg",
     social: {
       linkedin: "https://www.linkedin.com/in/rodrigo-rold%C3%A1n-575a16409/",
       github: "https://github.com/RodrigoRoldan-09",
