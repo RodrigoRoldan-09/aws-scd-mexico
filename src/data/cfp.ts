@@ -6,7 +6,7 @@
  */
 
 /** Cierre del CFP: 9 de octubre de 2026, 23:59 CDMX. */
-export const CFP_DEADLINE = "2026-10-09T23:59:00-06:00";
+export const CFP_DEADLINE = "2026-10-14T23:59:00-06:00";
 
 /**
  * Modalidad de ponencias. Establecido en `false` porque todas las sesiones
@@ -15,7 +15,7 @@ export const CFP_DEADLINE = "2026-10-09T23:59:00-06:00";
 export const CFP_ONLINE_SPEAKERS = false;
 
 /** Entrega de diapositivas finales: 28 de octubre de 2026, 23:59 CDMX. */
-export const SLIDES_DEADLINE = "2026-10-28T23:59:00-06:00";
+export const SLIDES_DEADLINE = "2026-10-31T23:59:00-06:00";
 
 /** Hitos del proceso, en orden cronológico. El texto sale de i18n ("CFP"). */
 export const cfpMilestones = [
