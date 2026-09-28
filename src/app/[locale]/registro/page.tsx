@@ -25,7 +25,7 @@ export default async function RegistroPage({ params }: Props) {
       Form.findOne({ formType: "attendee" }).select("isOpen").lean<{ isOpen?: boolean }>(),
       Form.findOne({ formType: "volunteer" }).select("isOpen").lean<{ isOpen?: boolean }>(),
     ]);
-    isOpen = false;
+    isOpen = form ? !!form.isOpen : (process.env.NODE_ENV === "development");
     volunteersOpen = volunteerForm ? !!volunteerForm.isOpen : (process.env.NODE_ENV === "development");
   } catch {
     isOpen = false;

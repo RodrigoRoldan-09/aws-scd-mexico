@@ -67,7 +67,7 @@ export const getPublicEventConfig = unstable_cache(
       Form.findOne({ formType: "volunteer" }).select("isOpen").lean<{ isOpen?: boolean }>(),
     ]);
     const formularios = {
-      attendeeOpen: false,
+      attendeeOpen: !!attendee?.isOpen,
       volunteerOpen: !!volunteer?.isOpen,
     };
     if (!c) return { ...EMPTY_PUBLIC_CONFIG, ...formularios };
