@@ -45,6 +45,8 @@ export interface Organizer {
   id: string;
   name: string;
   role: string;
+  roleEn?: string;
+  roleEs?: string;
   /** País del organizador. Se muestra como etiqueta en la tarjeta. */
   country?: "CL" | "CO" | "MX";
   aws?: boolean;

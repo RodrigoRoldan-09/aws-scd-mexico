@@ -193,26 +193,28 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
       if (s === 1) return false;
     }
     if (s === 0) {
-      if (!form.talkTitle.trim())    errs.talkTitle    = t.req;
-      if (!form.talkAbstract.trim()) errs.talkAbstract = t.req;
-      if (!form.sessionType)         errs.sessionType  = t.req;
-      if (form.sessionType === "online" && !form.preRecordingDate.trim()) errs.preRecordingDate = t.req;
-      if (!form.audienceLevel)       errs.audienceLevel = t.req;
+      if (!cleanWhitespace(form.talkTitle))    errs.talkTitle    = t.req;
+      if (!cleanWhitespace(form.talkAbstract)) errs.talkAbstract = t.req;
+      if (!form.sessionType)                  errs.sessionType  = t.req;
+      if (form.sessionType === "online" && !cleanWhitespace(form.preRecordingDate)) errs.preRecordingDate = t.req;
+      if (!form.audienceLevel)                errs.audienceLevel = t.req;
     }
     if (s === 1) {
-      if (!form.firstName.trim())     errs.firstName = t.req;
-      if (!form.lastName.trim())      errs.lastName  = t.req;
-      if (!form.tagline.trim())       errs.tagline   = t.req;
-      if (!cleanWhitespace(form.email)) errs.email = t.req;
-      else {
+      if (!cleanWhitespace(form.firstName))     errs.firstName = t.req;
+      if (!cleanWhitespace(form.lastName))      errs.lastName  = t.req;
+      if (!cleanWhitespace(form.tagline))       errs.tagline   = t.req;
+      if (!cleanWhitespace(form.email)) {
+        errs.email = t.req;
+      } else {
         const check = normalizeEmail(form.email);
-        if (!check.ok) errs.email = check.reason;
+        if (!check.ok) errs.email = check.reason ?? t.inv_email;
       }
-      if (!form.bio.trim())           errs.bio       = t.req;
-      if (!form.photo)                errs.photo     = t.req;
-      if (!form.countryCity.trim())   errs.countryCity = t.req;
-      if (!form.phone.trim()) errs.phone = t.req;
-      else {
+      if (!cleanWhitespace(form.bio))           errs.bio       = t.req;
+      if (!form.photo)                          errs.photo     = t.req;
+      if (!cleanWhitespace(form.countryCity))   errs.countryCity = t.req;
+      if (!cleanWhitespace(form.phone)) {
+        errs.phone = t.req;
+      } else {
         const check = normalizePhone(form.phone, findCountry(dialCode));
         if (!check.ok) errs.phone = check.reason;
       }
@@ -222,12 +224,13 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
       if (!form.codeOfConduct) errs.codeOfConduct = t.req;
       if (!form.consent)       errs.consent       = t.req;
       form.coSpeakers.forEach((cs, i) => {
-        if (!cs.firstName.trim()) errs[`cs_${i}_firstName`] = t.req;
-        if (!cs.lastName.trim())  errs[`cs_${i}_lastName`]  = t.req;
-        if (!cleanWhitespace(cs.email)) errs[`cs_${i}_email`] = t.req;
-        else {
+        if (!cleanWhitespace(cs.firstName)) errs[`cs_${i}_firstName`] = t.req;
+        if (!cleanWhitespace(cs.lastName))  errs[`cs_${i}_lastName`]  = t.req;
+        if (!cleanWhitespace(cs.email)) {
+          errs[`cs_${i}_email`] = t.req;
+        } else {
           const check = normalizeEmail(cs.email);
-          if (!check.ok) errs[`cs_${i}_email`] = check.reason;
+          if (!check.ok) errs[`cs_${i}_email`] = check.reason ?? t.inv_email;
         }
         if (!cs.photo)            errs[`cs_${i}_photo`]    = t.req;
       });
@@ -237,20 +240,20 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
   };
 
   /**
-   * Lleva la vista al inicio del formulario al cambiar de paso.
-   *
-   * Se apunta al contenedor del formulario y no al tope de la pagina para no
-   * pasarse de largo, y se respeta la preferencia de movimiento reducido.
+   * Lleva la vista al inicio del formulario al cambiar de paso o al haber errores.
    */
   const scrollToForm = () => {
-    const el = document.getElementById("postular");
+    const el = document.getElementById("postular") || document.querySelector("main");
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
 
   const goNext = () => {
-    if (!validate(step)) return;
+    if (!validate(step)) {
+      scrollToForm();
+      return;
+    }
     setDir(1);
     setStep((s) => s + 1);
     scrollToForm();
@@ -293,7 +296,29 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate(2)) return;
+    if (step < 2) {
+      goNext();
+      return;
+    }
+    const ok0 = validate(0);
+    if (!ok0) {
+      setDir(-1);
+      setStep(0);
+      scrollToForm();
+      return;
+    }
+    const ok1 = validate(1);
+    if (!ok1) {
+      setDir(-1);
+      setStep(1);
+      scrollToForm();
+      return;
+    }
+    const ok2 = validate(2);
+    if (!ok2) {
+      scrollToForm();
+      return;
+    }
     if (hasCaptcha && !captchaToken) {
       err("submit", t.captcha_required);
       return;
@@ -512,7 +537,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
         </div>
 
         {/* Recuadro del paso actual */}
-        <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
+        <div id="postular" className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
           <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
             <span className="arcade-pixel text-xs text-[#F2A6F0]">
               // 0{step + 1} · {step === 0 ? t.step1 : step === 1 ? t.step2 : t.step3}
@@ -543,27 +568,29 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     </div>
 
                     <Field label={t.talkTitle} error={errors.talkTitle} required>
-                      <TextInput value={form.talkTitle} onChange={(v) => { set("talkTitle", v); clearErr("talkTitle"); }} placeholder={t.talkTitle_ph} maxLength={80} />
+                      <TextInput value={form.talkTitle} hasError={!!errors.talkTitle} onChange={(v) => { set("talkTitle", v); clearErr("talkTitle"); }} placeholder={t.talkTitle_ph} maxLength={80} />
                     </Field>
 
                     <Field label={t.description} error={errors.talkAbstract} required>
-                      <Textarea value={form.talkAbstract} onChange={(v) => { set("talkAbstract", v); clearErr("talkAbstract"); }} placeholder={t.description_ph} maxLength={1000} rows={5} />
+                      <Textarea value={form.talkAbstract} hasError={!!errors.talkAbstract} onChange={(v) => { set("talkAbstract", v); clearErr("talkAbstract"); }} placeholder={t.description_ph} maxLength={1000} rows={5} />
                     </Field>
 
                     <Field label={t.sessionType} error={errors.sessionType} required>
                       <CardSelector
                         options={sessionTypeOpts}
                         value={form.sessionType as never}
+                        hasError={!!errors.sessionType}
                         onChange={(v) => { set("sessionType", v); clearErr("sessionType"); if (v !== "online") { set("preRecordingDate", ""); clearErr("preRecordingDate"); } }}
                       />
                     </Field>
 
                     {form.sessionType === "online" && (
-                      <Field label={t.preRecordingDate} error={errors.preRecordingDate}>
+                      <Field label={t.preRecordingDate} error={errors.preRecordingDate} required>
                         <div className="relative">
                           <Calendar className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[#73726C]" />
                           <TextInput
                             value={form.preRecordingDate}
+                            hasError={!!errors.preRecordingDate}
                             onChange={(v) => { set("preRecordingDate", v); clearErr("preRecordingDate"); }}
                             placeholder={t.preRecordingDate_ph}
                             maxLength={100}
@@ -577,11 +604,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       <CardSelector
                         options={audienceLevelOpts}
                         value={form.audienceLevel as never}
+                        hasError={!!errors.audienceLevel}
                         onChange={(v) => { set("audienceLevel", v); clearErr("audienceLevel"); }}
                       />
                     </Field>
 
-                    <Field label={t.lang_label}>
+                    <Field label={t.lang_label} required>
                       <div className="flex gap-3">
                         {([["es", t.lang_es], ["en", t.lang_en]] as const).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => set("language", val)}
@@ -615,6 +643,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       <div className="flex items-center gap-4">
                         <PhotoUpload
                           value={form.photo}
+                          hasError={!!errors.photo}
                           onChange={(v) => { set("photo", v); clearErr("photo"); }}
                           className="aspect-square h-24 w-24 shrink-0"
                         />
@@ -653,20 +682,21 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field label={t.firstName} error={errors.firstName} required>
-                        <TextInput value={form.firstName} onChange={(v) => { set("firstName", v); clearErr("firstName"); }} placeholder={t.firstName_ph} maxLength={80} />
+                        <TextInput value={form.firstName} hasError={!!errors.firstName} onChange={(v) => { set("firstName", v); clearErr("firstName"); }} placeholder={t.firstName_ph} maxLength={80} />
                       </Field>
                       <Field label={t.lastName} error={errors.lastName} required>
-                        <TextInput value={form.lastName} onChange={(v) => { set("lastName", v); clearErr("lastName"); }} placeholder={t.lastName_ph} maxLength={80} />
+                        <TextInput value={form.lastName} hasError={!!errors.lastName} onChange={(v) => { set("lastName", v); clearErr("lastName"); }} placeholder={t.lastName_ph} maxLength={80} />
                       </Field>
                     </div>
 
-                    <Field label={t.tagline} error={errors.tagline}>
-                      <TextInput value={form.tagline} onChange={(v) => { set("tagline", v); clearErr("tagline"); }} placeholder={t.tagline_ph} maxLength={120} />
+                    <Field label={t.tagline} error={errors.tagline} required>
+                      <TextInput value={form.tagline} hasError={!!errors.tagline} onChange={(v) => { set("tagline", v); clearErr("tagline"); }} placeholder={t.tagline_ph} maxLength={120} />
                     </Field>
 
                     <Field label={t.email} error={errors.email} required>
                       <TextInput
                         value={form.email}
+                        hasError={!!errors.email}
                         onChange={(v) => {
                           set("email", v);
                           clearErr("email");
@@ -685,12 +715,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                     </Field>
 
                     <Field label={t.bio} error={errors.bio} required>
-                      <Textarea value={form.bio} onChange={(v) => { set("bio", v); clearErr("bio"); }} placeholder={t.bio_ph} maxLength={700} rows={5} />
+                      <Textarea value={form.bio} hasError={!!errors.bio} onChange={(v) => { set("bio", v); clearErr("bio"); }} placeholder={t.bio_ph} maxLength={700} rows={5} />
                     </Field>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field label={t.countryCity} error={errors.countryCity} required>
-                        <TextInput value={form.countryCity} onChange={(v) => { set("countryCity", v); clearErr("countryCity"); }} placeholder={t.countryCity_ph} maxLength={80} />
+                        <TextInput value={form.countryCity} hasError={!!errors.countryCity} onChange={(v) => { set("countryCity", v); clearErr("countryCity"); }} placeholder={t.countryCity_ph} maxLength={80} />
                       </Field>
                       <Field label="" error={undefined}>
                         <PhoneInput
@@ -705,7 +735,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       </Field>
                     </div>
 
-                    <Field label={t.firstTime} error={errors.firstTimeSpeaker}>
+                    <Field label={t.firstTime} error={errors.firstTimeSpeaker} required>
                       <div className="flex gap-3">
                         {([true, false] as const).map((val) => (
                           <button key={String(val)} type="button" onClick={() => { set("firstTimeSpeaker", val); clearErr("firstTimeSpeaker"); }}
@@ -713,7 +743,9 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               "flex-1 rounded-[4px] border py-3 px-2 min-h-11 flex items-center justify-center font-mono text-sm font-bold transition-all",
                               form.firstTimeSpeaker === val
                                 ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
-                                : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
+                                : errors.firstTimeSpeaker && form.firstTimeSpeaker === null
+                                  ? "border-[#E24B4A] bg-[#090812] text-[#B4B2A9] hover:border-[#E24B4A]"
+                                  : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
                             )}
                           >
                             {val ? t.yes_opt : t.no_opt}
@@ -800,9 +832,16 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
 
                           {/* Photo */}
                           <div className="mb-3">
-                            <span className="mb-1.5 block font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">{t.coSpeaker_photo}</span>
+                            <span className="mb-1.5 block font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]">
+                              {t.coSpeaker_photo} <span className="text-[#C143BC]">*</span>
+                            </span>
                             <div className="flex items-center gap-3">
-                              <PhotoUpload value={cs.photo} onChange={(v) => { updateCoSpeaker(i, { photo: v }); clearErr(`cs_${i}_photo`); }} className="aspect-square h-16 w-16 shrink-0" />
+                              <PhotoUpload
+                                value={cs.photo}
+                                hasError={!!errors[`cs_${i}_photo`]}
+                                onChange={(v) => { updateCoSpeaker(i, { photo: v }); clearErr(`cs_${i}_photo`); }}
+                                className="aspect-square h-16 w-16 shrink-0"
+                              />
                               <p className="font-mono text-[10px] text-[#8E8EA0] leading-relaxed">{t.photo_hint}</p>
                             </div>
                             {errors[`cs_${i}_photo`] && <p className="mt-1 font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_photo`]}</p>}
@@ -813,13 +852,25 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                             <div className="flex flex-col gap-1">
                               <input value={cs.firstName} onChange={(e) => { updateCoSpeaker(i, { firstName: e.target.value }); clearErr(`cs_${i}_firstName`); }}
                                 placeholder={t.coSpeaker_firstName_ph} maxLength={80}
-                                className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                                className={cn(
+                                  "w-full min-h-11 rounded-[4px] border bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all",
+                                  errors[`cs_${i}_firstName`]
+                                    ? "border-[#E24B4A] shadow-[0_0_10px_rgba(226,75,74,0.25)] focus:border-[#E24B4A]"
+                                    : "border-[#2C2550] focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40",
+                                )}
+                              />
                               {errors[`cs_${i}_firstName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_firstName`]}</p>}
                             </div>
                             <div className="flex flex-col gap-1">
                               <input value={cs.lastName} onChange={(e) => { updateCoSpeaker(i, { lastName: e.target.value }); clearErr(`cs_${i}_lastName`); }}
                                 placeholder={t.coSpeaker_lastName_ph} maxLength={80}
-                                className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                                className={cn(
+                                  "w-full min-h-11 rounded-[4px] border bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all",
+                                  errors[`cs_${i}_lastName`]
+                                    ? "border-[#E24B4A] shadow-[0_0_10px_rgba(226,75,74,0.25)] focus:border-[#E24B4A]"
+                                    : "border-[#2C2550] focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40",
+                                )}
+                              />
                               {errors[`cs_${i}_lastName`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_lastName`]}</p>}
                             </div>
                           </div>
@@ -832,7 +883,13 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                               placeholder={t.coSpeaker_email_ph}
                               type="text" inputMode="email" autoComplete="off" spellCheck={false}
                               maxLength={200}
-                              className="w-full min-h-11 rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] focus:border-[#C143BC] focus:outline-none focus:ring-1 focus:ring-[#C143BC]/40 transition-all" />
+                              className={cn(
+                                "w-full min-h-11 rounded-[4px] border bg-[#090812] px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all",
+                                errors[`cs_${i}_email`]
+                                  ? "border-[#E24B4A] shadow-[0_0_10px_rgba(226,75,74,0.25)] focus:border-[#E24B4A]"
+                                  : "border-[#2C2550] focus:border-[#C143BC] focus:ring-1 focus:ring-[#C143BC]/40",
+                              )}
+                            />
                             {errors[`cs_${i}_email`] && <p className="font-mono text-xs text-[#E24B4A]">{errors[`cs_${i}_email`]}</p>}
                           </div>
 

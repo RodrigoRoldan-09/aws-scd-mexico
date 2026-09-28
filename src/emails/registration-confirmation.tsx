@@ -34,6 +34,23 @@ export function RegistrationConfirmationEmail({ name }: RegistrationConfirmation
       <Kicker>registro confirmado</Kicker>
       <Heading>{firstName ? `Listo, ${firstName}.` : "Tu lugar está reservado."}</Heading>
 
+      <Section style={{ textAlign: "center", margin: "20px 0 24px" }}>
+        <Img
+          src={`${APP_URL}/images/logo_SCD-01.png`}
+          alt="AWS Student Community Day México 2026 - Logo Oficial"
+          width="160"
+          style={{
+            margin: "0 auto",
+            display: "block",
+            maxWidth: "160px",
+            border: `2px solid ${C.block}`,
+            borderRadius: "16px",
+            backgroundColor: "#090812",
+            padding: "8px",
+          }}
+        />
+      </Section>
+
       <Paragraph>
         Tu cupo en el AWS Student Community Day México 2026 quedó reservado. Adjunto
         va un PDF con tu entrada y el código QR para el check-in.

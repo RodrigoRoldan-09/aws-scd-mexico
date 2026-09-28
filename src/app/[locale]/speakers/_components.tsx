@@ -71,6 +71,7 @@ export function TextInput({
   className,
   inputMode,
   autoComplete,
+  hasError,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -80,6 +81,7 @@ export function TextInput({
   className?: string;
   inputMode?: "text" | "email" | "numeric" | "url";
   autoComplete?: string;
+  hasError?: boolean;
 }) {
   return (
     <div className="relative">
@@ -94,7 +96,10 @@ export function TextInput({
         autoComplete={autoComplete ?? "off"}
         spellCheck={false}
         className={cn(
-          "w-full rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+          "w-full rounded-[4px] border bg-[#090812] px-3.5 sm:px-4 py-2.5 min-h-11 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all",
+          hasError
+            ? "border-[#E24B4A] shadow-[0_0_10px_rgba(226,75,74,0.25)] focus:border-[#E24B4A] focus:ring-1 focus:ring-[#E24B4A]/50"
+            : "border-[#2C2550] focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
           className,
         )}
       />
@@ -111,12 +116,14 @@ export function Textarea({
   placeholder,
   maxLength,
   rows = 4,
+  hasError,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   maxLength?: number;
   rows?: number;
+  hasError?: boolean;
 }) {
   return (
     <div className="relative">
@@ -127,7 +134,12 @@ export function Textarea({
         placeholder={placeholder}
         maxLength={maxLength}
         rows={rows}
-        className="w-full resize-none rounded-[4px] border border-[#2C2550] bg-[#090812] px-3.5 sm:px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40"
+        className={cn(
+          "w-full resize-none rounded-[4px] border bg-[#090812] px-3.5 sm:px-4 py-2.5 font-mono text-xs sm:text-sm text-[#E6E4DA] placeholder:text-[#73726C] outline-none transition-all",
+          hasError
+            ? "border-[#E24B4A] shadow-[0_0_10px_rgba(226,75,74,0.25)] focus:border-[#E24B4A] focus:ring-1 focus:ring-[#E24B4A]/50"
+            : "border-[#2C2550] focus:border-[#C143BC] focus:shadow-[0_0_12px_rgba(193,67,188,0.25)] focus:ring-1 focus:ring-[#C143BC]/40",
+        )}
       />
       {maxLength && (
         <span className={cn("absolute right-3 bottom-2.5 font-mono text-[10px]", value.length > maxLength * 0.9 ? "text-[#E24B4A]" : "text-[#73726C]")}>
@@ -139,7 +151,7 @@ export function Textarea({
 }
 
 // ── Subida de foto (S3 vía public presign) ───────────────────────────────────
-export function PhotoUpload({ value, onChange, className }: { value: string; onChange: (url: string) => void; className?: string }) {
+export function PhotoUpload({ value, onChange, className, hasError }: { value: string; onChange: (url: string) => void; className?: string; hasError?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -171,7 +183,16 @@ export function PhotoUpload({ value, onChange, className }: { value: string; onC
         onClick={() => !uploading && inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) upload(f); }}
-        className={cn("relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[4px] border-2 border-dashed transition-all", className ?? "aspect-square w-full max-w-[200px]", value ? "border-[#C143BC] bg-[#090812]" : "border-[#2C2550] bg-[#090812] hover:border-[#C143BC]/70 hover:shadow-[0_0_12px_rgba(193,67,188,0.15)]", uploading && "pointer-events-none cursor-wait")}
+        className={cn(
+          "relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[4px] border-2 border-dashed transition-all",
+          className ?? "aspect-square w-full max-w-[200px]",
+          value
+            ? "border-[#C143BC] bg-[#090812]"
+            : hasError
+              ? "border-[#E24B4A] bg-[#090812] shadow-[0_0_12px_rgba(226,75,74,0.25)]"
+              : "border-[#2C2550] bg-[#090812] hover:border-[#C143BC]/70 hover:shadow-[0_0_12px_rgba(193,67,188,0.15)]",
+          uploading && "pointer-events-none cursor-wait"
+        )}
       >
         {value && !uploading && (
           <>
@@ -234,8 +255,8 @@ export function BuilderCenterIcon({ className }: { className?: string }) {
 
 // ── Selector tipo card ────────────────────────────────────────────────────────
 export function CardSelector<T extends string>({
-  options, value, onChange, cols,
-}: { options: { value: T; label: string; desc: string; icon: React.ReactNode; disabled?: boolean }[]; value: T | ""; onChange: (v: T) => void; cols?: 2 | 4 }) {
+  options, value, onChange, cols, hasError,
+}: { options: { value: T; label: string; desc: string; icon: React.ReactNode; disabled?: boolean }[]; value: T | ""; onChange: (v: T) => void; cols?: 2 | 4; hasError?: boolean }) {
   const gridCols = cols ?? (options.length <= 2 ? 2 : 4);
   return (
     <div className={cn("grid gap-3", gridCols === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4")}>
@@ -254,7 +275,9 @@ export function CardSelector<T extends string>({
                 ? "cursor-not-allowed border-dashed border-[#2C2550] bg-transparent text-[#73726C] [&>span:nth-child(2)]:line-through"
                 : selected
                   ? "border-[#C143BC] bg-[#C143BC]/15 text-[#E6E4DA] shadow-[0_0_16px_rgba(193,67,188,0.25)] ring-1 ring-[#C143BC]/40"
-                  : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
+                  : hasError && !value
+                    ? "border-[#E24B4A] bg-[#090812] text-[#B4B2A9] hover:border-[#E24B4A]"
+                    : "border-[#2C2550] bg-[#090812] text-[#B4B2A9] hover:border-[#C143BC]/60 hover:text-[#E6E4DA]",
             )}
           >
             <span className={cn("flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center transition-colors", selected ? "text-[#F2A6F0]" : "text-[#8E8EA0]")}>

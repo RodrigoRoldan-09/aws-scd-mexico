@@ -13,6 +13,7 @@ import { checkAlreadyVolunteer } from "@/lib/duplicate-check";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 import { Passport } from "@/models/passport";
 import { verifyCaptcha } from "@/lib/captcha";
+import { notifyNewRegistration } from "@/lib/sns";
 
 export async function GET() {
   try {
@@ -120,6 +121,16 @@ export async function POST(request: NextRequest) {
 
     const name = `${data.firstName} ${data.lastName}`.trim();
     const email = data.email;
+
+    // Publicar evento en AWS SNS Topic
+    void notifyNewRegistration({
+      name,
+      email,
+      attendance: data.attendance,
+      qrCode,
+      role: roleLabelOf(data.role, data.roleOther) || data.role,
+      entityName: data.entityName ?? undefined,
+    });
 
     // Auto-create Passport for new registration (shortId = qrCode for seamless reuse)
     //

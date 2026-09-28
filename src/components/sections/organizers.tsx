@@ -49,6 +49,9 @@ function IconInstagram({ className }: { className?: string }) {
  * negro que recupera el color al pasar el cursor, y nombre / rol en mono.
  */
 export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "purple" }) {
+  const locale = useLocale();
+  const displayRole = locale === "en" ? (org.roleEn || org.role) : (org.roleEs || org.role);
+
   return (
     <div className="group w-full max-w-[260px] border border-[#2C2550] bg-[#1E1838] rounded-[16px] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[#C143BC]/70 hover:shadow-[0_0_25px_rgba(193,67,188,0.25)]">
       {/* Foto — o la carita del pasaporte mientras no la haya */}
@@ -85,7 +88,7 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
           {org.name}
         </p>
         <p className="mt-1 font-mono text-xs leading-snug text-[#C143BC]">
-          {org.role}
+          {displayRole}
         </p>
 
         <div className="mt-3 flex items-center gap-2.5">

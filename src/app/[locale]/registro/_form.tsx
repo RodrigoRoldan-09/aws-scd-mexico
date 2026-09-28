@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
@@ -127,8 +127,35 @@ export function RegistroForm({
   const captchaRef = useRef<TurnstileHandle>(null);
   const captchaMounted = useHydrated() && !!siteKey;
 
+  // Restaurar borrador de localStorage si el usuario navega a términos y regresa
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("scd:draft_registro");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.v) setV((prev) => ({ ...prev, ...parsed.v }));
+        if (typeof parsed.acceptCoc === "boolean") setAcceptCoc(parsed.acceptCoc);
+        if (typeof parsed.acceptPrivacy === "boolean") setAcceptPrivacy(parsed.acceptPrivacy);
+      }
+    } catch {
+      // Ignorar fallos de almacenamiento local
+    }
+  }, []);
+
+  const saveDraft = (nextV: Record<FieldKey, string>, coc: boolean, priv: boolean) => {
+    try {
+      localStorage.setItem("scd:draft_registro", JSON.stringify({ v: nextV, acceptCoc: coc, acceptPrivacy: priv }));
+    } catch {
+      // Ignorar fallos
+    }
+  };
+
   const set = (k: FieldKey, value: string) => {
-    setV((prev) => ({ ...prev, [k]: value }));
+    setV((prev) => {
+      const next = { ...prev, [k]: value };
+      saveDraft(next, acceptCoc, acceptPrivacy);
+      return next;
+    });
     if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
     if (formError) setFormError("");
   };
@@ -562,7 +589,10 @@ export function RegistroForm({
                     role="checkbox"
                     aria-checked={checked}
                     onClick={() => {
-                      setter(!checked);
+                      const nextVal = !checked;
+                      setter(nextVal);
+                      if (key === "coc") saveDraft(v, nextVal, acceptPrivacy);
+                      if (key === "privacy") saveDraft(v, acceptCoc, nextVal);
                       if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
                     }}
                     className={cn(

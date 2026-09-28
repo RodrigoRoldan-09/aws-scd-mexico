@@ -1,5 +1,7 @@
+import { Img, Section } from "@react-email/components";
 import {
   APP_URL,
+  C,
   Callout,
   DetailBox,
   Divider,
@@ -34,6 +36,23 @@ export function RegistrationConfirmationVirtualEmail({
       <Heading>
         {firstName ? `Listo, ${firstName}.` : "Tu lugar está reservado."}
       </Heading>
+
+      <Section style={{ textAlign: "center", margin: "20px 0 24px" }}>
+        <Img
+          src={`${APP_URL}/images/logo_SCD-01.png`}
+          alt="AWS Student Community Day México 2026 - Logo Oficial"
+          width="160"
+          style={{
+            margin: "0 auto",
+            display: "block",
+            maxWidth: "160px",
+            border: `2px solid ${C.block}`,
+            borderRadius: "16px",
+            backgroundColor: "#090812",
+            padding: "8px",
+          }}
+        />
+      </Section>
 
       <Paragraph>
         Quedaste registrado en el <strong>Track Online</strong> del AWS Student

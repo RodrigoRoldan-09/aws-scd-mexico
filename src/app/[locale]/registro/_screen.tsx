@@ -50,6 +50,7 @@ export function RegistroScreen({
     // se conecta no se le manda código QR, así que prometérselo ahí sería
     // mentirle.
     try {
+      localStorage.removeItem("scd:draft_registro");
       const nombre = [values.firstName, values.lastName].filter(Boolean).join(" ");
       if (nombre) sessionStorage.setItem("scd:nombre", nombre);
       sessionStorage.setItem("scd:modalidad", values.attendance ?? "");
