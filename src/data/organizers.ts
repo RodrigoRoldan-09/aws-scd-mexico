@@ -103,12 +103,16 @@ export const organizers: Organizer[] = [
     },
   },
   {
-    id: "lizette-cruz",
-    name: "Lizette Cruz",
+    id: "lizette-tello",
+    name: "Lizette Tello",
     role: "Content Creator",
     country: "MX",
     aws: true,
-    photo: "/images/equipo/meme.jpeg",
-    social: {},
+    photo: "/images/equipo/lizette.png",
+    social: {
+      linkedin: "https://www.linkedin.com/in/lizettello/",
+      github: "https://github.com/lizettello",
+      instagram: "https://www.instagram.com/cherrylizim/",
+    },
   },
 ];
