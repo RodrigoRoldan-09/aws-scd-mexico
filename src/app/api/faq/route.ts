@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   } catch (e) {
     const msg = (e as Error).message;
     if (msg === "Unauthorized") return Response.json({ error: msg }, { status: 401 });
-    if (msg === "Forbidden") return Response.json({ error: msg }, { status: 403 });
+    console.error("[api/faq] Error:", e);
     return Response.json({ error: "Error interno" }, { status: 500 });
   }
 }

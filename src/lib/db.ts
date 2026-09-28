@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
 interface Cached {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -18,12 +16,28 @@ const cached = g.mongooseCache;
 export async function connectDB() {
   if (cached.conn) return cached.conn;
 
-  if (!cached.promise) {
-    // maxPoolSize bajo: en serverless cada instancia abre su propio pool, así
-    // se evita agotar las conexiones de Atlas bajo picos (día del evento).
-    cached.promise = mongoose.connect(MONGODB_URI, { maxPoolSize: 10 });
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error("[db] MONGODB_URI no está definido en process.env");
+    throw new Error("MONGODB_URI is not defined");
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  if (!cached.promise) {
+    cached.promise = mongoose
+      .connect(uri, { maxPoolSize: 10, serverSelectionTimeoutMS: 8000 })
+      .catch((err) => {
+        cached.promise = null;
+        throw err;
+      });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch (err) {
+    cached.promise = null;
+    console.error("[db] Error conectando a MongoDB:", err);
+    throw err;
+  }
 }
+
