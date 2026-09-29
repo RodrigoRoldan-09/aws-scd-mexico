@@ -43,7 +43,7 @@ export function Tracks() {
             {t("eyebrow")}
           </DotHeading>
           <h2
-            className="m-0 max-w-[18ch] font-display font-medium lowercase leading-[1.05] tracking-tight"
+            className="m-0 max-w-[18ch] font-display font-medium leading-[1.05] tracking-tight"
             style={{ fontSize: "clamp(28px,4vw,48px)" }}
           >
             {t("section_pre")}

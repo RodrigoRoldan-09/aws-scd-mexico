@@ -90,9 +90,9 @@ export function SpeakerSubmissionConfirmationEmail({
 
       <Steps
         items={[
-          "El CFP cierra el 9 de octubre a las 23:59 (hora de la Ciudad de México).",
-          "Curaduría y evaluación, del 10 al 14 de octubre.",
-          "Publicación de seleccionados, 15 y 16 de octubre.",
+          "El CFP cierra el 14 de octubre a las 23:59 (hora de la Ciudad de México).",
+          "Curaduría y evaluación, del 15 al 20 de octubre.",
+          "Publicación de seleccionados, 21 de octubre.",
           `Si quedas, la entrega de diapositivas es el ${EVT.slidesDeadline}.`,
         ]}
       />

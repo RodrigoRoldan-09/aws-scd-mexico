@@ -89,7 +89,7 @@ export async function LegalPage({
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h2 className="m-0 pt-1 font-display text-2xl font-medium lowercase leading-tight tracking-tight text-hack-ink">
+                    <h2 className="m-0 pt-1 font-display text-2xl font-medium leading-tight tracking-tight text-hack-ink">
                       {s.title}
                     </h2>
                   </div>

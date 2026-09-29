@@ -32,7 +32,7 @@ export async function generateMetadata({
         : "Call for Speakers — AWS Student Community Day México 2026",
       description: isEn
         ? "Apply to speak · November 4, 2026 · Mexico City, Mexico"
-        : "Postúlate como speaker · 4 de noviembre, 2026 · Ciudad de México",
+        : "Postúlate como speaker · 4 de noviembre de 2026 · Ciudad de México",
     },
     alternates: {
       canonical: isEn

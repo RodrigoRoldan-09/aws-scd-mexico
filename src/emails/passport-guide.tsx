@@ -26,7 +26,7 @@ export function PassportGuideEmail({ name, passportUrl }: PassportGuideEmailProp
         items={[
           "Agrega tu LinkedIn y GitHub: son los que más se consultan después.",
           "Pon tu cargo o carrera — ayuda a que te ubiquen en el networking.",
-          "Revisa que tu nombre esté bien escrito: así sale en tu escarapela.",
+          "Revisa que tu nombre esté bien escrito: así sale en tu gafete.",
         ]}
       />
 
@@ -40,7 +40,7 @@ export function PassportGuideEmail({ name, passportUrl }: PassportGuideEmailProp
       />
 
       <Callout title="ojo">
-        Tu pasaporte es público: sólo pon ahí lo que quieras que cualquiera vea.
+        Tu pasaporte es público: solo pon ahí lo que quieras que cualquiera vea.
         Puedes editarlo cuando quieras.
       </Callout>
     </EmailLayout>

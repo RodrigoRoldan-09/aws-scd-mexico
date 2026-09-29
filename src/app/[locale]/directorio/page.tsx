@@ -293,9 +293,9 @@ export default function DirectorioPage() {
         {/* pt-28: el navbar es fijo y mide 80px. */}
         <div className="relative mx-auto max-w-7xl px-6 pb-16 pt-28 text-center">
           <p className="font-mono mb-3 text-sm text-[#C143BC] uppercase tracking-widest">
-            Directorio de Speakers
+            Directorio de speakers
           </p>
-          <h1 className="font-display font-bold lowercase tracking-tighter text-[#E6E4DA] text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="font-display font-bold tracking-tighter text-[#E6E4DA] text-5xl md:text-6xl lg:text-7xl">
             Speakers 2026
           </h1>
 

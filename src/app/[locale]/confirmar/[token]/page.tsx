@@ -224,7 +224,7 @@ export default function ConfirmarPage() {
                     <div style={{ height: 1, background: "rgba(255,255,255,.05)", margin: "12px 0" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <Clock size={17} color="#C143BC" strokeWidth={2.2} style={{ flexShrink: 0 }} />
-                      <span style={{ color: "#E6E4DA", fontSize: 13, fontWeight: 600 }}>10:00 AM · Check-In y escarapela</span>
+                      <span style={{ color: "#E6E4DA", fontSize: 13, fontWeight: 600 }}>9:00 AM · Check-In y gafete</span>
                     </div>
                     <div style={{ height: 1, background: "rgba(255,255,255,.05)", margin: "12px 0" }} />
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -259,7 +259,7 @@ export default function ConfirmarPage() {
                     La confirmación de registros terminó
                   </h2>
                   <p style={{ color: "#B4B2A9", fontSize: 13, lineHeight: 1.7, fontFamily: "monospace", margin: 0 }}>
-                    Te esperamos el <strong style={{ color: "#C143BC" }}>{EVENT_OPS.weekday} 4 de noviembre a las 10:00 AM</strong> para que confirmes tu asistencia directamente en Registro.
+                    Te esperamos el <strong style={{ color: "#C143BC" }}>{EVENT_OPS.weekday} 4 de noviembre a las 9:00 AM</strong> para que confirmes tu asistencia directamente en Registro.
                   </p>
                 </div>
               )}

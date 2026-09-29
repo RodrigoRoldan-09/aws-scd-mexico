@@ -62,11 +62,11 @@ const EMAIL_RE =
 const PROVIDER_RULES: Record<string, { allowed: RegExp; reason: string }> = {
   "gmail.com": {
     allowed: /^[a-z0-9.]+$/,
-    reason: "Las direcciones de Gmail sólo llevan letras, números y puntos.",
+    reason: "Las direcciones de Gmail solo llevan letras, números y puntos.",
   },
   "googlemail.com": {
     allowed: /^[a-z0-9.]+$/,
-    reason: "Las direcciones de Gmail sólo llevan letras, números y puntos.",
+    reason: "Las direcciones de Gmail solo llevan letras, números y puntos.",
   },
   "outlook.com": {
     allowed: /^[a-z0-9._-]+$/,
@@ -221,7 +221,7 @@ export function normalizeDocument(raw: string, rule: DocRule): DocCheck {
     case "digits": {
       const digits = value.replace(/[.\s-]/g, "");
       if (!/^\d+$/.test(digits)) {
-        return { ok: false, value, reason: "Ese documento lleva sólo números." };
+        return { ok: false, value, reason: "Ese documento lleva solo números." };
       }
       if (digits.length < rule.min || digits.length > rule.max) {
         return {

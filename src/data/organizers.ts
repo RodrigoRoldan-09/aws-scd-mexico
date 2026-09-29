@@ -2,8 +2,6 @@ import type { Organizer } from "@/types";
 
 /**
  * Equipo organizador. El orden se respeta tal cual en la sección.
- * POR CONFIRMAR: hoy lista al equipo de la edición de Chile; reemplazar por
- * el de México.
  *
  * `photo` vacío hace que la tarjeta muestre la carita de DiceBear sembrada
  * con el `id`, la misma que sale en el pasaporte.

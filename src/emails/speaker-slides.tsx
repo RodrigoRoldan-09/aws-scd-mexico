@@ -15,7 +15,7 @@ export function SpeakerSlidesEmail({ name, slideUrl }: SpeakerSlidesEmailProps) 
 
       <Paragraph>
         Tu presentación quedó guardada. La vamos a precargar en la sala que te
-        toque, así que el día del evento sólo tienes que llegar y presentar.
+        toque, así que el día del evento solo tienes que llegar y presentar.
       </Paragraph>
 
       <HardButton href={slideUrl} variant="outline">

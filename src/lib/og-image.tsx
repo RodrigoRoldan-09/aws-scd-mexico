@@ -15,7 +15,7 @@ export function OGImage({
   label?: string;
   locale?: string;
 }) {
-  const dateStr = locale === "en" ? "November 4, 2026" : "4 de noviembre, 2026";
+  const dateStr = locale === "en" ? "November 4, 2026" : "4 de noviembre de 2026";
   const venueStr = locale === "en" ? "Mexico City" : "Ciudad de México";
   const domain = SITE_HOST;
 

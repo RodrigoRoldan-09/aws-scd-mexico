@@ -98,7 +98,7 @@ function Row({
       </div>
       <div className={dot ? "pl-5 sm:pl-0" : "pl-0"}>
         {title && (
-          <p className="m-0 font-display text-lg font-medium lowercase tracking-tight text-[#E6E4DA]">
+          <p className="m-0 font-display text-lg font-medium tracking-tight text-[#E6E4DA]">
             {title}
           </p>
         )}
@@ -124,7 +124,7 @@ export function CallForSpeakers() {
             {t("heading")}
           </DotHeading>
           <h2
-            className="m-0 max-w-[16ch] font-display font-medium lowercase leading-[1.02] tracking-tight text-[#E6E4DA]"
+            className="m-0 max-w-[16ch] font-display font-medium leading-[1.02] tracking-tight text-[#E6E4DA]"
             style={{ fontSize: "clamp(28px,4vw,48px)" }}
           >
             {t("lead_pre")}
@@ -198,7 +198,7 @@ export function CallForSpeakers() {
                     {t(f.durationKey)}
                   </span>
                 </div>
-                <h4 className="font-display text-xl font-bold lowercase leading-tight tracking-tight text-[#E6E4DA]">
+                <h4 className="font-display text-xl font-bold leading-tight tracking-tight text-[#E6E4DA]">
                   {t(f.titleKey)}
                 </h4>
                 <p className="mt-2 font-mono text-sm leading-relaxed text-[#B4B2A9]">
@@ -230,7 +230,7 @@ export function CallForSpeakers() {
               className="rounded-[12px] border border-[#2C2550] bg-[#1E1838]/60 p-6 transition-all duration-300 hover:border-[#C143BC]/60 hover:bg-[#1E1838]"
             >
               <Icon className="mb-3 h-6 w-6 text-[#C143BC]" />
-              <p className="m-0 font-display text-lg font-bold lowercase tracking-tight text-[#E6E4DA]">
+              <p className="m-0 font-display text-lg font-bold tracking-tight text-[#E6E4DA]">
                 {t(c.titleKey)}
               </p>
               <p className="mt-1.5 font-mono text-sm leading-relaxed text-[#B4B2A9]">

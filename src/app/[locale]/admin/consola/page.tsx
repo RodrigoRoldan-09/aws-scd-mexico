@@ -123,7 +123,7 @@ export default function ConsolaPage() {
         { icon: ClipboardList, value: summary.attendees, label: "asistentes", hint: `${summary.inPerson} presencial · ${summary.online} online`, href: "registrations", tone: "accent" },
         { icon: Heart, value: summary.volunteers, label: "voluntarios", hint: `${summary.volunteersApproved} aprobados`, href: "volunteers", tone: "good" },
         { icon: Mic2, value: summary.speakers, label: "speakers", hint: `${summary.speakersAccepted} aceptados`, href: "speakers", tone: "ink" },
-        { icon: Stamp, value: summary.passports, label: "pasaportes", hint: "sólo presenciales", href: "pasaportes", tone: "ink" },
+        { icon: Stamp, value: summary.passports, label: "pasaportes", hint: "solo presenciales", href: "pasaportes", tone: "ink" },
         { icon: QrCode, value: summary.checkedIn, label: "con check-in", hint: `${summary.confirmed} confirmaron`, tone: "ink" },
         { icon: Users, value: summary.users, label: "cuentas de staff", href: "users", tone: "ink" },
       ])

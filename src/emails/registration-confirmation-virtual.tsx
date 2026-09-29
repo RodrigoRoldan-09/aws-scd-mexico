@@ -69,7 +69,7 @@ export function RegistrationConfirmationVirtualEmail({
       <DetailBox
         rows={[
           { label: "Fecha", value: EVT.dateLong },
-          { label: "Hora", value: "10:00 AM, hora de la Ciudad de México (CST)" },
+          { label: "Hora", value: "9:00 AM, hora de la Ciudad de México (CST)" },
           { label: "Modalidad", value: "Track Online — en vivo" },
           { label: "Costo", value: "Gratuito" },
         ]}

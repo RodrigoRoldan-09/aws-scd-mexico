@@ -9,6 +9,7 @@ import { Agenda } from "@/components/sections/agenda-section";
 import { Venue } from "@/components/sections/venue";
 import { Sponsors } from "@/components/sections/sponsors";
 import { Communities } from "@/components/sections/communities";
+import { AlliedSBGs } from "@/components/sections/allied-sbgs";
 import { Organizers } from "@/components/sections/organizers";
 import { FAQ } from "@/components/sections/faq-section";
 import { RegistrationCTA } from "@/components/sections/registration-cta";
@@ -40,6 +41,7 @@ export default async function HomePage({
       <Venue />
       <Sponsors />
       <Communities />
+      <AlliedSBGs />
       <Organizers />
       <FAQ />
 

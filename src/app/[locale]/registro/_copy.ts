@@ -22,8 +22,8 @@ export const COPY = {
 
     attendance: "Modalidad de asistencia",
     inPerson: "Presencial (100% en sede IPN)",
-    inPerson_badge: "Evento 100% Presencial",
-    inPerson_note: "Todas las ponencias, talleres y actividades se llevarán a cabo de forma presencial en IPN-Casco Santo Tomas.",
+    inPerson_badge: "Evento 100% presencial",
+    inPerson_note: "Todas las ponencias, talleres y actividades se llevarán a cabo de forma presencial en IPN-Casco de Santo Tomás.",
     online: "Virtual",
 
     docType: "Tipo de documento",
@@ -98,7 +98,7 @@ export const COPY = {
     attendance: "Attendance mode",
     inPerson: "In person (100% on-site at IPN)",
     inPerson_badge: "100% In-Person Event",
-    inPerson_note: "All talks, workshops, and activities will take place in person at IPN-Casco Santo Tomas.",
+    inPerson_note: "All talks, workshops, and activities will take place in person at IPN-Casco de Santo Tomás.",
     online: "Online",
 
     docType: "ID type",
@@ -126,7 +126,7 @@ export const COPY = {
 
     coc_text: "I have read and accept the ",
     coc_link: "Code of Conduct",
-    privacy_text: "I authorise the processing of my personal data under the ",
+    privacy_text: "I authorize the processing of my personal data under the ",
     privacy_link: "Privacy Policy",
 
     volunteers_q: "Were you looking for the ",
@@ -143,7 +143,7 @@ export const COPY = {
     r_mode: "mode",
     r_doc: "id",
     r_role: "role",
-    r_entity: "organisation",
+    r_entity: "organization",
     r_community: "community",
 
     e_firstName: "Enter your first name.",
@@ -157,7 +157,7 @@ export const COPY = {
     e_entityName: "Enter the name.",
     e_communityName: "Please write your community name.",
     e_coc: "You need to accept the code of conduct.",
-    e_privacy: "We need your authorisation to process your data.",
+    e_privacy: "We need your authorization to process your data.",
   },
 } as const;
 

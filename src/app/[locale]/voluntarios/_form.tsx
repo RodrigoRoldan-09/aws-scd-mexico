@@ -358,7 +358,7 @@ export function VoluntariosForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 01 · Identidad & Contacto
+            // 01 · Identidad y contacto
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Requerido
@@ -428,7 +428,7 @@ export function VoluntariosForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 02 · Perfil & Comunidad SBG
+            // 02 · Perfil y comunidad SBG
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Comunidad Tech
@@ -557,7 +557,7 @@ export function VoluntariosForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 03 · Participación & Preferencias
+            // 03 · Participación y preferencias
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Día del Evento
@@ -647,7 +647,7 @@ export function VoluntariosForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 04 · Logística & Contacto de Emergencia
+            // 04 · Logística y contacto de emergencia
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Staff SCD
@@ -703,7 +703,7 @@ export function VoluntariosForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 05 · Compromisos & Envío
+            // 05 · Compromisos y envío
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Confirmación

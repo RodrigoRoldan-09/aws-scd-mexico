@@ -10,7 +10,7 @@ export async function generateMetadata({
   const isEn = locale === "en";
 
   return {
-    title: isEn ? "Free Registration" : "Regístrate Gratis",
+    title: isEn ? "Free Registration" : "Regístrate gratis",
     description: isEn
       ? "Register for free at AWS Student Community Day México 2026. Talks, workshops, and networking in Mexico City. Limited spots."
       : "Regístrate gratis al AWS Student Community Day México 2026. Charlas, talleres y networking en la Ciudad de México. Cupos limitados.",
@@ -32,7 +32,7 @@ export async function generateMetadata({
         : "Regístrate — AWS Student Community Day México 2026",
       description: isEn
         ? "Free event · November 4, 2026 · Mexico City, Mexico"
-        : "Evento gratuito · 4 de noviembre, 2026 · Ciudad de México",
+        : "Evento gratuito · 4 de noviembre de 2026 · Ciudad de México",
     },
     alternates: {
       canonical: isEn

@@ -23,7 +23,7 @@ export function VolunteerSetupEmail({ name }: VolunteerSetupEmailProps) {
       <Heading>{firstName ? `${firstName}, armamos esto juntos.` : "Armamos esto juntos."}</Heading>
 
       <Paragraph>
-        El día antes del evento dejamos todo listo: señalética, salas, escarapelas
+        El día antes del evento dejamos todo listo: señalética, salas, gafetes
         y kits. Con varias manos sale en un par de horas.
       </Paragraph>
 
@@ -45,7 +45,7 @@ export function VolunteerSetupEmail({ name }: VolunteerSetupEmailProps) {
       <Steps
         items={[
           "Señalizar salas y rutas de circulación.",
-          "Ordenar escarapelas y kits por orden alfabético.",
+          "Ordenar gafetes y kits por orden alfabético.",
           "Probar proyectores y sonido de cada sala.",
           "Repasar los turnos del día siguiente.",
         ]}

@@ -6,6 +6,7 @@ import { Users, Globe } from "lucide-react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { HardButton } from "@/components/ui/hard-button";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { communities } from "@/data/communities";
 import { localePath } from "@/lib/utils";
 import type { Community } from "@/types";
@@ -55,8 +56,9 @@ export function CommunityCard({ comm }: { comm: Community }) {
               src={comm.logo}
               alt={comm.name}
               fill
-              sizes="(max-width: 640px) 90vw, 260px"
-              className="object-contain p-6 grayscale transition-all duration-500 group-hover:scale-[1.06] group-hover:grayscale-0"
+              draggable={false}
+              sizes="(max-width: 640px) 230px, 280px"
+              className="object-contain p-6 grayscale transition-all duration-500 group-hover:scale-[1.06] group-hover:grayscale-0 group-data-[active=true]/slide:grayscale-0"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -218,27 +220,23 @@ export function Communities() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.1} from="scale">
-          <div className="flex flex-wrap justify-center gap-4">
-            {communities.length > 0 ? (
-              communities.map((comm) => (
-                <CommunityCard key={comm.id} comm={comm} />
-              ))
-            ) : (
-              [0, 1, 2, 3].map((idx) => (
-                <EmptyCommunityCard
-                  key={idx}
-                  badge={t("empty_badge")}
-                  title={t("empty_title")}
-                  category={t("empty_category")}
-                  desc={t("empty_desc")}
-                />
-              ))
-            )}
-          </div>
+          <CoverflowCarousel label={t("carousel_label")}>
+            {communities.length > 0
+              ? communities.map((comm) => <CommunityCard key={comm.id} comm={comm} />)
+              : [0, 1, 2, 3].map((idx) => (
+                  <EmptyCommunityCard
+                    key={idx}
+                    badge={t("empty_badge")}
+                    title={t("empty_title")}
+                    category={t("empty_category")}
+                    desc={t("empty_desc")}
+                  />
+                ))}
+          </CoverflowCarousel>
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
-          <div className="mt-14 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <HardButton
               href={localePath(locale, "/comunidades")}
               tone="ink"

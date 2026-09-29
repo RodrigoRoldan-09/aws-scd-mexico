@@ -30,14 +30,14 @@ export const EVENT = {
     coordinates: { lat: 19.4520, lng: -99.1718 },
     mapsUrl: "https://maps.google.com/?q=Centro+Hist%C3%B3rico+y+Cultural+Juan+de+Dios+B%C3%A1tiz+Manuel+Carpio+Agricultura+Miguel+Hidalgo+11360+CDMX",
   },
-  // Miércoles 4 de noviembre de 2026, 10:00 AM CDMX (UTC-6) = 16:00 UTC.
-  date: "2026-11-04T16:00:00.000Z",
+  // Miércoles 4 de noviembre de 2026, 9:00 AM CDMX (UTC-6) = 15:00 UTC.
+  date: "2026-11-04T15:00:00.000Z",
   // 18:00 CDMX.
   endDate: "2026-11-05T00:00:00.000Z",
   // Textos de fecha y hora que usan correos, PDFs e imágenes.
-  dateLabel: "Miércoles 4 de noviembre, 2026",
+  dateLabel: "Miércoles 4 de noviembre de 2026",
   dateShort: "04.11.2026",
-  timeLabel: "10:00 AM (CST)",
+  timeLabel: "9:00 AM (CST)",
   dateConfirmed: true,
   registrationUrl: null as string | null,
   registrationOpen: false,

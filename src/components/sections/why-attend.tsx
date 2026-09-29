@@ -55,7 +55,7 @@ function WhyRow({ num, titleKey, tagKey, descKey, t }: {
       </span>
 
       <div className="flex flex-col gap-2.5">
-        <h3 className="font-display font-bold lowercase leading-tight tracking-tight text-[#E6E4DA] m-0 text-lg md:text-xl lg:text-2xl">
+        <h3 className="font-display font-bold leading-tight tracking-tight text-[#E6E4DA] m-0 text-lg md:text-xl lg:text-2xl">
           {t(titleKey)}
         </h3>
         <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#8B84A0]">
@@ -80,7 +80,7 @@ export function WhyAttend() {
           <DotHeading as="div" variant="inverted" className="mb-5 text-xl sm:text-2xl md:text-3xl">
             {t("eyebrow")}
           </DotHeading>
-          <h2 className="font-display font-bold lowercase leading-[1.02] tracking-tight max-w-[16ch] m-0"
+          <h2 className="font-display font-bold leading-[1.02] tracking-tight max-w-[16ch] m-0"
             style={{ fontSize: "clamp(28px,4vw,48px)" }}>
             {t("section_pre")}
             <em className="not-italic text-hack-block">{t("section_em")}</em>

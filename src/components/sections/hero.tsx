@@ -163,7 +163,7 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.2, ease }}
             className="mt-5 font-mono text-base text-surface-300 md:text-lg"
           >
-            {t("event_date")} · {EVENT.city.toLowerCase()} · 10:00 am ·{" "}
+            {t("event_date")} · {EVENT.city.toLowerCase()} · 9:00 am ·{" "}
             <span className="text-[#C143BC]">{t("tagline_short")}</span>
           </motion.p>
 

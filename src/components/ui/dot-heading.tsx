@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { Tone } from "./block-section";
@@ -9,19 +9,37 @@ import type { Tone } from "./block-section";
  * Reparte el texto en <span> por letra y le da a cada uno un retardo creciente,
  * para que la onda de color lo recorra de izquierda a derecha en vez de
  * encender todo el titular a la vez.
+ *
+ * Las letras se agrupan por palabra (cada palabra no se parte) y entre
+ * palabras va un espacio normal: así el titular puede saltar de línea en
+ * pantallas angostas en vez de salirse por el borde.
  */
 function Wave({ text, invert }: { text: string; invert: boolean }) {
-  const letters = [...text];
+  const letter = invert ? "wave-letter-invert" : "wave-letter";
+  // El índice cuenta también los espacios, para conservar el ritmo de la onda.
+  const parts = text.split(" ");
+  const words = parts.map((word, w) => ({
+    word,
+    start: parts.slice(0, w).reduce((n, prev) => n + [...prev].length + 1, 0),
+  }));
+
   return (
     <>
-      {letters.map((ch, i) => (
-        <span
-          key={i}
-          className={invert ? "wave-letter-invert" : "wave-letter"}
-          style={{ animationDelay: `${i * 0.045}s` }}
-        >
-          {ch === " " ? " " : ch}
-        </span>
+      {words.map(({ word, start }, w) => (
+        <Fragment key={w}>
+          {w > 0 && " "}
+          <span className="inline-block whitespace-nowrap">
+            {[...word].map((ch, i) => (
+              <span
+                key={i}
+                className={letter}
+                style={{ animationDelay: `${(start + i) * 0.045}s` }}
+              >
+                {ch}
+              </span>
+            ))}
+          </span>
+        </Fragment>
       ))}
     </>
   );
@@ -87,7 +105,7 @@ export function DotHeading({
     const caja = (
         <Tag
           className={cn(
-            "dot-matrix inline-block px-5 py-2.5 text-2xl leading-none sm:text-3xl md:text-4xl",
+            "dot-matrix inline-block max-w-full px-5 py-2.5 text-2xl leading-tight sm:text-3xl md:text-4xl",
             flicker && "animate-flicker",
             tone === "block"
               ? "bg-hack-ink text-hack-block"
@@ -100,7 +118,7 @@ export function DotHeading({
     );
 
     // Sin barrido la caja se pinta entera y no depende de nada más.
-    if (!reveal) return <div className="inline-block">{caja}</div>;
+    if (!reveal) return <div className="inline-block max-w-full">{caja}</div>;
 
     // Con barrido: se revela de izquierda a derecha en vez de aparecer, para
     // que se encienda como un letrero que arranca y no como un texto que llega.
@@ -110,7 +128,7 @@ export function DotHeading({
         initial={{ clipPath: "inset(0 100% 0 0)" }}
         animate={inView ? { clipPath: "inset(0 0% 0 0)" } : undefined}
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        className="inline-block"
+        className="inline-block max-w-full"
       >
         {caja}
       </motion.div>

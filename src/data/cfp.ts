@@ -10,7 +10,7 @@ export const CFP_DEADLINE = "2026-10-14T23:59:00-06:00";
 
 /**
  * Modalidad de ponencias. Establecido en `false` porque todas las sesiones
- * son 100% presenciales en IPN-Casco Santo Tomas.
+ * son 100% presenciales en IPN-Casco de Santo Tomás.
  */
 export const CFP_ONLINE_SPEAKERS = false;
 

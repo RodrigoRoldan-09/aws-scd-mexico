@@ -69,7 +69,7 @@ export function TerminalHeading({
     <div ref={ref}>
       <Tag
         className={cn(
-          "font-display lowercase tracking-tight text-surface-50",
+          "font-display tracking-tight text-surface-50",
           className,
         )}
       >

@@ -36,7 +36,7 @@ export const COPY = {
     entityName: (tipo: string) => `Nombre de tu ${tipo}`,
     entityName_ph: "Escríbelo completo",
 
-    sbg: "¿Haces parte de un AWS Student Builder Group?",
+    sbg: "¿Formas parte de un AWS Student Builder Group?",
     searchSbg: "Buscar SBG…",
     sbgOther_ph: "Nombre del grupo",
 
@@ -174,7 +174,7 @@ export const COPY = {
 
     coc_text: "I have read and accept the ",
     coc_link: "Code of Conduct",
-    privacy_text: "I authorise the processing of my personal data under the ",
+    privacy_text: "I authorize the processing of my personal data under the ",
     privacy_link: "Privacy Policy",
 
     notice1a: "This form is for the ",
@@ -182,7 +182,7 @@ export const COPY = {
     notice1c: ". If what you want is to attend the event, ",
     notice1link: "register as an attendee here",
     notice2a: "Already registered as an attendee and want to join the team? You cannot be on both lists: write to ",
-    notice2b: " and an organiser will move you.",
+    notice2b: " and an organizer will move you.",
 
     warning_title: "Important application notice",
     warning_participation: "Submitting this form or email does not confirm your participation as a volunteer. Your participation is only confirmed if you are contacted directly by the organizing team.",
@@ -195,7 +195,7 @@ export const COPY = {
     r_email: "email",
     r_phone: "phone",
     r_doc: "id",
-    r_entity: "organisation",
+    r_entity: "organization",
     r_sbg: "sbg",
     r_availability: "availability",
     r_areas: "areas",
@@ -223,7 +223,7 @@ export const COPY = {
     e_dietaryOther: "Tell us which one.",
     e_emergency: "Enter who we should call.",
     e_coc: "You need to accept the code of conduct.",
-    e_privacy: "We need your authorisation to process your data.",
+    e_privacy: "We need your authorization to process your data.",
   },
 } as const;
 

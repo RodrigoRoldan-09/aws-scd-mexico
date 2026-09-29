@@ -3,12 +3,12 @@
  */
 export const COPY = {
   es: {
-    title: "Comunidades Aliadas",
+    title: "Comunidades aliadas",
     lead: "Súmate como comunidad colaboradora al AWS Student Community Day México 2026. Cuéntanos sobre su impacto y cómo les gustaría participar.",
 
-    sec_identity: "// 01 · Identidad de la Comunidad",
-    sec_reach: "// 02 · Alcance & Colaboración",
-    sec_contact: "// 03 · Datos de Contacto",
+    sec_identity: "// 01 · Identidad de la comunidad",
+    sec_reach: "// 02 · Alcance y colaboración",
+    sec_contact: "// 03 · Datos de contacto",
 
     communityName: "Nombre de la comunidad",
     communityName_ph: "Ej. AWS User Group CDMX, Club de Cloud Computing, etc.",

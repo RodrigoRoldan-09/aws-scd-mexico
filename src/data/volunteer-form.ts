@@ -72,8 +72,8 @@ export const DIETARY: Option[] = [
   { value: "none", label: "Sin restricciones", en: "No restrictions" },
   { value: "vegetarian", label: "Vegetariano", en: "Vegetarian" },
   { value: "vegan", label: "Vegano", en: "Vegan" },
-  { value: "gluten_free", label: "Sin gluten / celíaco", en: "Gluten free / coeliac" },
-  { value: "lactose_free", label: "Sin lactosa", en: "Lactose free" },
+  { value: "gluten_free", label: "Sin gluten / celíaco", en: "Gluten-free / celiac" },
+  { value: "lactose_free", label: "Sin lactosa", en: "Lactose-free" },
   { value: "other", label: "Otra (la especifico)", en: "Other (I will specify)" },
 ];
 
@@ -90,7 +90,7 @@ export const SBG_SETTING_KEY = "volunteer_sbg_list";
 
 /** Punto de partida por país, si el ajuste todavía no se ha tocado. */
 export const DEFAULT_SBGS: Record<CountryCode, string[]> = {
-  CL: ["SBG Duoc UC — Maipú", "SBG Duoc UC — Virtual Campus"],
+  CL: [],
   CO: [
     "SBG EAN",
     "SBG UDFJC",

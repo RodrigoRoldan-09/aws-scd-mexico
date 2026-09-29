@@ -1,7 +1,6 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { pixelifySans, shareTechMono } from "@/lib/fonts";
 import { Navbar } from "@/components/layout/navbar";
@@ -11,9 +10,6 @@ import { EventConfigProvider } from "@/components/providers/event-config-provide
 import { getPublicEventConfig, EMPTY_PUBLIC_CONFIG, isCfpOpen } from "@/lib/data/event-config";
 import { EventJsonLd } from "@/components/seo/json-ld";
 import { BfcacheReset } from "@/components/effects/bfcache-reset";
-import { KiroThemeSync } from "@/components/kiro/kiro-theme-sync";
-import { KiroFooter } from "@/components/kiro/kiro-footer";
-import { FooterSwitch } from "@/components/kiro/footer-switch";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
 
@@ -127,12 +123,6 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
-  // En el servidor sólo se decide el tema de Kiro, que va en <html> antes del
-  // primer pintado. Barra y pie los decide `SiteChrome` en el cliente.
-  const headersList = await headers();
-  const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || "";
-  const isKiro = pathname.includes("/kiro");
-
   // Config pública: 1 sola lectura (cacheada) por request, repartida por Context.
   // Si la DB falla, cae al respaldo y el sitio sigue en pie.
   const [desdeLaBase, cfpOpen] = await Promise.all([
@@ -147,21 +137,14 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${pixelifySans.variable} ${shareTechMono.variable} h-full antialiased`}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      data-kiro={isKiro ? "" : undefined}
     >
       <body className="min-h-full bg-[var(--bg-base)] text-[var(--text-primary)] font-body">
         <BfcacheReset />
-        <KiroThemeSync />
         <NextIntlClientProvider>
           <EventConfigProvider value={eventConfig}>
             <SiteChrome
               navbar={<Navbar />}
-              footer={
-                <FooterSwitch
-                  defaultFooter={<Footer locale={locale} />}
-                  kiroFooter={<KiroFooter locale={locale} />}
-                />
-              }
+              footer={<Footer locale={locale} />}
               jsonLd={<EventJsonLd locale={locale} />}
             >
               {children}

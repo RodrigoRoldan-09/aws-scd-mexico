@@ -182,7 +182,7 @@ export function SpeakerPreview({
       </div>
 
       <div className="px-5 py-5">
-        <p className="m-0 font-display text-2xl font-medium lowercase leading-tight tracking-tight text-white">
+        <p className="m-0 font-display text-2xl font-medium leading-tight tracking-tight text-white">
           {name || t("preview_name_ph")}
         </p>
         <p className="mt-1 font-mono text-xs leading-snug text-hack-block">

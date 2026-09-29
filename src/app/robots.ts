@@ -21,8 +21,6 @@ export default function robots(): MetadataRoute.Robots {
           "/en/codigo-conducta",
           "/privacidad",
           "/en/privacidad",
-          "/kiro",
-          "/en/kiro",
         ],
         disallow: ["/admin/", "/en/admin/", "/api/", "/_next/", "/*/opengraph-image", "/opengraph-image", "/pasaporte/", "/en/pasaporte/", "/confirmar/", "/en/confirmar/"],
       },

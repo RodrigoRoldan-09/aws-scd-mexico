@@ -21,7 +21,6 @@ const staticRoutes: Route[] = [
   { es: "/speakers",        en: "/en/speakers",        priorityEs: 0.85, priorityEn: 0.8,  changeFrequency: "weekly"  },
   { es: "/directorio",      en: "/en/directorio",      priorityEs: 0.8,  priorityEn: 0.75, changeFrequency: "daily"   },
   { es: "/voluntarios",     en: "/en/voluntarios",     priorityEs: 0.75, priorityEn: 0.7,  changeFrequency: "weekly"  },
-  { es: "/kiro",            en: "/en/kiro",            priorityEs: 0.8,  priorityEn: 0.75, changeFrequency: "weekly"  },
   { es: "/codigo-conducta", en: "/en/codigo-conducta", priorityEs: 0.5,  priorityEn: 0.45, changeFrequency: "monthly" },
   { es: "/privacidad",      en: "/en/privacidad",      priorityEs: 0.4,  priorityEn: 0.35, changeFrequency: "monthly" },
 ];

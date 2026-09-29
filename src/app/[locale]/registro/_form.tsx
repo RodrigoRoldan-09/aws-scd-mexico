@@ -305,7 +305,7 @@ export function RegistroForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 01 · Identidad & Contacto
+            // 01 · Identidad y contacto
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Requerido
@@ -359,7 +359,7 @@ export function RegistroForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 02 · Modalidad & Acceso At IPN
+            // 02 · Modalidad y acceso en el IPN
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Sede CDMX
@@ -423,7 +423,7 @@ export function RegistroForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 03 · Perfil & Organización
+            // 03 · Perfil y organización
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Comunidad
@@ -493,7 +493,7 @@ export function RegistroForm({
                   label={t.entityName(
                     entities.find((x) => x.value === v.entityType)
                       ? labelOf(entities.find((x) => x.value === v.entityType)!, locale).toLowerCase()
-                      : locale === "en" ? "organisation" : "entidad",
+                      : locale === "en" ? "organization" : "entidad",
                   )}
                   required
                   htmlFor="f-entn"
@@ -566,7 +566,7 @@ export function RegistroForm({
       <div className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
         <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
           <span className="arcade-pixel text-xs text-[#F2A6F0]">
-            // 04 · Confirmación de Acceso
+            // 04 · Confirmación de acceso
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
             Finalizar

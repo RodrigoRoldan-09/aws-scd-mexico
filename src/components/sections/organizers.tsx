@@ -5,6 +5,7 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { HardButton } from "@/components/ui/hard-button";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { avatarUrl } from "@/lib/avatar";
 import { localePath } from "@/lib/utils";
 import { organizers } from "@/data/organizers";
@@ -61,8 +62,9 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
             src={org.photo}
             alt={org.name}
             fill
-            sizes="(max-width: 640px) 90vw, 260px"
-            className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.04] group-hover:grayscale-0"
+            draggable={false}
+            sizes="(max-width: 640px) 230px, 280px"
+            className="object-cover object-top grayscale transition-all duration-500 group-hover:scale-[1.04] group-hover:grayscale-0 group-data-[active=true]/slide:grayscale-0"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-[#0E0E1A] p-4">
@@ -72,6 +74,7 @@ export function OrganizerCard({ org }: { org: Organizer; accent?: "orange" | "pu
               alt=""
               aria-hidden="true"
               loading="lazy"
+              draggable={false}
               className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]"
             />
           </div>
@@ -149,15 +152,15 @@ export function Organizers() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.1} from="scale">
-          <div className="flex flex-wrap justify-center gap-4">
+          <CoverflowCarousel label={t("carousel_label")}>
             {organizers.map((org) => (
               <OrganizerCard key={org.id} org={org} />
             ))}
-          </div>
+          </CoverflowCarousel>
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
-          <div className="mt-14 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <HardButton
               tone="ink"
               href={localePath(locale, "/voluntarios")}

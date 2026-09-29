@@ -187,7 +187,7 @@ export const ROLES: Record<CountryCode, RoleOption[]> = {
   CL: [
     { value: "student_university", label: "Estudiante universitario", en: "University student", group: "students" },
     { value: "student_ip", label: "Estudiante de Instituto Profesional (IP)", en: "Professional Institute (IP) student", group: "students" },
-    { value: "student_cft", label: "Estudiante de Centro de Formación Técnica (CFT)", en: "Technical Training Centre (CFT) student", group: "students" },
+    { value: "student_cft", label: "Estudiante de Centro de Formación Técnica (CFT)", en: "Technical Training Center (CFT) student", group: "students" },
     { value: "student_school", label: "Estudiante de enseñanza media", en: "High school student", group: "students" },
     ...COMMON_ROLES,
   ],
@@ -218,10 +218,10 @@ export const ENTITY_TYPES: Record<CountryCode, EntityType[]> = {
   CL: [
     { value: "university", label: "Universidad", en: "University" },
     { value: "ip", label: "Instituto Profesional", en: "Professional Institute (IP)" },
-    { value: "cft", label: "Centro de Formación Técnica", en: "Technical Training Centre (CFT)" },
+    { value: "cft", label: "Centro de Formación Técnica", en: "Technical Training Center (CFT)" },
     { value: "school", label: "Colegio / Liceo", en: "School" },
     { value: "company", label: "Empresa", en: "Company" },
-    { value: "org", label: "Organización o comunidad", en: "Organisation or community" },
+    { value: "org", label: "Organización o comunidad", en: "Organization or community" },
     { value: "none", label: "Ninguna / Independiente", en: "None / Independent" },
   ],
   CO: [
@@ -230,7 +230,7 @@ export const ENTITY_TYPES: Record<CountryCode, EntityType[]> = {
     { value: "sena", label: "SENA", en: "SENA" },
     { value: "school", label: "Colegio", en: "School" },
     { value: "company", label: "Empresa", en: "Company" },
-    { value: "org", label: "Organización o comunidad", en: "Organisation or community" },
+    { value: "org", label: "Organización o comunidad", en: "Organization or community" },
     { value: "none", label: "Ninguna / Independiente", en: "None / Independent" },
   ],
   MX: [
@@ -238,7 +238,7 @@ export const ENTITY_TYPES: Record<CountryCode, EntityType[]> = {
     { value: "tech", label: "Universidad Tecnológica o Politécnica", en: "Technological or Polytechnic University" },
     { value: "school", label: "Preparatoria o bachillerato", en: "High school" },
     { value: "company", label: "Empresa", en: "Company" },
-    { value: "org", label: "Organización o comunidad", en: "Organisation or community" },
+    { value: "org", label: "Organización o comunidad", en: "Organization or community" },
     { value: "none", label: "Ninguna / Independiente", en: "None / Independent" },
   ],
   AR: [
@@ -246,7 +246,7 @@ export const ENTITY_TYPES: Record<CountryCode, EntityType[]> = {
     { value: "terciario", label: "Instituto terciario", en: "Tertiary institute" },
     { value: "school", label: "Escuela secundaria", en: "Secondary school" },
     { value: "company", label: "Empresa", en: "Company" },
-    { value: "org", label: "Organización o comunidad", en: "Organisation or community" },
+    { value: "org", label: "Organización o comunidad", en: "Organization or community" },
     { value: "none", label: "Ninguna / Independiente", en: "None / Independent" },
   ],
 };
