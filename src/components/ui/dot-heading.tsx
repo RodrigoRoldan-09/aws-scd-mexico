@@ -88,7 +88,10 @@ export function DotHeading({
   as?: "h1" | "h2" | "h3" | "p" | "div" | "span";
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  // El margen va sólo en vertical: con "-60px" en los cuatro lados, en móvil el
+  // borde izquierdo del letrero (a 24px de la pantalla) caía fuera del área
+  // observada y el barrido no arrancaba nunca.
+  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
 
   // La onda sólo se puede aplicar si el contenido es texto plano.
   const text = typeof children === "string" ? children : null;
@@ -122,16 +125,21 @@ export function DotHeading({
 
     // Con barrido: se revela de izquierda a derecha en vez de aparecer, para
     // que se encienda como un letrero que arranca y no como un texto que llega.
+    //
+    // Se observa un contenedor externo sin recorte: el navegador calcula la
+    // intersección con el `clip-path` aplicado, y mientras el letrero está
+    // oculto su caja recortada mide 0px de ancho.
     return (
-      <motion.div
-        ref={ref}
-        initial={{ clipPath: "inset(0 100% 0 0)" }}
-        animate={inView ? { clipPath: "inset(0 0% 0 0)" } : undefined}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        className="inline-block max-w-full"
-      >
-        {caja}
-      </motion.div>
+      <div ref={ref} className="inline-block max-w-full">
+        <motion.div
+          initial={{ clipPath: "inset(0 100% 0 0)" }}
+          animate={inView ? { clipPath: "inset(0 0% 0 0)" } : undefined}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-block max-w-full"
+        >
+          {caja}
+        </motion.div>
+      </div>
     );
   }
 

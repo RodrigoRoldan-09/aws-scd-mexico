@@ -58,7 +58,7 @@ interface CoverflowCarouselProps {
 export function CoverflowCarousel({
   children,
   label,
-  interval = 3800,
+  interval = 1500,
   slotClassName = "w-[200px] xs:w-[220px] sm:w-[240px]",
   className,
 }: CoverflowCarouselProps) {
