@@ -2,7 +2,7 @@ import https from "node:https";
 import dns from "node:dns";
 import { SITE_HOST } from "@/lib/constants";
 
-export const EMAIL_FROM = process.env.EMAIL_FROM || `AWS SCD <noreply@${SITE_HOST}>`;
+export const EMAIL_FROM = process.env.EMAIL_FROM || `AWS Student Community Day Mexico <noreply@${SITE_HOST}>`;
 export const MARKETING_EMAIL_FROM = process.env.MARKETING_EMAIL_FROM || EMAIL_FROM;
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";

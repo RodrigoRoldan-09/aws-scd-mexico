@@ -18,7 +18,7 @@ interface RegistrationConfirmationEmailProps {
   name?: string;
 }
 
-const MAPS_URL = "https://maps.app.goo.gl/8rMHzYicz3nDtj1w6";
+const MAPS_URL = EVT.mapsUrl;
 // Pasa por /api/email-map y no por Google directo para que la llave de Maps
 // no quede escrita en el HTML del correo.
 const MAPS_IMG = `${APP_URL}/api/email-map?w=520&h=220`;
@@ -74,21 +74,23 @@ export function RegistrationConfirmationEmail({ name }: RegistrationConfirmation
       <Divider />
 
       <Kicker>cómo llegar</Kicker>
-      <Section style={{ margin: "0 0 16px" }}>
-        <Link href={MAPS_URL}>
-          <Img
-            src={MAPS_IMG}
-            alt={`Mapa — ${EVT.venue}`}
-            width="520"
-            style={{
-              display: "block",
-              width: "100%",
-              maxWidth: "520px",
-              border: `2px solid ${C.line}`,
-            }}
-          />
-        </Link>
-      </Section>
+      {process.env.GOOGLE_MAPS_KEY ? (
+        <Section style={{ margin: "0 0 16px" }}>
+          <Link href={MAPS_URL}>
+            <Img
+              src={MAPS_IMG}
+              alt={`Mapa — ${EVT.venue}`}
+              width="520"
+              style={{
+                display: "block",
+                width: "100%",
+                maxWidth: "520px",
+                border: `2px solid ${C.line}`,
+              }}
+            />
+          </Link>
+        </Section>
+      ) : null}
 
       <Text
         style={{

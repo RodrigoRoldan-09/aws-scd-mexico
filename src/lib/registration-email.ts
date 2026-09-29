@@ -48,7 +48,7 @@ export async function buildRegistrationEmail(
   const pdfBuffer = await generateRegistrationPDF(name, qrBuffer, qrCode);
 
   return {
-    subject: "Registro Confirmado — AWS Student Community Day 2026",
+    subject: "Registro Confirmado — AWS Student Community Day México 2026",
     html: await render(RegistrationConfirmationEmail({ name })),
     attachments: [{ filename: "pase-aws-scd.pdf", content: pdfBuffer.toString("base64") }],
     isVirtual: false,
