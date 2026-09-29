@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/contexts/auth-context";
 import { usePathname } from "next/navigation";
 import { useUrlFilters, useDebounce } from "@/hooks/use-url-filters";
-import { Settings, Eye, Plus, Download, Users } from "lucide-react";
+import { Settings, Eye, Plus, Download, Users, Mail } from "lucide-react";
 import {
   Aviso, Cards, Cargando, Empty, HardButton, HardLink, PageHead, Pager, RowCard,
   Select, Stat, Stats, TableWrap, Tag, Th, Toolbar,
@@ -53,6 +53,7 @@ function RegistrationsAdminPageInner() {
   const [selected, setSelected] = useState<RegistrationRow | null>(null);
   const [showManual, setShowManual] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [bulkResending, setBulkResending] = useState(false);
 
   useEffect(() => {
     fetch("/api/registrations")
@@ -148,6 +149,46 @@ function RegistrationsAdminPageInner() {
     setPage(0);
   };
 
+  const handleBulkResend = async () => {
+    const ok = await confirm({
+      title: "Reenviar confirmación a todos",
+      message: `Se enviará el correo oficial de confirmación (con el diseño actualizado de México y su pase PDF con QR) a los ${registrations.length} asistentes registrados. ¿Deseas continuar?`,
+      confirmLabel: "Sí, reenviar a todos",
+    });
+    if (!ok) return;
+
+    setBulkResending(true);
+    toast("Iniciando reenvío de correos...", "info");
+    try {
+      const res = await fetch("/api/admin/registrations/bulk-resend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast(data.error || "Error en el reenvío masivo", "error");
+        return;
+      }
+      toast(`Reenvío completado: ${data.sent} enviados con éxito`, "success");
+      setRegistrations((prev) =>
+        prev.map((r) => {
+          const match = data.results?.find((x: { email: string }) => x.email === r.email);
+          if (!match) return r;
+          return {
+            ...r,
+            emailStatus: match.status === "sent" ? "sent" : "failed",
+            emailError: match.error || null,
+          };
+        }),
+      );
+    } catch {
+      toast("Error al procesar el reenvío masivo", "error");
+    } finally {
+      setBulkResending(false);
+    }
+  };
+
   const puedeCrear = user?.role === "admin" || user?.role === "organizer" || user?.role === "volunteer";
   const puedeExportar = user?.role === "admin" || user?.role === "organizer";
   const sinFiltrar = values.modalidad === "all" && values.checkin === "all" && values.confirmado === "all";
@@ -173,6 +214,16 @@ function RegistrationsAdminPageInner() {
             {puedeCrear && (
               <HardButton icon={Plus} onClick={() => setShowManual(true)}>
                 Nuevo registro
+              </HardButton>
+            )}
+            {puedeExportar && (
+              <HardButton
+                icon={Mail}
+                tone="ghost"
+                disabled={bulkResending}
+                onClick={handleBulkResend}
+              >
+                {bulkResending ? "Reenviando correos..." : "Reenviar a todos"}
               </HardButton>
             )}
             {puedeExportar && (
