@@ -76,10 +76,11 @@ export const alliedSBGs: Community[] = [
     name: "AWS SBG IPN",
     category: "Instituto Politécnico Nacional",
     badge: "CDMX",
-    logo: "/images/sbg/ipn_zac.webp",
+    logo: "/images/sbg/ipn.webp",
     social: {
       instagram: "https://www.instagram.com/awsclub.ipn/",
-
+      linkedin: "https://www.linkedin.com/in/aws-student-builder-group-ipn-zacatenco",
+      meetup: "https://www.meetup.com/aws-sbg-at-national-polytechnic-institute-zacatenco-campus/"
     },
   },
 ];
