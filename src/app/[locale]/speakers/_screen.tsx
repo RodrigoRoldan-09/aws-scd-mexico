@@ -459,45 +459,11 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
     );
   }
 
-  // ── Main form ────────────────────────────────────────────────────────────────
-  // ── Main form ────────────────────────────────────────────────────────────────
-  if (formOnly) {
-    return (
-      <FormShell
-        title={t.step_apply}
-        lead={t.apply_lead}
-        className="max-w-3xl"
-        aside={
-          <div className="flex items-center gap-4">
-            <Link
-              href={localePath(locale, "/speakers")}
-              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#F2A6F0] underline underline-offset-4 hover:text-[#E6E4DA]"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-              {t.apply_back}
-            </Link>
-            <div className="inline-flex items-center rounded-[4px] border border-[#2C2550] bg-[#090812] p-0.5">
-              {(["es", "en"] as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  className={cn(
-                    "rounded-[2px] px-3.5 py-1.5 font-mono text-xs font-bold transition-colors",
-                    lang === l
-                      ? "bg-[#C143BC] text-[#0E0E1A]"
-                      : "text-[#B4B2A9] hover:text-[#E6E4DA]",
-                  )}
-                >
-                  {l === "es" ? "ES" : "EN"}
-                </button>
-              ))}
-            </div>
-          </div>
-        }
-      >
-        {/* Pasos de postulación */}
-        <div className="relative mb-8">
+  // ── Main form content ────────────────────────────────────────────────────────
+  const formContent = (
+    <>
+      {/* Pasos de postulación */}
+      <div className="relative mb-8">
           <div className="absolute left-0 right-0 top-5 h-0.5 bg-[#2C2550]" aria-hidden="true">
             <div
               className="h-full bg-[#C143BC] transition-[width] duration-500 shadow-[0_0_8px_#C143BC]"
@@ -1050,6 +1016,45 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
             </div>
           </form>
         </div>
+    </>
+  );
+
+  if (formOnly) {
+    return (
+      <FormShell
+        title={t.step_apply}
+        lead={t.apply_lead}
+        className="max-w-3xl"
+        aside={
+          <div className="flex items-center gap-4">
+            <Link
+              href={localePath(locale, "/speakers")}
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#F2A6F0] underline underline-offset-4 hover:text-[#E6E4DA]"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              {t.apply_back}
+            </Link>
+            <div className="inline-flex items-center rounded-[4px] border border-[#2C2550] bg-[#090812] p-0.5">
+              {(["es", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  className={cn(
+                    "rounded-[2px] px-3.5 py-1.5 font-mono text-xs font-bold transition-colors",
+                    lang === l
+                      ? "bg-[#C143BC] text-[#0E0E1A]"
+                      : "text-[#B4B2A9] hover:text-[#E6E4DA]",
+                  )}
+                >
+                  {l === "es" ? "ES" : "EN"}
+                </button>
+              ))}
+            </div>
+          </div>
+        }
+      >
+        {formContent}
       </FormShell>
     );
   }
@@ -1057,6 +1062,39 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
   return (
     <div className="min-h-screen bg-[#0E0E1A] pt-8 md:pt-0">
       <CallForSpeakers />
+      <section className="border-t border-[#2C2550] bg-[#090812] py-16 px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-[#C143BC]">// Formulario de Postulación</p>
+              <h2 className="mt-1 font-display text-2xl font-bold text-[#E6E4DA] sm:text-3xl">
+                {t.step_apply}
+              </h2>
+              <p className="mt-2 font-mono text-xs text-[#B4B2A9]">
+                {t.apply_lead}
+              </p>
+            </div>
+            <div className="inline-flex items-center rounded-[4px] border border-[#2C2550] bg-[#0E0E1A] p-0.5">
+              {(["es", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  className={cn(
+                    "rounded-[2px] px-3.5 py-1.5 font-mono text-xs font-bold transition-colors",
+                    lang === l
+                      ? "bg-[#C143BC] text-[#0E0E1A]"
+                      : "text-[#B4B2A9] hover:text-[#E6E4DA]",
+                  )}
+                >
+                  {l === "es" ? "ES" : "EN"}
+                </button>
+              ))}
+            </div>
+          </div>
+          {formContent}
+        </div>
+      </section>
     </div>
   );
 }

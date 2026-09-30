@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
     const publicUrl = `${S3_PUBLIC_URL}/${key}`;
 
     return Response.json({ uploadUrl, publicUrl });
-  } catch {
+  } catch (err) {
+    console.error("[POST /api/upload/public-presign] error:", err);
     return Response.json({ error: "Error al generar URL de subida" }, { status: 500 });
   }
 }

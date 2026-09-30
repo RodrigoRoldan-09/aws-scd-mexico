@@ -48,6 +48,7 @@ export async function Footer({ locale }: { locale: string }) {
 
   const scdLinks = [
     { label: t("about"), href: `${localePath(locale)}#about` },
+    { label: "Call for Speakers (CFP)", href: localePath(locale, "/speakers") },
     { label: t("agenda"), href: `${localePath(locale)}#agenda` },
     { label: t("speakers"), href: localePath(locale, "/directorio") },
     { label: locale === "en" ? "Communities" : "Comunidades", href: localePath(locale, "/comunidades") },

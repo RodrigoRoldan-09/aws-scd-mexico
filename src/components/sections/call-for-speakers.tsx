@@ -143,7 +143,7 @@ export function CallForSpeakers() {
         <div className="mb-16 flex flex-col items-start justify-between gap-8 rounded-[12px] border border-[#2C2550] bg-[#1E1838] p-6 shadow-[0_8px_32px_rgba(0,0,0,0.35)] md:flex-row md:items-center md:p-8">
           <DeadlineCountdown />
           <HardButton
-            href={localePath(locale, "/speakers/postular")}
+            href="#postular"
             pulse
             disabled={closed}
             sub={closed ? t("closed_note") : undefined}

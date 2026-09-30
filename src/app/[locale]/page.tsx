@@ -35,7 +35,7 @@ export default async function HomePage({
       <Tracks />
 
       <TalaveraGreca variant="cyan" height={20} />
-      <Strip k="event" tone="ink" duration={36} reverse />
+      <Strip k="cfp" tone="ink" duration={36} reverse />
 
       <Agenda />
       <Venue />

@@ -15,6 +15,7 @@ import {
   GraduationCap,
   ShieldCheck,
   FileText,
+  Mic,
 } from "lucide-react";
 import { LanguageToggle } from "./language-toggle";
 import { EVENT } from "@/lib/constants";
@@ -48,6 +49,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       group: "SCD",
       items: [
         { label: "Acerca de", href: resolveHref("#about"), icon: Info },
+        { label: "Call for Speakers (CFP)", href: localePath(locale, "/speakers"), icon: Mic },
         { label: "Speakers", href: localePath(locale, "/directorio"), icon: Users },
         { label: "Agenda", href: resolveHref("#agenda"), icon: Calendar },
         { label: "Comunidades", href: localePath(locale, "/comunidades"), icon: Rocket },

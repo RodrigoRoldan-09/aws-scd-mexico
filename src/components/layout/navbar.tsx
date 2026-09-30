@@ -16,6 +16,7 @@ import {
   GraduationCap,
   ShieldCheck,
   FileText,
+  Mic,
 } from "lucide-react";
 import { cn, localePath } from "@/lib/utils";
 import { useEventConfig } from "@/components/providers/event-config-provider";
@@ -78,6 +79,12 @@ export function Navbar() {
       description: "El evento cloud para estudiantes",
       href: resolveHref("#about"),
       icon: Info,
+    },
+    {
+      title: "Call for Speakers",
+      description: "Convocatoria abierta para ponentes (CFP)",
+      href: localePath(locale, "/speakers"),
+      icon: Mic,
     },
     {
       title: "Speakers",
@@ -324,6 +331,18 @@ export function Navbar() {
               className="rounded-[6px] px-2.5 py-1 font-mono text-xs text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
             >
               Sponsors
+            </a>
+
+            {/* Call for Speakers / CFP */}
+            <a
+              href={localePath(locale, "/speakers")}
+              className="inline-flex items-center gap-1.5 rounded-[6px] border border-[#C143BC]/50 bg-[#C143BC]/15 px-2 py-0.5 font-mono text-xs font-semibold text-[#F2A6F0] transition-all hover:bg-[#C143BC] hover:text-[#0E0E1A]"
+            >
+              <Mic className="h-3 w-3 text-[#F2A6F0]" />
+              <span>CFP</span>
+              <span className="rounded-[3px] bg-[#C143BC] px-1 py-0.2 font-mono text-[9px] font-bold uppercase tracking-wider text-[#0E0E1A]">
+                Abierto
+              </span>
             </a>
 
             {/* Contacto (standalone) */}
