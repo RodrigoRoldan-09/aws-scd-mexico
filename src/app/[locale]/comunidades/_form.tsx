@@ -7,16 +7,25 @@ import { Turnstile, type TurnstileHandle } from "@/components/ui/turnstile";
 import { PhoneInput } from "@/components/forms/phone-input";
 import { DEFAULT_COUNTRY } from "@/lib/normalize";
 import { useHydrated } from "@/hooks/use-hydrated";
-import { cleanWhitespace, cleanMultiline, normalizeEmail, normalizePhone, findCountry } from "@/lib/normalize";
+import { cleanWhitespace, cleanMultiline, normalizeEmail, normalizePhone, normalizeLink, findCountry } from "@/lib/normalize";
 import { cn } from "@/lib/utils";
 import { copyFor } from "./_copy";
 import type { SummaryRow } from "@/components/forms/success-screen";
 
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
+/** Cuántos enlaces se pueden agregar como máximo. */
+const MAX_LINKS = 5;
+/**
+ * El servidor recorta `socialUrl` a 300 caracteres sin avisar (ver
+ * `parseCommunityInput`). Los enlaces se mandan unidos en una sola cadena, así
+ * que el total se valida acá para que ninguno quede cortado.
+ */
+const MAX_LINKS_CHARS = 300;
+const LINKS_SEPARATOR = ", ";
+
 type FieldKey =
   | "communityName"
-  | "socialUrl"
   | "metrics"
   | "contribution"
   | "contactEmail"
@@ -28,7 +37,6 @@ type Values = Record<FieldKey, string> & {
 
 const EMPTY: Values = {
   communityName: "",
-  socialUrl: "",
   metrics: "",
   contribution: "",
   contactEmail: "",
@@ -77,6 +85,10 @@ export function ComunidadesForm({
   const t = copyFor(locale);
 
   const [v, setV] = useState<Values>(EMPTY);
+  // Un enlace por campo. En pantalla son varias casillas; al enviar se unen con
+  // coma en una sola cadena, que es lo que el servidor ya espera.
+  const [links, setLinks] = useState<string[]>([""]);
+  const [focusIdx, setFocusIdx] = useState<number | null>(null);
   const [errors, setErrors] = useState<Partial<Record<string, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
@@ -90,11 +102,84 @@ export function ComunidadesForm({
     if (formError) setFormError("");
   };
 
+  const clearLinkErrors = (i: number) =>
+    setErrors((e) => ({ ...e, [`link_${i}`]: undefined, links: undefined }));
+
+  const setLink = (i: number, value: string) => {
+    setLinks((prev) => prev.map((l, j) => (j === i ? value : l)));
+    clearLinkErrors(i);
+    if (formError) setFormError("");
+  };
+
+  const addLink = () => {
+    if (links.length >= MAX_LINKS) return;
+    setFocusIdx(links.length);
+    setLinks((prev) => [...prev, ""]);
+  };
+
+  const removeLink = (i: number) => {
+    setFocusIdx(null);
+    setLinks((prev) => prev.filter((_, j) => j !== i));
+    // Los errores van por posición: al quitar una casilla se limpian.
+    setErrors((e) => {
+      const n = { ...e };
+      Object.keys(n).forEach((k) => {
+        if (k.startsWith("link_")) delete n[k];
+      });
+      delete n.links;
+      return n;
+    });
+  };
+
+  /** Revisa un enlace suelto. Devuelve el texto de error o el valor normalizado. */
+  const checkLink = (raw: string): { error: string } | { value: string } => {
+    const value = cleanWhitespace(raw);
+    // Dos enlaces pegados en un mismo campo: justo lo que queremos evitar.
+    if (/[,;\s]/.test(value)) return { error: t.e_socialUrl_many };
+    const r = normalizeLink(value);
+    if (!r.ok) return { error: t.e_socialUrl_invalid };
+    return { value: r.value };
+  };
+
+  /** Al salir de la casilla: se deja el enlace ya normalizado (https, sin barra final). */
+  const blurLink = (i: number) => {
+    if (!cleanWhitespace(links[i])) return;
+    const r = checkLink(links[i]);
+    if ("error" in r) {
+      setErrors((e) => ({ ...e, [`link_${i}`]: r.error }));
+    } else if (r.value !== links[i]) {
+      setLink(i, r.value);
+    }
+  };
+
+  /**
+   * Enlaces válidos, sin vacíos ni repetidos. Las casillas vacías de más se
+   * ignoran: quien se arrepiente de agregar otro no tiene que borrarlo.
+   */
+  const collectLinks = (): { list: string[]; errs: Record<string, string> } => {
+    const errs: Record<string, string> = {};
+    const list: string[] = [];
+    links.forEach((raw, i) => {
+      if (!cleanWhitespace(raw)) return;
+      const r = checkLink(raw);
+      if ("error" in r) {
+        errs[`link_${i}`] = r.error;
+        return;
+      }
+      if (!list.some((x) => x.toLowerCase() === r.value.toLowerCase())) list.push(r.value);
+    });
+    if (Object.keys(errs).length === 0) {
+      if (list.length === 0) errs.link_0 = t.e_socialUrl;
+      else if (list.join(LINKS_SEPARATOR).length > MAX_LINKS_CHARS) errs.links = t.e_socialUrl_long;
+    }
+    return { list, errs };
+  };
+
   const validate = (): boolean => {
     const e: Record<string, string> = {};
 
     if (!cleanWhitespace(v.communityName)) e.communityName = t.e_communityName;
-    if (!cleanWhitespace(v.socialUrl)) e.socialUrl = t.e_socialUrl;
+    Object.assign(e, collectLinks().errs);
     if (!cleanMultiline(v.metrics)) e.metrics = t.e_metrics;
     if (!cleanMultiline(v.contribution)) e.contribution = t.e_contribution;
 
@@ -117,10 +202,12 @@ export function ComunidadesForm({
     setFormError("");
 
     const tel = normalizePhone(v.contactPhone, findCountry(v.contactPhoneCountry));
+    // Se unen con coma aquí: al servidor le sigue llegando una sola cadena.
+    const socialUrl = collectLinks().list.join(LINKS_SEPARATOR);
 
     const payload: Record<string, unknown> = {
       communityName: cleanWhitespace(v.communityName),
-      socialUrl: cleanWhitespace(v.socialUrl),
+      socialUrl,
       metrics: cleanMultiline(v.metrics),
       contribution: cleanMultiline(v.contribution),
       contactEmail: normalizeEmail(v.contactEmail).value,
@@ -130,7 +217,7 @@ export function ComunidadesForm({
 
     const summaryRows: SummaryRow[] = [
       { label: t.r_community, value: v.communityName },
-      { label: t.r_social, value: v.socialUrl },
+      { label: t.r_social, value: socialUrl },
       { label: t.r_metrics, value: v.metrics },
       { label: t.r_contribution, value: v.contribution },
       { label: t.r_email, value: v.contactEmail },
@@ -175,16 +262,57 @@ export function ComunidadesForm({
             />
           </Field>
 
-          <Field label={t.socialUrl} required htmlFor="c-social" error={errors.socialUrl}>
-            <input
-              id="c-social"
-              value={v.socialUrl}
-              onChange={(e) => set("socialUrl", e.target.value)}
-              placeholder={t.socialUrl_ph}
-              maxLength={300}
-              inputMode="url"
-              className={cn(inputCls, errors.socialUrl && "border-[#E24B4A]")}
-            />
+          <Field
+            label={t.socialUrl}
+            required
+            htmlFor="c-social-0"
+            hint={t.socialUrl_hint}
+            error={errors.links}
+          >
+            <div className="flex flex-col gap-2.5">
+              {links.map((link, i) => (
+                <div key={i} className="flex flex-col gap-1">
+                  <div className="flex items-stretch gap-2">
+                    <input
+                      id={`c-social-${i}`}
+                      value={link}
+                      onChange={(e) => setLink(i, e.target.value)}
+                      onBlur={() => blurLink(i)}
+                      placeholder={i === 0 ? t.socialUrl_ph : t.socialUrl_ph_extra}
+                      maxLength={250}
+                      inputMode="url"
+                      autoComplete="off"
+                      autoFocus={focusIdx === i}
+                      aria-label={`${t.socialUrl} — ${t.socialUrl_n} ${i + 1}`}
+                      className={cn(inputCls, errors[`link_${i}`] && "border-[#E24B4A]")}
+                    />
+                    {i > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => removeLink(i)}
+                        aria-label={`${t.socialUrl_remove} ${t.socialUrl_n} ${i + 1}`}
+                        className="shrink-0 min-h-11 rounded-[4px] border border-red-500/40 px-3 font-mono text-[11px] font-bold text-red-400 transition-colors hover:bg-red-500/20"
+                      >
+                        {t.socialUrl_remove}
+                      </button>
+                    )}
+                  </div>
+                  {errors[`link_${i}`] && (
+                    <p className="m-0 font-mono text-xs text-[#E24B4A]">{errors[`link_${i}`]}</p>
+                  )}
+                </div>
+              ))}
+
+              {links.length < MAX_LINKS && (
+                <button
+                  type="button"
+                  onClick={addLink}
+                  className="flex w-full min-h-11 items-center justify-center gap-2 rounded-[4px] border-2 border-dashed border-[#2C2550] bg-[#090812] py-3 font-mono text-xs font-bold text-[#B4B2A9] transition-all hover:border-[#C143BC] hover:text-[#F2A6F0]"
+                >
+                  {t.socialUrl_add}
+                </button>
+              )}
+            </div>
           </Field>
         </div>
       </div>

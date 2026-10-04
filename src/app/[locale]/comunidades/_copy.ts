@@ -14,7 +14,12 @@ export const COPY = {
     communityName_ph: "Ej. AWS User Group CDMX, Club de Cloud Computing, etc.",
 
     socialUrl: "Enlace a redes sociales o sitio web",
-    socialUrl_ph: "https://meetup.com/..., https://linkedin.com/..., https://instagram.com/...",
+    socialUrl_ph: "https://meetup.com/tu-comunidad",
+    socialUrl_ph_extra: "https://linkedin.com/company/tu-comunidad",
+    socialUrl_hint: "Un enlace por campo. Si tienes más redes, usa “Agregar otro enlace”.",
+    socialUrl_n: "Enlace",
+    socialUrl_add: "+ Agregar otro enlace",
+    socialUrl_remove: "Quitar",
 
     metrics: "Métricas y alcance de la comunidad",
     metrics_hint: "Número aproximado de integrantes activos, asistencia típica a sus reuniones o canales de difusión.",
@@ -48,7 +53,10 @@ export const COPY = {
 
     // Errores
     e_communityName: "Escribe el nombre de la comunidad.",
-    e_socialUrl: "Ingresa el enlace a sus redes o sitio web.",
+    e_socialUrl: "Ingresa al menos un enlace a sus redes o sitio web.",
+    e_socialUrl_many: "Pon un solo enlace por campo. Usa “Agregar otro enlace” para los demás.",
+    e_socialUrl_invalid: "Ese enlace no parece válido. Revísalo (ej. https://meetup.com/tu-comunidad).",
+    e_socialUrl_long: "Los enlaces juntos son demasiado largos. Quita alguno o usa enlaces más cortos.",
     e_metrics: "Describe las métricas de tu comunidad.",
     e_contribution: "Cuéntanos qué brindaría la comunidad al evento.",
     e_contactEmail: "Revisa el correo electrónico de contacto.",
@@ -66,7 +74,12 @@ export const COPY = {
     communityName_ph: "e.g. AWS User Group CDMX, Cloud Computing Club, etc.",
 
     socialUrl: "Social media or website link",
-    socialUrl_ph: "https://meetup.com/..., https://linkedin.com/..., etc.",
+    socialUrl_ph: "https://meetup.com/your-community",
+    socialUrl_ph_extra: "https://linkedin.com/company/your-community",
+    socialUrl_hint: "One link per field. If you have more, use “Add another link”.",
+    socialUrl_n: "Link",
+    socialUrl_add: "+ Add another link",
+    socialUrl_remove: "Remove",
 
     metrics: "Community metrics and reach",
     metrics_hint: "Approximate number of active members, average meetup attendance, or active communication channels.",
@@ -98,7 +111,10 @@ export const COPY = {
     r_phone: "phone",
 
     e_communityName: "Enter your community name.",
-    e_socialUrl: "Provide a link to your social media or website.",
+    e_socialUrl: "Provide at least one link to your social media or website.",
+    e_socialUrl_many: "Put only one link per field. Use “Add another link” for the rest.",
+    e_socialUrl_invalid: "That link doesn't look valid. Check it (e.g. https://meetup.com/your-community).",
+    e_socialUrl_long: "The links together are too long. Remove one or use shorter links.",
     e_metrics: "Describe your community metrics.",
     e_contribution: "Tell us what your community brings to the event.",
     e_contactEmail: "Check the contact email address.",

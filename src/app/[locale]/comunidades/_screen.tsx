@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { CheckCircle2, ArrowLeft } from "lucide-react";
+import { CheckCircle2, ArrowLeft, ChevronLeft } from "lucide-react";
 import { FormShell } from "@/components/forms/form-shell";
 import { DotHeading } from "@/components/ui/dot-heading";
 import type { SummaryRow } from "@/components/forms/success-screen";
 import { ComunidadesForm } from "./_form";
+import { localePath } from "@/lib/utils";
 import { copyFor } from "./_copy";
 
 export function ComunidadesScreen() {
@@ -95,7 +96,20 @@ export function ComunidadesScreen() {
   }
 
   return (
-    <FormShell title={t.title} lead={t.lead} className="max-w-3xl">
+    <FormShell
+      title={t.title}
+      lead={t.lead}
+      className="max-w-3xl"
+      aside={
+        <Link
+          href={localePath(locale, "/comunidades")}
+          className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#F2A6F0] underline underline-offset-4 hover:text-[#E6E4DA]"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          {locale === "en" ? "Back to the call" : "Volver a la convocatoria"}
+        </Link>
+      }
+    >
       <ComunidadesForm onSubmit={handleSubmit} />
     </FormShell>
   );
