@@ -6,4 +6,4 @@
  */
 
 /** Cierre del registro: 12 de octubre de 2026, 23:59 CDMX. */
-export const COMMUNITY_CALL_DEADLINE = "2026-10-12T23:59:00-06:00";
+export const COMMUNITY_CALL_DEADLINE = "2026-10-15T23:59:00-06:00";
