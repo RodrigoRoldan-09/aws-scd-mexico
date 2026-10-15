@@ -33,7 +33,7 @@ export async function PATCH(
     const { slug } = await params;
     const body = await request.json();
 
-    const allowed = ["isPublic", "status", "roomId", "track", "speakerType", "scheduledAt", "sessionId", "talkTitleCard", "roleCard", "cardContentX", "cardContentY", "cardNameOffset", "cardTitleSize", "cardNameSize"] as const;
+    const allowed = ["isPublic", "status", "roomId", "track", "format", "speakerType", "scheduledAt", "sessionId", "talkTitleCard", "roleCard", "cardContentX", "cardContentY", "cardNameOffset", "cardTitleSize", "cardNameSize"] as const;
     const update: Record<string, unknown> = {};
     for (const key of allowed) {
       if (key in body) update[key] = body[key];
@@ -83,11 +83,11 @@ export async function PUT(
 
     const { slug } = await params;
     const body = await request.json();
-    const { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, track, sessionId, submissionId, isPublic } = body;
+    const { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, format, track, sessionId, submissionId, isPublic } = body;
 
     const profile = await SpeakerProfile.findOneAndUpdate(
       { slug },
-      { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, track, sessionId: sessionId || null, submissionId: submissionId || null, isPublic },
+      { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, format: format ?? "talk", track, sessionId: sessionId || null, submissionId: submissionId || null, isPublic },
       { returnDocument: "after" },
     );
 

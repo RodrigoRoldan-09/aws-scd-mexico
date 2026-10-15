@@ -19,6 +19,7 @@ export interface SpeakerSubmissionConfirmationEmailProps {
   firstName: string;
   talkTitle: string;
   talkAbstract: string;
+  format?: "talk" | "workshop";
   sessionType: string;
   audienceLevel: string;
   language: string;
@@ -59,6 +60,7 @@ export function SpeakerSubmissionConfirmationEmail({
   firstName,
   talkTitle,
   talkAbstract,
+  format,
   sessionType,
   audienceLevel,
   language,
@@ -90,9 +92,9 @@ export function SpeakerSubmissionConfirmationEmail({
 
       <Steps
         items={[
-          "El CFP cierra el 14 de octubre a las 23:59 (hora de la Ciudad de México).",
-          "Curaduría y evaluación, del 15 al 20 de octubre.",
-          "Publicación de seleccionados, 21 de octubre.",
+          "El CFP cierra el 22 de octubre a las 23:59 (hora de la Ciudad de México).",
+          "Curaduría y evaluación, del 23 al 26 de octubre.",
+          "Publicación de seleccionados, 27 de octubre.",
           `Si quedas, la entrega de diapositivas es el ${EVT.slidesDeadline}.`,
         ]}
       />
@@ -153,6 +155,7 @@ export function SpeakerSubmissionConfirmationEmail({
 
       <DetailBox
         rows={[
+          { label: "Tipo", value: format === "workshop" ? "Workshop / Taller práctico" : "Charla / Conferencia" },
           { label: "Modalidad", value: SESSION_TYPE[sessionType] ?? sessionType },
           { label: "Nivel", value: LEVEL[audienceLevel] ?? audienceLevel },
           { label: "Idioma", value: LANGUAGE[language] ?? language },

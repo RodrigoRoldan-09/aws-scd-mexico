@@ -62,6 +62,7 @@ export interface SpeakerRow {
   // ── La charla ──
   talkTitle: string;
   talkAbstract: string;
+  format?: "talk" | "workshop";
   sessionType: string;
   preRecordingDate: string;
   audienceLevel: string;

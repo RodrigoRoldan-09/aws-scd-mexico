@@ -83,10 +83,19 @@ export function ReminderEventEmail({
         Cómo llegar
       </HardButton>
 
+      {daysLeft === 5 && (
+        <Callout title="apertura de puertas 7:30 AM · acceso rápido con QR">
+          ¡El hype está al máximo! Las puertas y mesas de registro abren desde las 7:30 AM.
+          Llega temprano con tu código QR listo en el celular para realizar tu check-in ágil,
+          recibir tu kit de bienvenida y asegurar los mejores lugares para la ceremonia de apertura.
+        </Callout>
+      )}
+
       {daysLeft === 1 && (
-        <Callout title="llega temprano">
-          Abrimos puertas y arrancamos a las 9:00 AM en punto. El check-in con mucha gente
-          toma su rato — venir con margen te ahorra la fila.
+        <Callout title="llega temprano · puertas abren 7:30 AM">
+          Abrimos puertas y registro desde las 7:30 AM para arrancar a las 9:00 AM en punto.
+          El check-in con mucha gente toma su rato — venir temprano con tu código QR a la mano
+          te ahorra la fila y asegura tu lugar.
         </Callout>
       )}
 

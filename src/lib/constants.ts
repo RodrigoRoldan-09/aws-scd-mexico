@@ -56,7 +56,7 @@ export const EVENT_OPS = {
   weekday: "miércoles",
   confirmDeadline: "miércoles 4 de noviembre, 6:00 AM",
   confirmDeadlineShort: "4 Nov (6 AM)",
-  slidesDeadline: "28 de octubre",
+  slidesDeadline: "1 de noviembre",
   setup: "Martes 3 de noviembre · 3:00 PM",
   setupShort: "Mar 3 Nov · 3 PM",
   badgePickup: "Hoy, martes 3 de noviembre · 3:00 a 5:00 PM",

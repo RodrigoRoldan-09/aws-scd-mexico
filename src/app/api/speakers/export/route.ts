@@ -33,7 +33,7 @@ const STATUS_LABELS: Record<string, string> = {
 const COLUMNS = [
   "Nombre", "Apellido", "Correo electrónico", "Teléfono", "Ciudad y país",
   "Cargo", "Empresa", "Primera vez como speaker",
-  "Título de la charla", "Resumen", "Tipo de sesión", "Nivel", "Idioma",
+  "Formato", "Título de la propuesta", "Resumen", "Tipo de sesión", "Nivel", "Idioma",
   "Requerimientos", "Co-speakers",
   "LinkedIn", "GitHub", "Builder Center", "Sitio web",
   "Estado", "Aprobado", "Aprobado en", "Aprobado por", "Enviado en", "ID",
@@ -63,6 +63,7 @@ export async function GET() {
         p?.role ?? "",
         p?.company ?? "",
         p?.firstTimeSpeaker ? "Sí" : "No",
+        p?.format === "workshop" ? "Workshop" : "Charla",
         p?.talkTitle ?? "",
         p?.talkAbstract ?? "",
         p?.sessionType ?? "",

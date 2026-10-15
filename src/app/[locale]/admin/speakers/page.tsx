@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Download, Eye, EyeOff, MapPin, Mic2, Plus, SlidersHorizontal, Wifi } from "lucide-react";
+import { Download, Eye, EyeOff, Laptop, MapPin, Mic2, Plus, SlidersHorizontal, Wifi } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,7 @@ const GRUPOS: Record<string, SpeakerStatus[]> = {
   rechazados: ["rejected"],
 };
 
-const FILTROS = { buscar: "", etapa: "all", publicos: "", modalidad: "all" };
+const FILTROS = { buscar: "", etapa: "all", publicos: "", modalidad: "all", formato: "all" };
 
 function SpeakersPageInner() {
   const pathname = usePathname();
@@ -69,6 +69,9 @@ function SpeakersPageInner() {
       const modalidad =
         values.modalidad === "all" ||
         (values.modalidad === "online" ? s.sessionType === "online" : s.sessionType !== "online");
+      const formato =
+        values.formato === "all" ||
+        (values.formato === "workshop" ? s.format === "workshop" : s.format !== "workshop");
       const texto =
         !q ||
         [speakerName(s), s.email, s.talkTitle, s.company, s.countryCity, s.role]
@@ -76,9 +79,9 @@ function SpeakersPageInner() {
           .join(" ")
           .toLowerCase()
           .includes(q);
-      return etapa && publicos && modalidad && texto;
+      return etapa && publicos && modalidad && formato && texto;
     });
-  }, [rows, search, values.etapa, values.publicos, values.modalidad]);
+  }, [rows, search, values.etapa, values.publicos, values.modalidad, values.formato]);
 
   const cuenta = (etapa: string) =>
     etapa === "all" ? rows.length : rows.filter((s) => GRUPOS[etapa].includes(s.status)).length;
@@ -86,6 +89,8 @@ function SpeakersPageInner() {
   const publicos = rows.filter((s) => s.isPublic).length;
   const online = rows.filter((s) => s.sessionType === "online").length;
   const presencial = rows.length - online;
+  const workshops = rows.filter((s) => s.format === "workshop").length;
+  const charlas = rows.length - workshops;
 
   /**
    * Poner o quitar un filtro.
@@ -126,8 +131,14 @@ function SpeakersPageInner() {
     const est = STATUS[s.status];
     return (
       <>
-        {/* La modalidad va primero y con color propio, igual que en
-            Asistentes: acento presencial, celeste online. */}
+        {/* Formato: Charla vs Workshop */}
+        <Tag
+          tone={s.format === "workshop" ? "warn" : "neutral"}
+          icon={s.format === "workshop" ? Laptop : Mic2}
+        >
+          {s.format === "workshop" ? "Workshop" : "Charla"}
+        </Tag>
+        {/* La modalidad va con color propio: acento presencial, celeste online. */}
         <Tag tone={s.sessionType === "online" ? "info" : "accent"} icon={s.sessionType === "online" ? Wifi : MapPin}>
           {s.sessionType === "online" ? "Online" : "Presencial"}
         </Tag>
@@ -171,8 +182,23 @@ function SpeakersPageInner() {
           placeholder="Nombre, correo, charla, empresa…"
           defaultValue={values.buscar}
           onSearch={setSearch}
-          className="col-span-2 sm:min-w-[280px] sm:flex-1"
+          className="col-span-2 sm:min-w-[240px] sm:flex-1"
         />
+        {/* Formato: Charlas vs Workshops */}
+        <HardButton
+          tone={values.formato === "talk" ? "accent" : "ghost"}
+          icon={Mic2}
+          onClick={() => set("formato", values.formato === "talk" ? "all" : "talk")}
+        >
+          Charlas ({charlas})
+        </HardButton>
+        <HardButton
+          tone={values.formato === "workshop" ? "accent" : "ghost"}
+          icon={Laptop}
+          onClick={() => set("formato", values.formato === "workshop" ? "all" : "workshop")}
+        >
+          Workshops ({workshops})
+        </HardButton>
         {/* Presencial / online: dos botones que se apagan al volver a tocarlos.
             En el teléfono van de a dos por fila, con «sólo públicos» debajo. */}
         <HardButton
@@ -203,7 +229,7 @@ function SpeakersPageInner() {
         <Cargando />
       ) : filtradas.length === 0 ? (
         <Empty icon={Mic2}>
-          {search || values.etapa !== "all" || values.publicos || values.modalidad !== "all"
+          {search || values.etapa !== "all" || values.publicos || values.modalidad !== "all" || values.formato !== "all"
             ? "Nadie con esos filtros."
             : "Todavía no hay postulaciones."}
         </Empty>
@@ -228,8 +254,9 @@ function SpeakersPageInner() {
               <thead>
                 <tr className="border-b-2 border-surface-600">
                   <Th>Speaker</Th>
+                  <Th>Formato</Th>
                   <Th>Modalidad</Th>
-                  <Th className="hidden md:table-cell">Charla</Th>
+                  <Th className="hidden md:table-cell">Propuesta</Th>
                   <Th className="hidden lg:table-cell">Track</Th>
                   <Th>Estado</Th>
                   <Th align="center">Público</Th>
@@ -260,6 +287,14 @@ function SpeakersPageInner() {
                             </span>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Tag
+                          tone={s.format === "workshop" ? "warn" : "neutral"}
+                          icon={s.format === "workshop" ? Laptop : Mic2}
+                        >
+                          {s.format === "workshop" ? "Workshop" : "Charla"}
+                        </Tag>
                       </td>
                       <td className="px-4 py-3">
                         <Tag tone={s.sessionType === "online" ? "info" : "accent"} icon={s.sessionType === "online" ? Wifi : MapPin}>

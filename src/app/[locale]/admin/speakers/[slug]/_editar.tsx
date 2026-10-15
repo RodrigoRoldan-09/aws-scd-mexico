@@ -44,6 +44,7 @@ export function EditarPerfil({
     photo: row.photo || "",
     talkTitle: row.talkTitle || "",
     talkAbstract: row.talkAbstract || "",
+    format: row.format || ("talk" as "talk" | "workshop"),
     track: row.track || "general",
     isPublic: row.isPublic,
     social: { ...row.social },
@@ -156,18 +157,32 @@ export function EditarPerfil({
                 placeholder="De qué va la charla."
               />
             </div>
-            <div>
-              <label className={labelCls} htmlFor="track">Track</label>
-              <select
-                id="track"
-                value={form.track}
-                onChange={(e) => set("track", e.target.value)}
-                className="min-h-11 w-full border-2 border-surface-600 bg-surface-900 px-3 py-2 font-mono text-sm text-surface-100 outline-none focus:border-aws-orange"
-              >
-                {TRACKS.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label className={labelCls} htmlFor="format">Formato</label>
+                <select
+                  id="format"
+                  value={form.format}
+                  onChange={(e) => set("format", e.target.value as "talk" | "workshop")}
+                  className="min-h-11 w-full border-2 border-surface-600 bg-surface-900 px-3 py-2 font-mono text-sm text-surface-100 outline-none focus:border-aws-orange"
+                >
+                  <option value="talk">🎤 Charla</option>
+                  <option value="workshop">🛠️ Workshop</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="track">Track</label>
+                <select
+                  id="track"
+                  value={form.track}
+                  onChange={(e) => set("track", e.target.value)}
+                  className="min-h-11 w-full border-2 border-surface-600 bg-surface-900 px-3 py-2 font-mono text-sm text-surface-100 outline-none focus:border-aws-orange"
+                >
+                  {TRACKS.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </section>

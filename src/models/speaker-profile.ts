@@ -45,6 +45,7 @@ export interface ISpeakerProfile extends Document {
   // Talk / session info
   talkTitle: string;
   talkAbstract: string;
+  format?: "talk" | "workshop";
   sessionType: string;
   /** Sólo para sesiones online: cuándo puede grabar. Texto libre. */
   preRecordingDate: string;
@@ -124,6 +125,7 @@ const speakerProfileSchema = new Schema<ISpeakerProfile>(
     // Talk / session info
     talkTitle: { type: String, default: "" },
     talkAbstract: { type: String, default: "" },
+    format: { type: String, enum: ["talk", "workshop"], default: "talk", index: true },
     sessionType: { type: String, default: "talk" },
     preRecordingDate: { type: String, default: "" },
     audienceLevel: { type: String, default: "100" },

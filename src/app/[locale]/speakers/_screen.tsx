@@ -10,7 +10,6 @@ import { PhoneInput } from "@/components/forms/phone-input";
 import { SpeakerPreview } from "@/components/forms/previews";
 import { SuccessScreen, type SummaryRow } from "@/components/forms/success-screen";
 import { useCountdown } from "@/hooks/use-countdown";
-import { DotHeading } from "@/components/ui/dot-heading";
 import { FormShell } from "@/components/forms/form-shell";
 import { localePath } from "@/lib/utils";
 import { SITE_HOST } from "@/lib/constants";
@@ -23,6 +22,7 @@ import {
   GraduationCap, BookOpen, Layers, Cpu,
   ChevronRight, ChevronLeft, CheckCircle2,
   Globe, Calendar, Loader2,
+  Mic, Laptop,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -42,7 +42,13 @@ import {
  * La usan dos rutas: `/speakers`, que muestra las bases, y `/speakers/postular`,
  * que muestra sólo el formulario.
  */
-export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
+export function SpeakersScreen({
+  formOnly = false,
+  initialFormat = "talk",
+}: {
+  formOnly?: boolean;
+  initialFormat?: "talk" | "workshop";
+}) {
   const tf = useTranslations("Forms");
   const locale = useLocale();
   const [lang, setLang] = useState<Lang>("es");
@@ -52,6 +58,31 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
   const [dialCode, setDialCode] = useState(DEFAULT_COUNTRY.code);
   const [emailHint, setEmailHint] = useState("");
   const [dir, setDir] = useState(1); // 1=forward, -1=back
+  const [step2Ready, setStep2Ready] = useState(false);
+
+  // Leer si llega ?tipo=workshop o ?format=workshop por la URL
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search);
+      const q = p.get("tipo") || p.get("format");
+      if (q === "workshop") {
+        setForm((f) => ({ ...f, format: "workshop" }));
+      } else if (q === "talk" || q === "charla") {
+        setForm((f) => ({ ...f, format: "talk" }));
+      }
+    }
+  }, []);
+
+  // Cooldown de protección al entrar al Paso 3 para evitar auto-envío por doble clic
+  useEffect(() => {
+    if (step === 2) {
+      setStep2Ready(false);
+      const timer = setTimeout(() => setStep2Ready(true), 350);
+      return () => clearTimeout(timer);
+    } else {
+      setStep2Ready(false);
+    }
+  }, [step]);
 
   // Estado del Call for Speakers: lo manda el plazo de CFP_DEADLINE y nada mas.
   // Este formulario es estatico (las preguntas estan escritas mas abajo, no
@@ -76,7 +107,9 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
   const [form, setForm] = useState({
     // Con online apagado sólo queda presencial: va elegido de entrada para no
     // pedir un clic en la única tarjeta que se puede tocar.
-    talkTitle: "", talkAbstract: "", sessionType: (CFP_ONLINE_SPEAKERS ? "" : "in-person") as string,
+    talkTitle: "", talkAbstract: "",
+    format: initialFormat as "talk" | "workshop",
+    sessionType: (CFP_ONLINE_SPEAKERS ? "" : "in-person") as string,
     preRecordingDate: "",
     audienceLevel: "" as string, language: "es", requirements: "",
     firstName: "", lastName: "", tagline: "", email: "", bio: "", photo: "",
@@ -255,11 +288,15 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
       return;
     }
     setDir(1);
+    if (step === 1) {
+      setForm((f) => ({ ...f, consent: false, codeOfConduct: false }));
+    }
     setStep((s) => s + 1);
     scrollToForm();
   };
   const goBack = () => {
     setDir(-1);
+    setForm((f) => ({ ...f, consent: false, codeOfConduct: false }));
     setStep((s) => s - 1);
     scrollToForm();
   };
@@ -278,11 +315,13 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
       level={form.audienceLevel}
       sessionType={form.sessionType}
       language={form.language}
+      format={form.format}
     />
   );
 
   const summaryRows: SummaryRow[] = [
-    { label: "charla", value: form.talkTitle },
+    { label: "tipo", value: form.format === "workshop" ? "Workshop" : "Charla" },
+    { label: form.format === "workshop" ? "workshop" : "charla", value: form.talkTitle },
     { label: "modalidad", value: form.sessionType === "online" ? "Online" : "Presencial" },
     { label: "nivel", value: form.audienceLevel },
     { label: "idioma", value: form.language === "en" ? "English" : "Español" },
@@ -298,6 +337,9 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
     e.preventDefault();
     if (step < 2) {
       goNext();
+      return;
+    }
+    if (!step2Ready) {
       return;
     }
     const ok0 = validate(0);
@@ -337,6 +379,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
           firstName: form.firstName, lastName: form.lastName,
           email: normalizeEmail(form.email).value, tagline: form.tagline, bio: form.bio,
           photo: form.photo, talkTitle: form.talkTitle, talkAbstract: form.talkAbstract,
+          format: form.format,
           sessionType: form.sessionType, audienceLevel: form.audienceLevel,
           preRecordingDate: form.sessionType === "online" ? form.preRecordingDate : undefined,
           language: form.language, requirements: form.requirements,
@@ -371,6 +414,12 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
     center: { x: 0, opacity: 1 },
     exit:  (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
   };
+
+  // ── Format options (Charla vs Workshop) ──────────────────────────────────
+  const formatOpts = [
+    { value: "talk",     label: t.format_talk,     desc: t.format_talk_desc,     icon: <Mic className="h-5 w-5" /> },
+    { value: "workshop", label: t.format_workshop, desc: t.format_workshop_desc, icon: <Laptop className="h-5 w-5" /> },
+  ];
 
   // ── Session type options ─────────────────────────────────────────────────────
   // Online se muestra pero no se puede elegir mientras CFP_ONLINE_SPEAKERS
@@ -506,11 +555,39 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
         <div id="postular" className="rounded-[4px] border border-[#C143BC]/40 bg-[#120E22]/90 p-3.5 sm:p-6 shadow-[0_0_15px_rgba(193,67,188,0.06)]">
           <div className="mb-4 flex items-center justify-between border-b border-[#2C2550] pb-2.5">
             <span className="arcade-pixel text-xs text-[#F2A6F0]">
-              // 0{step + 1} · {step === 0 ? t.step1 : step === 1 ? t.step2 : t.step3}
+              {"// "}0{step + 1} · {step === 0 ? (form.format === "workshop" ? "El workshop" : t.step1) : step === 1 ? t.step2 : t.step3}
             </span>
             <span className="font-mono text-[10px] uppercase tracking-wider text-[#73726C]">
               Paso {step + 1} / 3
             </span>
+          </div>
+
+          {/* Selector rápido: Charla vs Workshop */}
+          <div className="mb-5 grid grid-cols-2 gap-2 rounded-[4px] border border-[#2C2550] bg-[#090812] p-1">
+            <button
+              type="button"
+              onClick={() => set("format", "talk")}
+              className={cn(
+                "flex items-center justify-center gap-2 rounded-[2px] py-2.5 font-mono text-xs font-bold transition-all",
+                form.format === "talk"
+                  ? "border border-[#C143BC] bg-[#C143BC] text-[#0E0E1A] shadow-[0_0_14px_rgba(193,67,188,0.4)]"
+                  : "text-[#B4B2A9] hover:text-[#E6E4DA]",
+              )}
+            >
+              <Mic className="h-4 w-4" /> {t.tab_talk}
+            </button>
+            <button
+              type="button"
+              onClick={() => set("format", "workshop")}
+              className={cn(
+                "flex items-center justify-center gap-2 rounded-[2px] py-2.5 font-mono text-xs font-bold transition-all",
+                form.format === "workshop"
+                  ? "border border-[#C143BC] bg-[#C143BC] text-[#0E0E1A] shadow-[0_0_14px_rgba(193,67,188,0.4)]"
+                  : "text-[#B4B2A9] hover:text-[#E6E4DA]",
+              )}
+            >
+              <Laptop className="h-4 w-4" /> {t.tab_workshop}
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
@@ -529,16 +606,39 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                 {step === 0 && (
                   <div className="flex flex-col gap-5">
                     <div>
-                      <h2 className="font-mono text-base font-bold text-surface-50 uppercase tracking-wide">{t.step1}</h2>
+                      <h2 className="font-mono text-base font-bold text-surface-50 uppercase tracking-wide">
+                        {form.format === "workshop" ? "El workshop" : t.step1}
+                      </h2>
                       <p className="font-mono text-xs text-[#8E8EA0]">{t.step1_desc}</p>
                     </div>
 
-                    <Field label={t.talkTitle} error={errors.talkTitle} required>
-                      <TextInput value={form.talkTitle} hasError={!!errors.talkTitle} onChange={(v) => { set("talkTitle", v); clearErr("talkTitle"); }} placeholder={t.talkTitle_ph} maxLength={80} />
+                    <Field label={t.format_label} required>
+                      <CardSelector
+                        options={formatOpts}
+                        value={form.format}
+                        onChange={(v) => set("format", v)}
+                      />
                     </Field>
 
-                    <Field label={t.description} error={errors.talkAbstract} required>
-                      <Textarea value={form.talkAbstract} hasError={!!errors.talkAbstract} onChange={(v) => { set("talkAbstract", v); clearErr("talkAbstract"); }} placeholder={t.description_ph} maxLength={1000} rows={5} />
+                    <Field label={form.format === "workshop" ? t.workshopTitle : t.talkTitle} error={errors.talkTitle} required>
+                      <TextInput
+                        value={form.talkTitle}
+                        hasError={!!errors.talkTitle}
+                        onChange={(v) => { set("talkTitle", v); clearErr("talkTitle"); }}
+                        placeholder={form.format === "workshop" ? t.workshopTitle_ph : t.talkTitle_ph}
+                        maxLength={100}
+                      />
+                    </Field>
+
+                    <Field label={form.format === "workshop" ? t.workshopDescription : t.description} error={errors.talkAbstract} required>
+                      <Textarea
+                        value={form.talkAbstract}
+                        hasError={!!errors.talkAbstract}
+                        onChange={(v) => { set("talkAbstract", v); clearErr("talkAbstract"); }}
+                        placeholder={form.format === "workshop" ? t.workshopDescription_ph : t.description_ph}
+                        maxLength={1000}
+                        rows={5}
+                      />
                     </Field>
 
                     <Field label={t.sessionType} error={errors.sessionType} required>
@@ -590,8 +690,14 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
                       </div>
                     </Field>
 
-                    <Field label={t.requirements}>
-                      <Textarea value={form.requirements} onChange={(v) => set("requirements", v)} placeholder={t.requirements_ph} maxLength={300} rows={2} />
+                    <Field label={form.format === "workshop" ? t.workshopRequirements : t.requirements}>
+                      <Textarea
+                        value={form.requirements}
+                        onChange={(v) => set("requirements", v)}
+                        placeholder={form.format === "workshop" ? t.workshopRequirements_ph : t.requirements_ph}
+                        maxLength={300}
+                        rows={2}
+                      />
                     </Field>
                   </div>
                 )}
@@ -1007,7 +1113,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
               ) : (
                 <button
                   type="submit"
-                  disabled={submitting || (hasCaptcha && !captchaToken)}
+                  disabled={submitting || !step2Ready || !form.consent || !form.codeOfConduct || (hasCaptcha && !captchaToken)}
                   className="flex min-h-11 items-center justify-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-6 py-2.5 font-mono text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.4)] transition-all hover:-translate-y-0.5 hover:bg-[#F2A6F0] hover:shadow-[0_0_25px_rgba(193,67,188,0.6)] active:translate-y-0 disabled:opacity-50"
                 >
                   {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> {t.submitting}</> : t.submit}
@@ -1066,7 +1172,7 @@ export function SpeakersScreen({ formOnly = false }: { formOnly?: boolean }) {
         <div className="mx-auto max-w-3xl">
           <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <p className="font-mono text-xs uppercase tracking-widest text-[#C143BC]">// Formulario de Postulación</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[#C143BC]">{"// "}Formulario de Postulación</p>
               <h2 className="mt-1 font-display text-2xl font-bold text-[#E6E4DA] sm:text-3xl">
                 {t.step_apply}
               </h2>

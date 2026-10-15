@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowLeft, Check, Copy, Eye, EyeOff, Globe, Image as ImageIcon, Languages,
-  Mail, MapPin, Pencil, Phone, Send, Star, Trash2, Undo2,
+  Laptop, Mail, MapPin, Mic2, Pencil, Phone, Send, Star, Trash2, Undo2,
 } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { Modal } from "@/components/ui/modal";
@@ -281,6 +281,29 @@ export function FichaSpeaker({ slug }: { slug: string }) {
     }
   };
 
+  /** Alternar entre Charla y Workshop. */
+  const alternarFormato = async () => {
+    setTrabajando(true);
+    const nuevoFormato = s.format === "workshop" ? "talk" : "workshop";
+    try {
+      const res = await fetch(`/api/speaker-profiles/${s.slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ format: nuevoFormato }),
+      });
+      if (!res.ok) {
+        toast("No se pudo cambiar el formato", "error");
+        return;
+      }
+      toast(nuevoFormato === "workshop" ? "Cambiado a Workshop" : "Cambiado a Charla", "success");
+      await cargar();
+    } catch {
+      toast("No se pudo cambiar el formato", "error");
+    } finally {
+      setTrabajando(false);
+    }
+  };
+
   const eliminar = async () => {
     const ok = await confirm({
       title: "Eliminar speaker",
@@ -472,6 +495,14 @@ export function FichaSpeaker({ slug }: { slug: string }) {
         >
           {s.isPublic ? "Ocultar del sitio" : "Publicar en el sitio"}
         </HardButton>
+        <HardButton
+          tone="ghost"
+          icon={s.format === "workshop" ? Laptop : Mic2}
+          disabled={trabajando}
+          onClick={alternarFormato}
+        >
+          {s.format === "workshop" ? "Cambiar a Charla" : "Cambiar a Workshop"}
+        </HardButton>
         <HardButton tone="ghost" icon={Pencil} onClick={() => setEditando(true)}>
           Editar la ficha
         </HardButton>
@@ -489,17 +520,32 @@ export function FichaSpeaker({ slug }: { slug: string }) {
       </div>
 
       {/* ── La propuesta ─────────────────────────────────────────────────── */}
-      <SectionHead title="la propuesta" />
+      <SectionHead title={s.format === "workshop" ? "el workshop" : "la propuesta"} />
       <Panel className="mb-6">
-        <p className="m-0 font-mono text-lg font-bold leading-snug text-surface-50">
-          {s.talkTitle || "Sin título"}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          <Tag tone={online ? "info" : "accent"}>
-            {SESSION_TYPE_LABEL[s.sessionType] ?? s.sessionType ?? "—"}
-          </Tag>
-          {s.audienceLevel && <Tag>{LEVEL_LABEL[s.audienceLevel] ?? s.audienceLevel}</Tag>}
-          {s.language && <Tag icon={Languages}>{LANG_LABEL[s.language] ?? s.language}</Tag>}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="min-w-0">
+            <p className="m-0 font-mono text-lg font-bold leading-snug text-surface-50">
+              {s.talkTitle || "Sin título"}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              <Tag tone={s.format === "workshop" ? "warn" : "accent"} icon={s.format === "workshop" ? Laptop : Mic2}>
+                {s.format === "workshop" ? "Workshop" : "Charla"}
+              </Tag>
+              <Tag tone={online ? "info" : "accent"}>
+                {SESSION_TYPE_LABEL[s.sessionType] ?? s.sessionType ?? "—"}
+              </Tag>
+              {s.audienceLevel && <Tag>{LEVEL_LABEL[s.audienceLevel] ?? s.audienceLevel}</Tag>}
+              {s.language && <Tag icon={Languages}>{LANG_LABEL[s.language] ?? s.language}</Tag>}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={alternarFormato}
+            disabled={trabajando}
+            className="shrink-0 border border-surface-600 bg-surface-900 px-3 py-1.5 font-mono text-xs font-semibold text-surface-200 hover:border-aws-orange hover:text-aws-orange transition-colors"
+          >
+            {s.format === "workshop" ? "Convertir a Charla" : "Convertir a Workshop"}
+          </button>
         </div>
         {s.talkAbstract && (
           <p className="m-0 mt-4 whitespace-pre-wrap font-mono text-sm leading-relaxed text-surface-200">

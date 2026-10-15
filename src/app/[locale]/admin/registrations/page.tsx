@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/contexts/auth-context";
 import { usePathname } from "next/navigation";
 import { useUrlFilters, useDebounce } from "@/hooks/use-url-filters";
-import { Settings, Eye, Plus, Download, Users, Mail } from "lucide-react";
+import { Settings, Eye, Plus, Download, Users, Mail, RefreshCw } from "lucide-react";
 import {
   Aviso, Cards, Cargando, Empty, HardButton, HardLink, PageHead, Pager, RowCard,
   Select, Stat, Stats, TableWrap, Tag, Th, Toolbar,
@@ -54,6 +54,7 @@ function RegistrationsAdminPageInner() {
   const [showManual, setShowManual] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [bulkResending, setBulkResending] = useState(false);
+  const [retryingPending, setRetryingPending] = useState(false);
 
   useEffect(() => {
     fetch("/api/registrations")
@@ -189,6 +190,48 @@ function RegistrationsAdminPageInner() {
     }
   };
 
+  const handleRetryPending = async () => {
+    setRetryingPending(true);
+    toast("Reintentando correos pendientes/fallidos con AWS SES...", "info");
+    try {
+      const res = await fetch("/api/admin/registrations/retry-pending", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ limit: 100 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast(data.error || "Error al reintentar correos", "error");
+        return;
+      }
+      if (data.total === 0) {
+        toast("No hay correos pendientes ni fallidos para enviar", "info");
+      } else {
+        toast(
+          `Reintento completado: ${data.sent} enviados con éxito, ${data.failed} fallidos de ${data.total}`,
+          data.failed === 0 ? "success" : "info",
+        );
+      }
+      if (data.results?.length) {
+        setRegistrations((prev) =>
+          prev.map((r) => {
+            const match = data.results.find((x: { email: string }) => x.email === r.email);
+            if (!match) return r;
+            return {
+              ...r,
+              emailStatus: match.status === "sent" ? "sent" : "failed",
+              emailError: match.error || null,
+            };
+          }),
+        );
+      }
+    } catch {
+      toast("Error de conexión al procesar el reintento", "error");
+    } finally {
+      setRetryingPending(false);
+    }
+  };
+
   const puedeCrear = user?.role === "admin" || user?.role === "organizer" || user?.role === "volunteer";
   const puedeExportar = user?.role === "admin" || user?.role === "organizer";
   const sinFiltrar = values.modalidad === "all" && values.checkin === "all" && values.confirmado === "all";
@@ -214,6 +257,16 @@ function RegistrationsAdminPageInner() {
             {puedeCrear && (
               <HardButton icon={Plus} onClick={() => setShowManual(true)}>
                 Nuevo registro
+              </HardButton>
+            )}
+            {emailsFailed > 0 && puedeExportar && (
+              <HardButton
+                icon={RefreshCw}
+                tone="danger"
+                disabled={retryingPending}
+                onClick={handleRetryPending}
+              >
+                {retryingPending ? "Reintentando..." : `Reintentar fallidos (${emailsFailed})`}
               </HardButton>
             )}
             {puedeExportar && (
@@ -277,14 +330,31 @@ function RegistrationsAdminPageInner() {
 
       {emailsFailed > 0 && (
         <Aviso tone="danger">
-          {emailsFailed} {emailsFailed === 1 ? "correo falló" : "correos fallaron"} al enviarse.
-          <button
-            type="button"
-            onClick={() => { set("correo", "failed"); setPage(0); }}
-            className="ml-2 underline underline-offset-2"
-          >
-            Ver cuáles
-          </button>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span>
+                {emailsFailed} {emailsFailed === 1 ? "correo falló" : "correos fallaron"} al enviarse.
+              </span>
+              <button
+                type="button"
+                onClick={() => { set("correo", "failed"); setPage(0); }}
+                className="ml-2 underline underline-offset-2 hover:text-surface-100"
+              >
+                Ver cuáles
+              </button>
+            </div>
+            {puedeExportar && (
+              <button
+                type="button"
+                disabled={retryingPending}
+                onClick={handleRetryPending}
+                className="inline-flex items-center gap-1.5 self-start sm:self-auto px-3 py-1 font-mono text-xs font-semibold bg-red-500/20 text-red-200 border border-red-500/40 hover:bg-red-500/30 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw className={`h-3 w-3 ${retryingPending ? "animate-spin" : ""}`} />
+                {retryingPending ? "Reintentando..." : "Reintentar ahora con AWS SES"}
+              </button>
+            )}
+          </div>
         </Aviso>
       )}
 

@@ -145,6 +145,7 @@ export function SpeakerPreview({
   level,
   sessionType,
   language,
+  format = "talk",
 }: {
   firstName: string;
   lastName: string;
@@ -154,17 +155,20 @@ export function SpeakerPreview({
   level?: string;
   sessionType?: string;
   language?: string;
+  format?: "talk" | "workshop";
 }) {
   const t = useTranslations("Forms");
   const name = cleanWhitespace(`${firstName} ${lastName}`);
+  const isWorkshop = format === "workshop";
   const badges = [
+    isWorkshop ? "Workshop (Hands-on)" : "Charla",
     level && t("preview_level", { level }),
     sessionType === "in-person" ? t("preview_inperson") : null,
     language === "en" ? "English" : language === "es" ? "Español" : null,
   ].filter(Boolean) as string[];
 
   return (
-    <Frame kicker={t("preview_speaker")}>
+    <Frame kicker={isWorkshop ? "tarjeta de workshop" : t("preview_speaker")}>
       <div className="relative aspect-[4/3] w-full overflow-hidden border-b-2 border-hack-block/25 bg-surface-800">
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -177,7 +181,7 @@ export function SpeakerPreview({
           </div>
         )}
         <span className="dot-matrix absolute left-3 top-3 bg-hack-block px-2 py-1 text-[10px] leading-none text-hack-ink">
-          speaker
+          {isWorkshop ? "workshop" : "speaker"}
         </span>
       </div>
 

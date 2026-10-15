@@ -231,9 +231,11 @@ export default async function SpeakerProfilePage({ params }: PageProps) {
 
           {/* Right column */}
           <article className="flex flex-col gap-8">
-            {/* Talk */}
+            {/* Talk / Workshop */}
             <section className="rounded-2xl border border-[#2C2550] bg-[#1E1838] p-6">
-              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]/60">Charla</p>
+              <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#E6E4DA]/60">
+                {profile.format === "workshop" ? "🛠️ Workshop" : "🎤 Charla"}
+              </p>
               <h2 className="font-display text-2xl font-bold text-[#E6E4DA] leading-snug">
                 {profile.talkTitle || "Próximamente"}
               </h2>

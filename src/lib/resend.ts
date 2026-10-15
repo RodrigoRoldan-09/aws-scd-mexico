@@ -1,6 +1,7 @@
 import https from "node:https";
 import dns from "node:dns";
 import { SITE_HOST } from "@/lib/constants";
+import { sendEmailSES, sendEmailBatchSES } from "./ses";
 
 export const EMAIL_FROM = process.env.EMAIL_FROM || `AWS Student Community Day Mexico <noreply@${SITE_HOST}>`;
 export const MARKETING_EMAIL_FROM = process.env.MARKETING_EMAIL_FROM || EMAIL_FROM;
@@ -38,7 +39,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // OJO: el endpoint /emails/batch de Resend NO soporta adjuntos (los ignora en
 // silencio). Los correos con attachments se envían uno a uno por /emails.
-export async function sendEmailBatch(
+export async function sendEmailBatchResend(
   emails: SendEmailOptions[]
 ): Promise<{ sentCount: number; failedCount: number }> {
   let sentCount = 0;
@@ -56,7 +57,7 @@ export async function sendEmailBatch(
   for (const e of emails) {
     if (e.attachments && e.attachments.length > 0) {
       await flush();
-      const res = await sendEmail(e);
+      const res = await sendEmailRawResend(e);
       if (res.error) failedCount++; else sentCount++;
       await sleep(550); // rate limit de Resend (~2 req/s)
     } else {
@@ -135,7 +136,7 @@ async function sendBatchRaw(
   return { sentCount, failedCount };
 }
 
-export async function sendEmail({ from, to, subject, html, attachments }: SendEmailOptions): Promise<SendEmailResult> {
+export async function sendEmailRawResend({ from, to, subject, html, attachments }: SendEmailOptions): Promise<SendEmailResult> {
   let ip: string;
   try {
     ip = await resolveHost("api.resend.com");
@@ -189,3 +190,69 @@ export async function sendEmail({ from, to, subject, html, attachments }: SendEm
     req.end();
   });
 }
+
+/**
+ * Función principal de envío de correos con enrutamiento inteligente:
+ * - Si EMAIL_PROVIDER="resend": envía con Resend. Si falla y EMAIL_FALLBACK!=false, intenta AWS SES.
+ * - Si EMAIL_PROVIDER="ses" o "auto" (por defecto): intenta AWS SES primero; si falla, hace fallback a Resend.
+ */
+export async function sendEmail(options: SendEmailOptions): Promise<SendEmailResult> {
+  const provider = (process.env.EMAIL_PROVIDER || "auto").toLowerCase();
+  const fallbackEnabled = process.env.EMAIL_FALLBACK !== "false";
+
+  if (provider === "ses" || provider === "auto") {
+    const sesRes = await sendEmailSES(options);
+    if (!sesRes.error) {
+      return sesRes;
+    }
+    if (fallbackEnabled) {
+      console.warn(`[Email Service] SES falló para ${options.to} (${sesRes.error}). Intentando fallback con Resend...`);
+      return sendEmailRawResend(options);
+    }
+    return sesRes;
+  }
+
+  // Provider resend
+  const resendRes = await sendEmailRawResend(options);
+  if (!resendRes.error) {
+    return resendRes;
+  }
+  if (fallbackEnabled) {
+    console.warn(`[Email Service] Resend falló para ${options.to} (${resendRes.error}). Intentando fallback con AWS SES...`);
+    return sendEmailSES(options);
+  }
+  return resendRes;
+}
+
+/**
+ * Función principal de envío masivo en lote con enrutamiento inteligente.
+ */
+export async function sendEmailBatch(
+  emails: SendEmailOptions[]
+): Promise<{ sentCount: number; failedCount: number }> {
+  const provider = (process.env.EMAIL_PROVIDER || "auto").toLowerCase();
+  const fallbackEnabled = process.env.EMAIL_FALLBACK !== "false";
+
+  if (provider === "ses" || provider === "auto") {
+    const sesRes = await sendEmailBatchSES(emails);
+    if (sesRes.failedCount > 0 && fallbackEnabled) {
+      const failedEmails = emails.filter((e) =>
+        sesRes.errors.some((err) => err.to === e.to)
+      );
+      if (failedEmails.length > 0) {
+        console.warn(`[Email Service] Reintentando ${failedEmails.length} correos fallidos de SES vía Resend...`);
+        const fallbackRes = await sendEmailBatchResend(failedEmails);
+        return {
+          sentCount: sesRes.sentCount + fallbackRes.sentCount,
+          failedCount: fallbackRes.failedCount,
+        };
+      }
+    }
+    return { sentCount: sesRes.sentCount, failedCount: sesRes.failedCount };
+  }
+
+  // Provider resend
+  const resendRes = await sendEmailBatchResend(emails);
+  return resendRes;
+}
+

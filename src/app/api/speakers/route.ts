@@ -86,6 +86,7 @@ function validateBody(body: Record<string, unknown>) {
   const country    = upper(body.countryCity, 120);
 
   const sessionType    = SESSION_TYPES.includes(body.sessionType as never) ? (body.sessionType as string) : null;
+  const format: "talk" | "workshop" = body.format === "workshop" ? "workshop" : "talk";
   const audienceLevel  = LEVELS.includes(body.audienceLevel as never)      ? (body.audienceLevel as string) : null;
   const language       = LANGUAGES.includes(body.language as never)        ? (body.language as string) : null;
   const preRecordingDate = typeof body.preRecordingDate === "string" ? body.preRecordingDate.slice(0, 100) : "";
@@ -119,6 +120,7 @@ function validateBody(body: Record<string, unknown>) {
     photo:          photo!,
     talkTitle:      talkTitle!,
     talkAbstract:   abstract!,
+    format,
     sessionType:       sessionType!,
     preRecordingDate:  preRecordingDate,
     audienceLevel:     audienceLevel!,
@@ -221,6 +223,7 @@ export async function GET(req: NextRequest) {
 
       talkTitle: p?.talkTitle ?? "",
       talkAbstract: p?.talkAbstract ?? "",
+      format: p?.format ?? "talk",
       sessionType: p?.sessionType ?? "",
       preRecordingDate: p?.preRecordingDate ?? "",
       audienceLevel: p?.audienceLevel ?? "",
@@ -284,7 +287,7 @@ export async function POST(request: NextRequest) {
 
     const {
       firstName, lastName, email, tagline, bio, photo,
-      talkTitle, talkAbstract, sessionType, preRecordingDate, audienceLevel, language,
+      talkTitle, talkAbstract, format, sessionType, preRecordingDate, audienceLevel, language,
       requirements, countryCity, phone, firstTimeSpeaker,
       coSpeakers, social,
     } = validated;
@@ -334,6 +337,7 @@ export async function POST(request: NextRequest) {
       photo,
       talkTitle,
       talkAbstract,
+      format: format ?? "talk",
       sessionType,
       preRecordingDate,
       audienceLevel,
@@ -366,6 +370,7 @@ export async function POST(request: NextRequest) {
           firstName,
           talkTitle,
           talkAbstract,
+          format,
           sessionType,
           audienceLevel,
           language,

@@ -5,8 +5,8 @@
  * escrita están en i18n ("CFP") y en el correo de confirmación.
  */
 
-/** Cierre del CFP: 9 de octubre de 2026, 23:59 CDMX. */
-export const CFP_DEADLINE = "2026-10-14T23:59:00-06:00";
+/** Cierre del CFP: 22 de octubre de 2026, 23:59 CDMX. */
+export const CFP_DEADLINE = "2026-10-22T23:59:00-06:00";
 
 /**
  * Modalidad de ponencias. Establecido en `false` porque todas las sesiones
@@ -14,8 +14,8 @@ export const CFP_DEADLINE = "2026-10-14T23:59:00-06:00";
  */
 export const CFP_ONLINE_SPEAKERS = false;
 
-/** Entrega de diapositivas finales: 28 de octubre de 2026, 23:59 CDMX. */
-export const SLIDES_DEADLINE = "2026-10-31T23:59:00-06:00";
+/** Entrega de diapositivas finales: 1 de noviembre de 2026, 23:59 CDMX. */
+export const SLIDES_DEADLINE = "2026-11-01T23:59:00-06:00";
 
 /** Hitos del proceso, en orden cronológico. El texto sale de i18n ("CFP"). */
 export const cfpMilestones = [
