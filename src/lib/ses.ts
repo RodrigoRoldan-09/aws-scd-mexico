@@ -8,13 +8,19 @@ import { SESClient, SendRawEmailCommand, SendEmailCommand } from "@aws-sdk/clien
  */
 const region = process.env.AWS_REGION || "us-east-1";
 
+// Acepta las credenciales con prefijo APP_ (las que escribe amplify.yml) o sin él
+// (las de .env.example), igual que src/lib/s3.ts. Si no hay ninguna, cae al
+// proveedor de credenciales por defecto de AWS (IAM role, CLI, etc.).
+const accessKeyId = process.env.APP_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.APP_AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+
 export const sesClient = new SESClient({
   region,
   credentials:
-    process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId && secretAccessKey
       ? {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          accessKeyId,
+          secretAccessKey,
         }
       : undefined,
 });
