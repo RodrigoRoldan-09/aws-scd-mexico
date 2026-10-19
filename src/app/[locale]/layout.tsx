@@ -124,12 +124,23 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   // Config pública: 1 sola lectura (cacheada) por request, repartida por Context.
-  // Si la DB falla, cae al respaldo y el sitio sigue en pie.
-  const [desdeLaBase, cfpOpen] = await Promise.all([
-    getPublicEventConfig().catch(() => EMPTY_PUBLIC_CONFIG),
-    isCfpOpen(),
-  ]);
-  const eventConfig = { ...desdeLaBase, cfpOpen };
+  // Degradación elegante: ningún fallo de datos puede tumbar el layout global
+  // —y con él, todas las rutas—. Si la DB o el entorno faltan (p. ej. el runtime
+  // SSR arranca sin MONGODB_URI), `/` renderiza igual con el registro apagado.
+  //
+  // El guardado va en dos capas: `.catch` por lectura cubre promesas rechazadas,
+  // y el try/catch externo cubre un throw síncrono (p. ej. desde el envoltorio
+  // de `unstable_cache` o `connection()`) que no entraría al `.catch` del then.
+  let eventConfig;
+  try {
+    const [desdeLaBase, cfpOpen] = await Promise.all([
+      getPublicEventConfig().catch(() => EMPTY_PUBLIC_CONFIG),
+      isCfpOpen().catch(() => false),
+    ]);
+    eventConfig = { ...desdeLaBase, cfpOpen };
+  } catch {
+    eventConfig = { ...EMPTY_PUBLIC_CONFIG, cfpOpen: false };
+  }
 
   return (
     <html

@@ -3,12 +3,14 @@ import { connectDB } from "@/lib/db";
 import { SpeakerProfile } from "@/models/speaker-profile";
 import { AgendaEvent } from "@/models/agenda-event";
 import { setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/routing";
 import Link from "next/link";
 import { Code2, Globe, ArrowLeft, Clock, MapPin } from "lucide-react";
 import { ShareButton } from "@/components/ui/share-modal";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -100,29 +102,29 @@ function SpeakerCard({
   );
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale, slug: "_placeholder" }));
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  await connectDB();
-  const profile = await SpeakerProfile.findOne({ slug, isPublic: true }).lean();
-  if (!profile) return {};
-  return {
-    title: `${profile.name} — AWS Student Community Day`,
-    description: profile.bio || profile.talkTitle,
-    openGraph: {
-      title: profile.name,
+  try {
+    const { slug } = await params;
+    await connectDB();
+    const profile = await SpeakerProfile.findOne({ slug, isPublic: true }).lean();
+    if (!profile) return {};
+    return {
+      title: `${profile.name} — AWS Student Community Day`,
       description: profile.bio || profile.talkTitle,
-      images: [`/api/og/speaker/${slug}`],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: profile.name,
-      images: [`/api/og/speaker/${slug}`],
-    },
-  };
+      openGraph: {
+        title: profile.name,
+        description: profile.bio || profile.talkTitle,
+        images: [`/api/og/speaker/${slug}`],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: profile.name,
+        images: [`/api/og/speaker/${slug}`],
+      },
+    };
+  } catch {
+    return {};
+  }
 }
 
 function toAbsoluteUrl(url: string): string {
