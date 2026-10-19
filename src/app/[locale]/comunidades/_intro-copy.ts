@@ -23,7 +23,7 @@ export const INTRO_COPY = {
     hours: "hrs",
     minutes: "min",
     seconds: "seg",
-    closed_note: "El registro cerró el 12 de octubre de 2026 a las 23:59 CST.",
+    closed_note: "El registro cerró el 28 de octubre de 2026 a las 23:59 CST.",
     cta_apply: "Registrar mi comunidad",
     cta_closed: "El registro está cerrado",
 
@@ -70,11 +70,11 @@ export const INTRO_COPY = {
     dates_heading: "Calendario",
     milestones: [
       { date: "5 oct", title: "Publicación del call for communities y contacto con comunidades", highlight: false },
-      { date: "12 oct · 23:59 CST", title: "Cierre de registro", highlight: true },
-      { date: "12 – 16 oct", title: "Revisión de postulaciones", highlight: false },
-      { date: "18 oct", title: "Envío de correos de aceptación", highlight: false },
-      { date: "21 oct", title: "Junta con comunidades", highlight: false },
-      { date: "Semana del 26 oct", title: "Colchón para dudas generales y retoque de detalles", highlight: false },
+      { date: "28 oct · 23:59 CST", title: "Cierre de registro", highlight: true },
+      { date: "29 – 30 oct", title: "Revisión de postulaciones", highlight: false },
+      { date: "31 oct", title: "Envío de correos de aceptación", highlight: false },
+      { date: "1 nov", title: "Junta con comunidades", highlight: false },
+      { date: "2 – 3 nov", title: "Colchón para dudas generales y retoque de detalles", highlight: false },
     ],
 
     join_heading: "¿Quieres participar?",
@@ -97,7 +97,7 @@ export const INTRO_COPY = {
     hours: "hrs",
     minutes: "min",
     seconds: "sec",
-    closed_note: "Applications closed on October 12, 2026 at 11:59 PM CST.",
+    closed_note: "Applications closed on October 28, 2026 at 11:59 PM CST.",
     cta_apply: "Register my community",
     cta_closed: "Applications are closed",
 
@@ -144,11 +144,11 @@ export const INTRO_COPY = {
     dates_heading: "Calendar",
     milestones: [
       { date: "Oct 5", title: "Call for communities published and communities contacted", highlight: false },
-      { date: "Oct 12 · 11:59 PM CST", title: "Applications close", highlight: true },
-      { date: "Oct 12 – 16", title: "Application review", highlight: false },
-      { date: "Oct 18", title: "Acceptance emails sent", highlight: false },
-      { date: "Oct 21", title: "Meeting with communities", highlight: false },
-      { date: "Week of Oct 26", title: "Buffer for general questions and final details", highlight: false },
+      { date: "Oct 28 · 11:59 PM CST", title: "Applications close", highlight: true },
+      { date: "Oct 29 – 30", title: "Application review", highlight: false },
+      { date: "Oct 31", title: "Acceptance emails sent", highlight: false },
+      { date: "Nov 1", title: "Meeting with communities", highlight: false },
+      { date: "Nov 2 – 3", title: "Buffer for general questions and final details", highlight: false },
     ],
 
     join_heading: "Want to participate?",

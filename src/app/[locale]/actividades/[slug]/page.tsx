@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { connectDB } from "@/lib/db";
-import { Activity } from "@/models/activity";
-import { ActivityDetailScreen } from "./_screen";
+import { SITE_URL } from "@/lib/constants";
+import { getPublicActivityBySlug } from "@/lib/activities-public";
+import { ActivityRegistrationScreen } from "./_screen";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -12,38 +12,52 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const isEn = locale === "en";
-
-  await connectDB();
-  const activity = await Activity.findOne({ slug }).lean();
+  const activity = await getPublicActivityBySlug(slug);
 
   if (!activity) {
     return {
-      title: isEn ? "Activity Not Found | AWS SCD" : "Actividad No Encontrada | AWS SCD",
+      title: isEn ? "Activity Not Found" : "Actividad no encontrada",
     };
   }
 
-  const title = (isEn && activity.titleEn ? activity.titleEn : activity.title) || activity.title;
-  const description = (isEn && activity.descriptionEn ? activity.descriptionEn : activity.description) || activity.description;
+  const title = isEn ? activity.titleEn || activity.title : activity.title;
+  const description = isEn
+    ? activity.descriptionEn || activity.description
+    : activity.description;
 
   return {
-    title: `${title} | AWS Student Community Day México 2026`,
-    description: description.slice(0, 160),
+    title,
+    description,
+    openGraph: {
+      title: `${title} — AWS Student Community Day México 2026`,
+      description,
+      url: isEn
+        ? `${SITE_URL}/en/actividades/${activity.slug}`
+        : `${SITE_URL}/actividades/${activity.slug}`,
+    },
   };
 }
 
-export default async function ActivityPage({ params }: Props) {
+export default async function ActivitySlugPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  await connectDB();
-  const activityDoc = await Activity.findOne({ slug }).lean();
-
-  if (!activityDoc) {
+  const activity = await getPublicActivityBySlug(slug);
+  if (!activity) {
     notFound();
   }
 
-  // Serializar para pasar al Client Component
-  const serializedActivity = JSON.parse(JSON.stringify(activityDoc));
+  // Las actividades (`type: "activity"`) se registran en el formulario unificado por prioridad.
+  if (activity.type === "activity") {
+    redirect(
+      `${locale === "en" ? "/en" : ""}/actividades/registro-actividades?prefer=${activity.slug}`,
+    );
+  }
 
-  return <ActivityDetailScreen initialActivity={serializedActivity} />;
+  return (
+    <ActivityRegistrationScreen
+      activity={activity}
+      locale={locale}
+    />
+  );
 }
