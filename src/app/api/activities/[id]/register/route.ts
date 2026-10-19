@@ -10,12 +10,12 @@ import { doTimesOverlap } from "@/lib/activity-schedule";
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ slug: string }> },
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { slug } = await context.params;
-    if (!slug) {
-      return NextResponse.json({ error: "Slug requerido" }, { status: 400 });
+    const { id } = await context.params;
+    if (!id) {
+      return NextResponse.json({ error: "Identificador requerido" }, { status: 400 });
     }
 
     const body = await request.json().catch(() => ({}));
@@ -38,7 +38,7 @@ export async function POST(
 
     await connectDB();
 
-    const activity = await Activity.findOne({ slug: slug.toLowerCase().trim() });
+    const activity = await Activity.findOne({ slug: id.toLowerCase().trim() });
     if (!activity || !activity.isPublished || !activity.isOpen) {
       return NextResponse.json(
         { error: "El workshop o hackatón no existe o no está abierto para registro." },
