@@ -44,7 +44,25 @@ function SbgLogoLockup({ locale }: { locale: string }) {
 }
 
 export async function Footer({ locale }: { locale: string }) {
-  const t = await getTranslations({ locale, namespace: "Footer" });
+  // Blindaje del camino global: el footer se renderiza en casi todas las
+  // páginas. Si next-intl falla al cargar los mensajes en el runtime, en vez
+  // de tumbar la página con un 500 caemos a etiquetas mínimas por clave.
+  let t: (key: string) => string;
+  try {
+    t = await getTranslations({ locale, namespace: "Footer" });
+  } catch {
+    const fallbacks: Record<string, string> = {
+      about: locale === "en" ? "About" : "Acerca de",
+      agenda: "Agenda",
+      speakers: "Speakers",
+      community: locale === "en" ? "Community" : "Comunidad",
+      brand_tagline_desc: "AWS Student Builder Group IPN CDMX",
+      code_of_conduct: locale === "en" ? "Code of Conduct" : "Código de Conducta",
+      privacy_policy: locale === "en" ? "Privacy Policy" : "Aviso de Privacidad",
+      copyright: "© 2026 AWS Student Community Day México",
+    };
+    t = (key: string) => fallbacks[key] ?? "";
+  }
 
   const scdLinks = [
     { label: t("about"), href: `${localePath(locale)}#about` },

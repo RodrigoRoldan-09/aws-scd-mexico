@@ -28,7 +28,22 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  // Blindaje del camino global: generateMetadata corre en CADA request. Si
+  // next-intl falla al cargar los mensajes en el runtime (SSR de Amplify),
+  // una excepción aquí tumba TODAS las rutas con un 500. Degradamos a títulos
+  // estáticos en vez de propagar el error.
+  let t: Awaited<ReturnType<typeof getTranslations>>;
+  try {
+    t = await getTranslations({ locale, namespace: "Metadata" });
+  } catch {
+    return {
+      metadataBase: new URL(SITE_URL),
+      title: "AWS Student Community Day México 2026",
+      description:
+        "AWS Student Community Day México 2026 — evento de comunidad, cloud y tecnología.",
+    };
+  }
 
   return {
     metadataBase: new URL(SITE_URL),
