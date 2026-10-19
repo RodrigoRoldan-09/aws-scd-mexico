@@ -59,6 +59,14 @@ export const LOG_ACTIONS: Record<string, Entry> = {
   SPEAKER_CARD_APPROVED: { label: "Tarjeta aprobada", group: "contenido" },
   SPEAKER_CARD_RESET: { label: "Tarjeta reiniciada", group: "contenido" },
   SLIDE_TEMPLATE_UPLOADED: { label: "Plantilla subida", group: "contenido" },
+  ACTIVITY_CREATED: { label: "Actividad creada", group: "contenido" },
+  ACTIVITY_UPDATED: { label: "Actividad editada", group: "contenido" },
+  ACTIVITY_DELETED: { label: "Actividad eliminada", group: "peligro" },
+  ACTIVITY_ASSIGNED: { label: "Actividad asignada", group: "personas" },
+  ACTIVITY_UNASSIGNED: { label: "Actividad desasignada", group: "personas" },
+  ACTIVITY_REGISTRATION_CANCELLED: { label: "Inscripción cancelada", group: "personas" },
+  ACTIVITY_APPLICATION_CANCELLED: { label: "Solicitud cancelada", group: "personas" },
+  UNIFIED_ACTIVITY_FORM_UPDATED: { label: "Formulario de actividades actualizado", group: "sistema" },
 
   // ── Sistema ──
   USER_LOGIN: { label: "Inició sesión", group: "sistema" },

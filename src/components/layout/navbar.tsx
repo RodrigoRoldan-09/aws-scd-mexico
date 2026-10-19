@@ -109,9 +109,9 @@ export function Navbar() {
 
   const sbgItems: DropdownItem[] = [
     {
-      title: "Workshops",
-      description: "Hands-on labs y arquitectura",
-      href: resolveHref("#tracks"),
+      title: "Workshops & Actividades",
+      description: "Hands-on labs, retos y dinámicas",
+      href: localePath(locale, "/actividades"),
       icon: Terminal,
     },
     {
