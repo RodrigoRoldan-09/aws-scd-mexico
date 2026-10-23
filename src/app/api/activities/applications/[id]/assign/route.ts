@@ -6,6 +6,9 @@ import { ActivityApplication } from "@/models/activity-application";
 import { ActivityRegistration } from "@/models/activity-registration";
 import { doTimesOverlap } from "@/lib/activity-schedule";
 import { createLog } from "@/lib/log";
+import { render } from "@react-email/components";
+import { ActivityAssignmentEmail } from "@/emails/activity-assignment";
+import { sendEmail, EMAIL_FROM } from "@/lib/resend";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -195,6 +198,35 @@ export async function POST(request: NextRequest, context: RouteContext) {
       targetId: String(application._id),
       details: `Asignado a "${targetActivity.title}" (${targetActivity.slug}). Prioridad: ${assignedPriorityRank ?? "Asignación directa / Fuera de lista"}. Notas: ${adminNotes || "N/A"}`,
     });
+
+    // Correo de asignación en segundo plano: un fallo de correo no debe romper la asignación
+    // (no se reenvía si solo se re-guardó la misma actividad, p. ej. al editar notas)
+    if (!isSameActivity) try {
+      const emailHtml = await render(
+        ActivityAssignmentEmail({
+          name: `${application.firstName} ${application.lastName}`.trim(),
+          qrCode: application.qrCode,
+          activityTitle: targetActivity.title,
+          startTime: targetActivity.startTime,
+          endTime: targetActivity.endTime,
+          roomName: targetActivity.roomName,
+          priorityRank: assignedPriorityRank,
+          requiresLaptop: targetActivity.formConfig?.requireLaptop,
+          prerequisitesList: targetActivity.formConfig?.prerequisitesList,
+        }),
+      );
+
+      void sendEmail({
+        from: EMAIL_FROM,
+        to: application.email,
+        subject: `Asignación confirmada: ${targetActivity.title} — AWS Student Community Day México 2026`,
+        html: `${emailHtml}<!-- ref:${application.qrCode}:activity:${targetActivity.slug} -->`,
+      }).catch((err) => {
+        console.error("[ActivityAssign] Error enviando correo de asignación:", err);
+      });
+    } catch (renderError) {
+      console.error("[ActivityAssign] Error renderizando plantilla de asignación:", renderError);
+    }
 
     return NextResponse.json({
       ok: true,

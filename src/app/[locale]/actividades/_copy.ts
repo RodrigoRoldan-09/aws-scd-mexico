@@ -195,7 +195,7 @@ export const ACTIVITIES_COPY = {
     ua_none_desc: "Aún no hay actividades abiertas para registro. Vuelve pronto.",
     ua_pending_title: "SOLICITUD RECIBIDA",
     ua_pending_desc:
-      "Ya recibimos tu solicitud de actividades. Solo podrás participar en una (1) actividad.",
+      "Ya recibimos tu solicitud de actividades. Solo podrás participar en una (1) actividad. Si eres seleccionado(a), te avisaremos por correo con los detalles de tu actividad.",
     ua_assigned_title: "ACTIVIDAD CONFIRMADA",
     ua_assigned_desc: "Tu actividad confirmada es:",
     ua_sent_priorities: "Prioridades que enviaste:",
@@ -424,7 +424,7 @@ export const ACTIVITIES_COPY = {
     ua_none_desc: "There are no activities open for registration yet. Check back soon.",
     ua_pending_title: "APPLICATION RECEIVED",
     ua_pending_desc:
-      "We already received your activities application. You can only take part in one (1) activity.",
+      "We already received your activities application. You can only take part in one (1) activity. If you are selected, we will email you the details of your activity.",
     ua_assigned_title: "ACTIVITY CONFIRMED",
     ua_assigned_desc: "Your confirmed activity is:",
     ua_sent_priorities: "Priorities you submitted:",
