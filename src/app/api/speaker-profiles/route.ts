@@ -43,7 +43,11 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const body = await request.json();
-    const { name, role, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, track, sessionId, isPublic, slug: rawSlug } = body;
+    const {
+      name, role, tagline, company, companyLogo, bio, photo, social,
+      talkTitle, talkAbstract, format, track, sessionId, isPublic,
+      email, countryCity, accepted, slug: rawSlug,
+    } = body;
 
     if (!name) {
       return Response.json({ error: "El nombre es obligatorio" }, { status: 400 });
@@ -52,9 +56,17 @@ export async function POST(request: NextRequest) {
     const baseSlug = rawSlug ? toSlug(rawSlug) : toSlug(name);
     const slug = await uniqueSlug(baseSlug);
 
+    // Alta manual: si se marca `accepted`, la ficha nace como aceptada para
+    // poder agendarla en Programa. No se envía ningún correo: sólo el endpoint
+    // /api/speakers/[id]/approve escribe a las personas, y acá no se llama.
+    const aceptada = accepted === true;
+
     const profile = await SpeakerProfile.create({
       name,
+      email: typeof email === "string" ? email.trim() : "",
+      countryCity: typeof countryCity === "string" ? countryCity.trim() : "",
       role: role ?? "",
+      tagline: tagline ?? "",
       company: company ?? "",
       companyLogo: companyLogo ?? "",
       bio: bio ?? "",
@@ -62,9 +74,13 @@ export async function POST(request: NextRequest) {
       social: social ?? {},
       talkTitle: talkTitle ?? "",
       talkAbstract: talkAbstract ?? "",
+      format: format === "workshop" ? "workshop" : "talk",
       track: track ?? "general",
       sessionId: sessionId || null,
       isPublic: isPublic ?? false,
+      ...(aceptada
+        ? { status: "accepted", approvedAt: new Date(), approvedBy: user._id.toString() }
+        : {}),
       slug,
     });
 
