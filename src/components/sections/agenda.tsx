@@ -6,12 +6,14 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { WireSolid } from "@/components/effects/wire-solid";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { Modal } from "@/components/ui/modal";
-import { Clock, MapPin, ExternalLink, X } from "lucide-react";
+import { Clock, MapPin, ExternalLink, Star, X } from "lucide-react";
 import type { AgendaEventDTO as AgendaEvent } from "@/lib/data/agenda";
 import { TZ_LABEL } from "@/lib/constants";
 
 const trackColors: Record<string, string> = {
-  cloud:         "border-blue-500/40 bg-blue-500/10 text-blue-300",
+  // Keynote: misma tarjeta que las demás, pero dorada y con un leve resplandor.
+  keynote:       "border-amber-400/70 bg-gradient-to-br from-amber-400/15 to-[#C143BC]/10 text-amber-100 shadow-[0_0_18px_rgba(251,191,36,0.18)]",
+  cloud:        "border-blue-500/40 bg-blue-500/10 text-blue-300",
   devops:        "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
   "ai-ml":       "border-purple-500/40 bg-purple-500/10 text-purple-300",
   security:      "border-red-500/40 bg-red-500/10 text-red-300",
@@ -22,6 +24,7 @@ const trackColors: Record<string, string> = {
 const DEFAULT_TRACK_COLOR = "border-[#C143BC]/40 bg-[#C143BC]/10 text-[#C143BC]";
 
 const trackLabels: Record<string, string> = {
+  keynote: "Keynote",
   cloud: "Cloud", devops: "DevOps", "ai-ml": "AI/ML",
   security: "Security", "soft-skills": "Soft Skills", general: "General",
 };
@@ -68,6 +71,7 @@ function getTrackLabel(track: string) { return trackLabels[track] || (track.char
 
 function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void }) {
   const colors = getTrackColor(event.track);
+  const esKeynote = event.track === "keynote";
   const photoUrl = event.speakerPhoto || event.imageUrl || null;
   return (
     <button
@@ -88,6 +92,12 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
           </div>
         )}
         <div className="flex-1 min-w-0 px-3 py-2.5 flex flex-col justify-center gap-1">
+          {esKeynote && (
+            <span className="inline-flex w-fit items-center gap-1 rounded-[3px] bg-amber-400 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-[#0E0E1A]">
+              <Star className="h-2.5 w-2.5" fill="currentColor" aria-hidden="true" />
+              Keynote
+            </span>
+          )}
           <p className="font-mono text-[13px] font-bold leading-snug line-clamp-3">{event.title}</p>
           {event.speaker && (
             <p className="font-mono text-[11px] opacity-60 line-clamp-1">{event.speaker}</p>
@@ -117,7 +127,8 @@ function EventModal({ event, onClose }: { event: AgendaEvent; onClose: () => voi
       <Modal open onClose={onClose} title="" size="md">
         <div className="flex flex-col gap-5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-none border px-2.5 py-0.5 font-mono text-xs ${colors}`}>
+            <span className={`inline-flex items-center gap-1 rounded-none border px-2.5 py-0.5 font-mono text-xs ${colors}`}>
+              {event.track === "keynote" && <Star className="h-3 w-3" fill="currentColor" aria-hidden="true" />}
               {getTrackLabel(event.track)}
             </span>
             {event.level && (
