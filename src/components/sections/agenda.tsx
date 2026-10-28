@@ -6,7 +6,8 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { WireSolid } from "@/components/effects/wire-solid";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { Modal } from "@/components/ui/modal";
-import { Clock, MapPin, ExternalLink, Star, X } from "lucide-react";
+import { ArrowRight, Clock, MapPin, ExternalLink, Sparkles, Star, X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import type { AgendaEventDTO as AgendaEvent } from "@/lib/data/agenda";
 import { TZ_LABEL } from "@/lib/constants";
 
@@ -494,9 +495,32 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
             </div>
           </ScrollReveal>
         )}
+
+        <ScrollReveal>
+          <div className="relative mt-12 overflow-hidden rounded-[16px] border border-[#D85A30]/40 bg-gradient-to-br from-[#D85A30]/15 via-[#1E1838] to-[#C143BC]/20 px-6 py-10 text-center">
+            <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-[#D85A30]/20 blur-3xl" aria-hidden="true" />
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-[#C143BC]/25 blur-3xl" aria-hidden="true" />
+            <div className="relative flex flex-col items-center gap-5">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D85A30]/50 bg-[#D85A30]/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest text-[#D85A30]">
+                <Sparkles className="h-3 w-3" aria-hidden="true" />
+                {t("activities_cta_badge")}
+              </span>
+              <p className="max-w-[46ch] font-mono text-sm leading-relaxed text-surface-200 md:text-base">
+                {t("activities_cta_hint")}
+              </p>
+              <Link
+                href="/actividades"
+                className="group relative inline-flex items-center justify-center gap-2.5 rounded-[8px] bg-gradient-to-r from-[#D85A30] to-[#C143BC] px-9 py-4 font-mono text-base font-bold text-white shadow-[0_0_28px_rgba(216,90,48,0.45)] ring-1 ring-white/20 transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_44px_rgba(193,67,188,0.6)] active:scale-[0.98]"
+              >
+                {t("activities_cta")}
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
 
-      {selected && <EventModal event={selected} onClose={() => setSelected(null)} />}
+      {selected &&<EventModal event={selected} onClose={() => setSelected(null)} />}
     </section>
   );
 }
