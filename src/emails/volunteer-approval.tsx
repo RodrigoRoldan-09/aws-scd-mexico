@@ -56,23 +56,21 @@ export function VolunteerApprovalEmail({ name }: VolunteerApprovalEmailProps) {
       <Divider />
 
       <Kicker>cómo llegar</Kicker>
-      {process.env.GOOGLE_MAPS_KEY ? (
-        <Section style={{ margin: "0 0 16px" }}>
-          <Link href={MAPS_URL}>
-            <Img
-              src={MAPS_IMG}
-              alt={`Mapa — ${EVT.venue}`}
-              width="520"
-              style={{
-                display: "block",
-                width: "100%",
-                maxWidth: "520px",
-                border: `2px solid ${C.line}`,
-              }}
-            />
-          </Link>
-        </Section>
-      ) : null}
+      <Section style={{ margin: "0 0 16px" }}>
+        <Link href={MAPS_URL}>
+          <Img
+            src={MAPS_IMG}
+            alt={`Mapa — ${EVT.venue}`}
+            width="520"
+            style={{
+              display: "block",
+              width: "100%",
+              maxWidth: "520px",
+              border: `2px solid ${C.line}`,
+            }}
+          />
+        </Link>
+      </Section>
 
       <HardButton href={MAPS_URL} variant="outline">
         Abrir en Google Maps

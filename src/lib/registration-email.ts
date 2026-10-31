@@ -32,7 +32,8 @@ export async function buildRegistrationEmail(
 
   if (isVirtual) {
     return {
-      subject: "Estás dentro del Track Online — AWS Student Community Day México 2026",
+      subject:
+        "Estás dentro del Track Online · You're in the Online Track — AWS Student Community Day México 2026",
       html: await render(RegistrationConfirmationVirtualEmail({ name })),
       attachments: [],
       isVirtual: true,
@@ -48,7 +49,7 @@ export async function buildRegistrationEmail(
   const pdfBuffer = await generateRegistrationPDF(name, qrBuffer, qrCode);
 
   return {
-    subject: "Registro Confirmado — AWS Student Community Day México 2026",
+    subject: "Registro Confirmado · Registration Confirmed — AWS Student Community Day México 2026",
     html: await render(RegistrationConfirmationEmail({ name })),
     attachments: [{ filename: "pase-aws-scd.pdf", content: pdfBuffer.toString("base64") }],
     isVirtual: false,

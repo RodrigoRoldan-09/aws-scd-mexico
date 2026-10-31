@@ -245,6 +245,50 @@ export function Divider() {
   return <Hr style={{ border: "none", borderTop: `1px solid ${C.line}`, margin: "24px 0" }} />;
 }
 
+// ── Bilingüe ─────────────────────────────────────────────────────────────────
+
+/** Rótulo de idioma que encabeza cada mitad de un correo bilingüe. */
+export function LanguageLabel({ lang }: { lang: "es" | "en" }) {
+  return (
+    <Text
+      lang={lang}
+      style={{
+        margin: "0 0 12px",
+        fontFamily: MONO,
+        fontSize: "11px",
+        fontWeight: 700,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color: C.block,
+      }}
+    >
+      {lang === "es" ? "ESPAÑOL" : "ENGLISH"}
+    </Text>
+  );
+}
+
+/**
+ * Correo bilingüe en un solo mensaje: español arriba, separador, inglés abajo.
+ * Los bloques visuales compartidos (QR, mapa, botones) van fuera, una vez.
+ */
+export function BilingualSections({
+  es,
+  en,
+}: {
+  es: React.ReactNode;
+  en: React.ReactNode;
+}) {
+  return (
+    <>
+      <LanguageLabel lang="es" />
+      {es}
+      <Divider />
+      <LanguageLabel lang="en" />
+      {en}
+    </>
+  );
+}
+
 // ── Botón "bulletproof" ──────────────────────────────────────────────────────
 
 /**

@@ -1,4 +1,7 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { EVENT } from "@/lib/constants";
 
 export const runtime = "nodejs";
@@ -41,10 +44,53 @@ function clamp(raw: string | null, fallback: number, min: number, max: number) {
   return Math.min(max, Math.max(min, Math.round(n)));
 }
 
+const CACHE = "public, max-age=604800, immutable";
+
+/**
+ * Respaldo cuando no hay llave o Google falla: el PNG commiteado
+ * (scripts/gen-venue-map-fallback.mjs). Se lee una vez y queda en memoria. Si
+ * el archivo faltara, un PNG liso del color de fondo — esta ruta nunca falla.
+ */
+let fallbackPng: Buffer | null = null;
+
+async function getFallbackPng(): Promise<Buffer> {
+  if (fallbackPng) return fallbackPng;
+  try {
+    fallbackPng = await readFile(
+      join(process.cwd(), "public", "images", "emails", "venue-map-fallback.png"),
+    );
+  } catch {
+    fallbackPng = await sharp({
+      create: { width: 640, height: 280, channels: 3, background: "#0E0E1A" },
+    })
+      .png()
+      .toBuffer();
+  }
+  return fallbackPng;
+}
+
+async function fallbackResponse() {
+  try {
+    const png = await getFallbackPng();
+    return new NextResponse(new Uint8Array(png), {
+      headers: { "Content-Type": "image/png", "Cache-Control": CACHE },
+    });
+  } catch {
+    // Último recurso: PNG 1x1 transparente embebido.
+    const pixel = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+      "base64",
+    );
+    return new NextResponse(new Uint8Array(pixel), {
+      headers: { "Content-Type": "image/png", "Cache-Control": CACHE },
+    });
+  }
+}
+
 export async function GET(request: Request) {
   const key = process.env.GOOGLE_MAPS_KEY;
-  // Sin llave el correo se ve bien igual, sólo sin mapa.
-  if (!key) return new NextResponse(null, { status: 503 });
+  // Sin llave el correo lleva el mapa de respaldo.
+  if (!key) return fallbackResponse();
 
   const params = new URL(request.url).searchParams;
 
@@ -69,15 +115,19 @@ export async function GET(request: Request) {
     STYLE.map((s) => `&style=${encodeURIComponent(s)}`).join("") +
     `&key=${key}`;
 
-  const res = await fetch(url);
-  if (!res.ok) return new NextResponse(null, { status: 502 });
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return fallbackResponse();
 
-  return new NextResponse(await res.arrayBuffer(), {
-    headers: {
-      "Content-Type": "image/png",
-      // El mapa de un evento con fecha fija no cambia. Que Gmail y compañía lo
-      // cacheen es lo que evita una llamada a Google por cada apertura.
-      "Cache-Control": "public, max-age=604800, immutable",
-    },
-  });
+    return new NextResponse(await res.arrayBuffer(), {
+      headers: {
+        "Content-Type": "image/png",
+        // El mapa de un evento con fecha fija no cambia. Que Gmail y compañía lo
+        // cacheen es lo que evita una llamada a Google por cada apertura.
+        "Cache-Control": CACHE,
+      },
+    });
+  } catch {
+    return fallbackResponse();
+  }
 }
