@@ -10,7 +10,11 @@ import { HardButton, SectionHead } from "@/components/admin/ui";
 import { SOCIAL_FIELDS, TRACKS, type SpeakerRow } from "../_shared";
 
 /**
- * Editar la ficha de un speaker.
+ * Crear o editar la ficha de un speaker.
+ *
+ * Con `row` es edición. Con `row` en `null` es un alta manual: el mismo
+ * formulario, más dos interruptores (dejarlo aceptado y publicarlo), y nunca
+ * se envía ningún correo. El correo del speaker es opcional.
  *
  * Los datos vienen de la fila que ya tiene la pantalla: `GET
  * /api/speaker-profiles/[slug]` sólo devuelve perfiles públicos. Se editan las
@@ -23,31 +27,43 @@ const areaCls =
 
 const labelCls = "mb-1.5 block font-mono text-xs font-medium text-surface-200";
 
+const SOCIAL_VACIO: SpeakerRow["social"] = {
+  builderCenter: "", linkedin: "", twitter: "", github: "",
+  instagram: "", website: "", blog: "", facebook: "",
+};
+
 export function EditarPerfil({
   row,
   onSaved,
   onCancel,
 }: {
-  row: SpeakerRow;
-  onSaved: () => void;
+  /** La fila a editar, o `null` para dar de alta a alguien nuevo. */
+  row: SpeakerRow | null;
+  /** En un alta recibe el slug de la ficha recién creada. */
+  onSaved: (slug?: string) => void;
   onCancel: () => void;
 }) {
   const { toast } = useToast();
+  const crear = row === null;
   const [guardando, setGuardando] = useState(false);
+  // Sólo se usan al crear.
+  const [aceptado, setAceptado] = useState(true);
   const [form, setForm] = useState({
-    name: row.name || "",
-    role: row.role || "",
-    tagline: row.tagline || "",
-    company: row.company || "",
-    companyLogo: row.companyLogo || "",
-    bio: row.bio || "",
-    photo: row.photo || "",
-    talkTitle: row.talkTitle || "",
-    talkAbstract: row.talkAbstract || "",
-    format: row.format || ("talk" as "talk" | "workshop"),
-    track: row.track || "general",
-    isPublic: row.isPublic,
-    social: { ...row.social },
+    name: row?.name || "",
+    email: row?.email || "",
+    countryCity: row?.countryCity || "",
+    role: row?.role || "",
+    tagline: row?.tagline || "",
+    company: row?.company || "",
+    companyLogo: row?.companyLogo || "",
+    bio: row?.bio || "",
+    photo: row?.photo || "",
+    talkTitle: row?.talkTitle || "",
+    talkAbstract: row?.talkAbstract || "",
+    format: row?.format || ("talk" as "talk" | "workshop"),
+    track: row?.track || "general",
+    isPublic: row ? row.isPublic : true,
+    social: { ...SOCIAL_VACIO, ...(row?.social ?? {}) },
   });
 
   const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) =>
@@ -62,18 +78,18 @@ export function EditarPerfil({
     }
     setGuardando(true);
     try {
-      const res = await fetch(`/api/speaker-profiles/${row.slug}`, {
-        method: "PUT",
+      const res = await fetch(crear ? "/api/speaker-profiles" : `/api/speaker-profiles/${row.slug}`, {
+        method: crear ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(crear ? { ...form, accepted: aceptado } : form),
       });
+      const d = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
         toast(d.error || "No se pudo guardar", "error");
         return;
       }
-      toast("Ficha guardada", "success");
-      onSaved();
+      toast(crear ? "Speaker creado" : "Ficha guardada", "success");
+      onSaved(d.profile?.slug);
     } catch {
       toast("No se pudo guardar", "error");
     } finally {
@@ -82,6 +98,7 @@ export function EditarPerfil({
   };
 
   const copiarTarjeta = async () => {
+    if (!row) return;
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/api/og/speaker/${row.slug}`);
       toast("Enlace copiado", "success");
@@ -97,6 +114,15 @@ export function EditarPerfil({
           <SectionHead title="la persona" />
           <div className="flex flex-col gap-3">
             <Input label="Nombre completo" value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Ej. María Rodríguez" />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <Input label="Correo (opcional)" type="email" value={form.email} onChange={(e) => set("email", e.target.value)} placeholder="Déjalo vacío si no lo tienes" />
+                <p className="m-0 mt-1 font-mono text-[11px] leading-snug text-surface-300">
+                  Guardar la ficha nunca envía correos. No hace falta poner uno falso.
+                </p>
+              </div>
+              <Input label="Ciudad y país" value={form.countryCity} onChange={(e) => set("countryCity", e.target.value)} placeholder="Ej. Ciudad de México, México" />
+            </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Input label="Cargo" value={form.role} onChange={(e) => set("role", e.target.value)} placeholder="Ej. Cloud Architect" />
               <Input label="Empresa" value={form.company} onChange={(e) => set("company", e.target.value)} placeholder="Ej. AWS" />
@@ -189,17 +215,24 @@ export function EditarPerfil({
 
         <section>
           <SectionHead title="visibilidad" />
-          <Switch checked={form.isPublic} onChange={(v) => set("isPublic", v)} label="Visible en el sitio público" />
+          <div className="flex flex-col gap-3">
+            {crear && (
+              <Switch checked={aceptado} onChange={setAceptado} label="Dejarlo como aceptado (para poder agendarlo en Programa)" />
+            )}
+            <Switch checked={form.isPublic} onChange={(v) => set("isPublic", v)} label="Visible en el sitio público" />
+          </div>
         </section>
 
         <div className="grid grid-cols-2 gap-2 border-t-2 border-surface-600 pt-4 sm:flex sm:justify-end">
           <HardButton tone="ghost" onClick={onCancel} disabled={guardando}>Cancelar</HardButton>
           <HardButton onClick={guardar} disabled={guardando}>
-            {guardando ? "Guardando…" : "Guardar cambios"}
+            {guardando ? "Guardando…" : crear ? "Crear speaker" : "Guardar cambios"}
           </HardButton>
         </div>
       </div>
 
+      {row && (
+        <>
       {/* La tarjeta que sale en el sitio, al lado, para ver el efecto al vuelo. */}
       <div className="flex w-full shrink-0 flex-col gap-3 lg:w-64">
         <p className="m-0 font-mono text-[11px] font-bold uppercase tracking-widest text-surface-200">
@@ -216,6 +249,8 @@ export function EditarPerfil({
         </div>
         <HardButton tone="ghost" icon={Copy} onClick={copiarTarjeta}>Copiar enlace</HardButton>
       </div>
+        </>
+      )}
     </div>
   );
 }

@@ -16,4 +16,19 @@ export const sponsors: Sponsor[] = [
     url: "https://aws.amazon.com",
     tier: "diamond",
   },
+  {
+    id: "epam",
+    name: "EPAM",
+    logo: "/images/logos/epam-logo.png",
+    url: "https://www.epam.com",
+    tier: "gold",
+  },
+  {
+    id: "aldea",
+    name: "Aldea JIMZ",
+    logo: "/images/logos/aldea-logo.png",
+    url: "https://aldeajimz.com/",
+    tier: "gold",
+    scale: 1.6,
+  },
 ];

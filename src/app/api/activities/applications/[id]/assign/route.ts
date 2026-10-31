@@ -199,29 +199,37 @@ export async function POST(request: NextRequest, context: RouteContext) {
       details: `Asignado a "${targetActivity.title}" (${targetActivity.slug}). Prioridad: ${assignedPriorityRank ?? "Asignación directa / Fuera de lista"}. Notas: ${adminNotes || "N/A"}`,
     });
 
-    // Aviso de asignación en segundo plano: un fallo de correo nunca cambia la respuesta.
-    try {
-      const titleEn = targetActivity.titleEn || targetActivity.title;
-      const html = await render(
-        ActivityAssignmentEmail({
-          name: application.firstName,
-          activityTitleEs: targetActivity.title,
-          activityTitleEn: titleEn,
-          timeRange: `${targetActivity.startTime}–${targetActivity.endTime}`,
-          room: targetActivity.roomName || undefined,
-          qrCode: application.qrCode,
-        }),
-      );
-      void sendEmail({
-        from: EMAIL_FROM,
-        to: application.email,
-        subject: `Tu actividad fue asignada: ${targetActivity.title} · Your activity has been assigned: ${titleEn}`,
-        html,
-      }).catch((e) => {
-        console.error("[ActivityAssign] Error enviando aviso de asignación:", e);
-      });
-    } catch (e) {
-      console.error("[ActivityAssign] Error preparando aviso de asignación:", e);
+    // Un solo correo de asignación, en segundo plano: un fallo de correo nunca
+    // cambia la respuesta. No se reenvía si solo se re-guardó la misma
+    // actividad (p. ej. al editar las notas del admin).
+    if (!isSameActivity) {
+      try {
+        const titleEn = targetActivity.titleEn || targetActivity.title;
+        const html = await render(
+          ActivityAssignmentEmail({
+            name: application.firstName,
+            activityTitleEs: targetActivity.title,
+            activityTitleEn: titleEn,
+            timeRange: `${targetActivity.startTime}–${targetActivity.endTime}`,
+            room: targetActivity.roomName || undefined,
+            qrCode: application.qrCode,
+            priorityRank: assignedPriorityRank,
+            requiresLaptop: targetActivity.formConfig?.requireLaptop,
+            prerequisitesList: targetActivity.formConfig?.prerequisitesList,
+            prerequisitesListEn: targetActivity.formConfig?.prerequisitesListEn,
+          }),
+        );
+        void sendEmail({
+          from: EMAIL_FROM,
+          to: application.email,
+          subject: `Tu actividad fue asignada: ${targetActivity.title} · Your activity has been assigned: ${titleEn}`,
+          html: `${html}<!-- ref:${application.qrCode}:activity:${targetActivity.slug} -->`,
+        }).catch((e) => {
+          console.error("[ActivityAssign] Error enviando aviso de asignación:", e);
+        });
+      } catch (e) {
+        console.error("[ActivityAssign] Error preparando aviso de asignación:", e);
+      }
     }
 
     return NextResponse.json({

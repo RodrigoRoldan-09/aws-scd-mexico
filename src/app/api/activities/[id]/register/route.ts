@@ -63,7 +63,7 @@ export async function POST(
 
     // Preparar lista de correos de participantes
     const isTeam = !!team?.isTeam;
-    const teamMembers = (Array.isArray(team?.members) ? team.members : []).map((m: any) => ({
+    const teamMembers = (Array.isArray(team?.members) ? team.members : []).map((m: Partial<Record<"firstName" | "lastName" | "email" | "roleInTeam", unknown>>) => ({
       firstName: String(m.firstName || "").trim(),
       lastName: String(m.lastName || "").trim(),
       email: String(m.email || "").trim().toLowerCase(),
@@ -313,6 +313,8 @@ export async function POST(
           activitySlug: activity.slug,
           activityTitle: activity.title,
           qrCode: hybrid.qrCode,
+          firstName: hybrid.registration.firstName,
+          lastName: hybrid.registration.lastName,
           email,
           status: "registered",
           spotsConsumed: spotsNeeded,

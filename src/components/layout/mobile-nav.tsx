@@ -9,7 +9,6 @@ import {
   Info,
   Users,
   Calendar,
-  Terminal,
   Rocket,
   HeartHandshake,
   GraduationCap,
@@ -59,7 +58,6 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
     {
       group: "SBG",
       items: [
-        { label: "Workshops & Actividades", href: localePath(locale, "/actividades"), icon: Terminal },
         { label: "Proyectos", href: resolveHref("#about"), icon: Rocket },
         { label: "Comunidad", href: resolveHref("#communities"), icon: HeartHandshake },
         { label: "Aula", href: resolveHref("#agenda"), icon: GraduationCap },

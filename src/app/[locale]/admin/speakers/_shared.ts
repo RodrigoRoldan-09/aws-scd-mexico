@@ -164,7 +164,7 @@ export const MOVER: Record<SpeakerStatus, { verb: string; what: string; mail: bo
   },
   accepted: {
     verb: "Aprobar y avisarle",
-    what: "Queda aceptada y se le envía el correo con la carta en PDF.",
+    what: "Queda aceptada y publicada. Tú eliges si se le envía el correo con la carta en PDF.",
     mail: true,
   },
   scheduled: {

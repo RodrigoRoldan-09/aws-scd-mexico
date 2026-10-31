@@ -39,6 +39,8 @@ export interface Sponsor {
   logo: string;
   url: string;
   tier: "diamond" | "platinum" | "gold" | "community";
+  /** Multiplica la altura del logo dentro de su tier (default 1). Útil en logos verticales. */
+  scale?: number;
 }
 
 export interface Organizer {

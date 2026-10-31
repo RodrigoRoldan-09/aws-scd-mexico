@@ -13,7 +13,14 @@ export type SessionTrack = {
   color: string;
 };
 
+/**
+ * Valor de `track` que marca una keynote. No es un campo nuevo: `track` ya es
+ * un texto libre en la base, así que no hace falta migrar nada.
+ */
+export const KEYNOTE_TRACK = "keynote";
+
 export const TRACKS: SessionTrack[] = [
+  { value: KEYNOTE_TRACK, label: "Keynote", color: "border-amber-400/70 bg-amber-400/15 text-amber-300" },
   { value: "general", label: "General", color: "border-surface-500 bg-surface-700 text-surface-100" },
   { value: "cloud", label: "Cloud Fundamentals", color: "border-blue-500/50 bg-blue-500/15 text-blue-300" },
   { value: "devops", label: "DevOps & Platform", color: "border-emerald/50 bg-emerald/15 text-emerald" },

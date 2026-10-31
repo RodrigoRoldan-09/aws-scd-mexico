@@ -23,6 +23,8 @@ export async function POST(
     const body = await request.json().catch(() => ({})) as Record<string, unknown>;
     const speakerType = body.speakerType === "international" ? "international" : "local";
     const track = typeof body.track === "string" ? body.track : "general";
+    // Aprobar sin escribirle a la persona (altas manuales, correos de prueba).
+    const skipEmail = body.skipEmail === true;
 
     await connectDB();
 
@@ -53,7 +55,8 @@ export async function POST(
     const profileUrl = `${appUrl}/speakers/${slug}`;
     const cardUrl   = (profile?.cardImageUrl as string | undefined) || `${appUrl}/api/og/speaker/${slug}`;
 
-    if (email) {
+    const enviar = !!email && !skipEmail;
+    if (enviar) {
       const html = await render(
         SpeakerApprovalEmail({ name, speakerType, presentationMode, profileUrl, cardUrl })
       );
@@ -91,10 +94,10 @@ export async function POST(
       action: "SPEAKER_APPROVED",
       target: name || id,
       targetId: id,
-      details: `${speakerType} · ${email}`,
+      details: `${speakerType} · ${email}${enviar ? "" : " · sin correo"}`,
     });
 
-    return Response.json({ ok: true, slug });
+    return Response.json({ ok: true, slug, emailed: enviar });
   } catch (e) {
     console.error("[approve]", e);
     return Response.json({ error: "Error interno" }, { status: 500 });

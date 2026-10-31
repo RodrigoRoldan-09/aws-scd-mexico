@@ -147,7 +147,7 @@ function Accion({
         {correo && (
           <span className="mt-1.5 inline-flex items-center gap-1.5 border border-amber-400/60 bg-amber-400/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
             <Send className="h-3 w-3" />
-            Le llega un correo
+            Correo opcional
           </span>
         )}
       </span>
@@ -235,21 +235,24 @@ export function FichaSpeaker({ slug }: { slug: string }) {
     }
   };
 
-  /** Aprobar: manda el correo con la carta y deja la persona aceptada. */
-  const aprobar = async () => {
+  /**
+   * Aprobar: deja a la persona aceptada y publicada. Con `sinCorreo` no se le
+   * escribe a nadie; sin él, el correo con la carta sale sólo si tiene correo.
+   */
+  const aprobar = async (sinCorreo = false) => {
     setTrabajando(true);
     try {
       const res = await fetch(`/api/speakers/${s.id}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ speakerType: tipo, track, presentationMode: s.sessionType }),
+        body: JSON.stringify({ speakerType: tipo, track, presentationMode: s.sessionType, skipEmail: sinCorreo }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) {
         toast(d.error || "No se pudo aprobar", "error");
         return;
       }
-      toast("Aprobado y correo enviado", "success");
+      toast(d.emailed ? "Aprobado y correo enviado" : "Aprobado, sin enviar correo", "success");
       setAprobando(false);
       await cargar();
     } catch {
@@ -679,15 +682,20 @@ export function FichaSpeaker({ slug }: { slug: string }) {
           </label>
 
           <p className="m-0 border-l-4 border-aws-orange bg-aws-orange/5 py-2 pl-3 font-mono text-xs leading-relaxed text-surface-200">
-            Al aprobar se envía el correo con la carta en PDF y la persona queda
-            como aceptada. El PDF sale de lo que haya en Ajustes.
+            Al aprobar con correo se envía la carta en PDF (sólo si la ficha
+            tiene correo) y la persona queda aceptada y publicada. Con «sin
+            correo» queda igual, pero no se le escribe a nadie. El PDF sale de
+            lo que haya en Ajustes.
           </p>
 
           <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end">
             <HardButton tone="ghost" onClick={() => setAprobando(false)} disabled={trabajando}>
               Cancelar
             </HardButton>
-            <HardButton icon={Check} onClick={aprobar} disabled={trabajando}>
+            <HardButton tone="ghost" icon={Check} onClick={() => aprobar(true)} disabled={trabajando}>
+              Aprobar sin correo
+            </HardButton>
+            <HardButton icon={Check} onClick={() => aprobar(false)} disabled={trabajando}>
               {trabajando ? "Enviando…" : "Aprobar y enviar"}
             </HardButton>
           </div>

@@ -6,8 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { Download, Eye, EyeOff, Laptop, MapPin, Mic2, Plus, SlidersHorizontal, Wifi } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Modal } from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/toast";
 import { useUrlFilters, useDebounce } from "@/hooks/use-url-filters";
 import { Avatar } from "@/components/admin/avatar";
 import { localePath } from "@/lib/utils";
@@ -15,6 +13,7 @@ import {
   Cards, Cargando, Empty, HardButton, HardLink, PageHead, RowCard,
   Stat, Stats, TableWrap, Tag, Th, Toolbar,
 } from "@/components/admin/ui";
+import { EditarPerfil } from "./[slug]/_editar";
 import {
   STATUS, speakerName, trackLabel,
   type SpeakerRow, type SpeakerStatus,
@@ -39,7 +38,6 @@ function SpeakersPageInner() {
   const pathname = usePathname();
   const router = useRouter();
   const locale = pathname.startsWith("/en") ? "en" : "es";
-  const { toast } = useToast();
   const { values, set } = useUrlFilters(FILTROS);
 
   const [rows, setRows] = useState<SpeakerRow[]>([]);
@@ -47,8 +45,6 @@ function SpeakersPageInner() {
   const [search, setSearch] = useState(values.buscar);
   const debounced = useDebounce(search, 300);
   const [creando, setCreando] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [guardando, setGuardando] = useState(false);
 
   useEffect(() => { set("buscar", debounced); }, [debounced, set]);
 
@@ -102,30 +98,6 @@ function SpeakersPageInner() {
     set("publicos", "");
   };
 
-  /** Alta manual: se crea con lo mínimo y se sigue en su ficha. */
-  const crear = async () => {
-    const name = nombre.trim();
-    if (!name) return;
-    setGuardando(true);
-    try {
-      const res = await fetch("/api/speaker-profiles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast(data.error || "No se pudo crear", "error");
-        return;
-      }
-      router.push(localePath(locale, `/admin/speakers/${data.profile.slug}`));
-    } catch {
-      toast("No se pudo crear", "error");
-    } finally {
-      setGuardando(false);
-    }
-  };
-
   /** Las etiquetas de una fila: las mismas en la tabla y en la tarjeta. */
   const etiquetas = (s: SpeakerRow) => {
     const est = STATUS[s.status];
@@ -161,7 +133,7 @@ function SpeakersPageInner() {
             <HardLink icon={Download} href="/api/speakers/export" download="speakers-aws-scd.csv">
               Exportar CSV
             </HardLink>
-            <HardButton icon={Plus} onClick={() => { setNombre(""); setCreando(true); }}>
+            <HardButton icon={Plus} onClick={() => setCreando(true)}>
               Nuevo speaker
             </HardButton>
           </>
@@ -324,25 +296,16 @@ function SpeakersPageInner() {
         </>
       )}
 
-      <Modal open={creando} onClose={() => setCreando(false)} title="Nuevo speaker" size="sm">
-        <div className="flex flex-col gap-4">
-          <Input
-            label="Nombre completo"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            placeholder="Ej. Ana Pérez"
-            autoFocus
-          />
-          <p className="m-0 font-mono text-xs leading-relaxed text-surface-300">
-            Se crea la ficha con el nombre y se abre para completar el resto.
-          </p>
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end">
-            <HardButton tone="ghost" onClick={() => setCreando(false)}>Cancelar</HardButton>
-            <HardButton onClick={crear} disabled={guardando || !nombre.trim()}>
-              {guardando ? "Creando…" : "Crear y abrir"}
-            </HardButton>
-          </div>
-        </div>
+      {/* Alta manual: el mismo formulario de la ficha, con foto y todo, sin correos. */}
+      <Modal open={creando} onClose={() => setCreando(false)} title="Nuevo speaker" size="xl">
+        <EditarPerfil
+          row={null}
+          onSaved={(slug) => {
+            setCreando(false);
+            if (slug) router.push(localePath(locale, `/admin/speakers/${slug}`));
+          }}
+          onCancel={() => setCreando(false)}
+        />
       </Modal>
     </div>
   );

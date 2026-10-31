@@ -83,11 +83,42 @@ export async function PUT(
 
     const { slug } = await params;
     const body = await request.json();
-    const { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, format, track, sessionId, submissionId, isPublic } = body;
+
+    // Sólo se tocan los campos que llegan en el cuerpo. Antes se escribían todos,
+    // y como el formulario de edición no manda `sessionId`, cada guardado dejaba
+    // al speaker sin su sesión de la agenda.
+    const CAMPOS = [
+      "name", "role", "tagline", "company", "companyLogo", "bio", "photo", "social",
+      "talkTitle", "talkAbstract", "track", "isPublic", "countryCity",
+    ] as const;
+    const update: Record<string, unknown> = {};
+    for (const key of CAMPOS) {
+      if (body[key] !== undefined) update[key] = body[key];
+    }
+    if (typeof body.email === "string") update.email = body.email.trim().toLowerCase();
+    if (body.format !== undefined) update.format = body.format === "workshop" ? "workshop" : "talk";
+    if ("sessionId" in body) update.sessionId = body.sessionId || null;
+
+    if ("name" in update && !String(update.name ?? "").trim()) {
+      return Response.json({ error: "El nombre no puede quedar vacío" }, { status: 400 });
+    }
+
+    // Si cambia algo que sale en la tarjeta, la imagen ya aprobada deja de valer:
+    // se vuelve a generar desde el Canvas.
+    const antes = await SpeakerProfile.findOne({ slug })
+      .select("name role company photo talkTitle companyLogo")
+      .lean();
+    if (!antes) return Response.json({ error: "No encontrado" }, { status: 404 });
+    const cambiaTarjeta = (["name", "role", "company", "photo", "talkTitle", "companyLogo"] as const)
+      .some((k) => k in update && update[k] !== (antes[k] ?? ""));
+    if (cambiaTarjeta) {
+      update.cardApproved = false;
+      update.cardImageUrl = "";
+    }
 
     const profile = await SpeakerProfile.findOneAndUpdate(
       { slug },
-      { name, role, tagline, company, companyLogo, bio, photo, social, talkTitle, talkAbstract, format: format ?? "talk", track, sessionId: sessionId || null, submissionId: submissionId || null, isPublic },
+      update,
       { returnDocument: "after" },
     );
 

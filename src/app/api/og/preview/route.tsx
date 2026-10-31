@@ -14,6 +14,7 @@ import http from "http";
 import sharp from "sharp";
 import QRCode from "qrcode";
 import { EVENT, SITE_HOST, SITE_URL } from "@/lib/constants";
+import { loadEventLogoDataUrl } from "@/lib/og-assets";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -309,17 +310,17 @@ function VariantB({
 
         {/* ── EVENT LOGO — bottom-right ── */}
         {/* card 1: untouched */}
-        {!isMulti && (
+        {eventLogo && !isMulti && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={eventLogo} alt="" style={{ position: "absolute", bottom: 40, right: 44, width: 195, height: 195, objectFit: "contain" }} />
         )}
         {/* card 2: same size, lowered to center-align with the smaller QR */}
-        {isMulti && n === 2 && (
+        {eventLogo && isMulti && n === 2 && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={eventLogo} alt="" style={{ position: "absolute", bottom: 17, right: 44, width: 195, height: 195, objectFit: "contain" }} />
         )}
         {/* cards 3 & 4: enlarged so visible logo matches QR visual size */}
-        {isMulti && n >= 3 && (
+        {eventLogo && isMulti && n >= 3 && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={eventLogo} alt="" style={{ position: "absolute", bottom: 40, right: 44, width: 240, height: 240, objectFit: "contain" }} />
         )}
@@ -444,7 +445,7 @@ export async function GET(request: NextRequest) {
   const fontBuf = fs.readFileSync(path.join(/*turbopackIgnore: true*/ process.cwd(), "public/fonts/JetBrainsMono-Bold.ttf"));
   const fontData = fontBuf.buffer.slice(fontBuf.byteOffset, fontBuf.byteOffset + fontBuf.byteLength) as ArrayBuffer;
   const awsLogo = loadAsset("public/images/logos/aws-logo.svg", "image/svg+xml");
-  const eventLogo = loadAsset("public/images/logos/event-logo.png", "image/png");
+  const eventLogo = await loadEventLogoDataUrl();
   const sbgIcon = loadAsset("public/images/logos/sbg-icon-orange.png", "image/png");
 
   const primary = speakers[0];

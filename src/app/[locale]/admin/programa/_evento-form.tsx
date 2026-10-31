@@ -8,8 +8,7 @@ import { Select } from "@/components/ui/select";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { useToast } from "@/components/ui/toast";
 import { Aviso, HardButton } from "@/components/admin/ui";
-import { keynotes, type Keynote } from "@/data/keynotes";
-import { TRACKS } from "@/data/session-tracks";
+import { KEYNOTE_TRACK, TRACKS } from "@/data/session-tracks";
 import { EVENT } from "@/lib/constants";
 import {
   FORM_VACIO, IDIOMA_OPCIONES, MODALIDAD_OPCIONES, NIVEL_OPCIONES, TIPOS,
@@ -20,8 +19,8 @@ import {
  * El formulario de un bloque del programa.
  *
  * Tres tipos: una sesión (se elige un speaker aceptado y el resto se rellena
- * solo), una keynote (se elige de la lista del evento) o un bloque libre (café,
- * almuerzo, cierre). Los tracks son la lista fija de `@/data/session-tracks`.
+ * solo), una keynote (igual que la sesión, pero marcada con el track «keynote»
+ * para que destaque en la agenda) o un bloque libre (café, almuerzo, cierre). Los tracks son la lista fija de `@/data/session-tracks`.
  */
 
 const OPCIONES_TRACK = TRACKS.map(({ value, label }) => ({ value, label }));
@@ -50,36 +49,22 @@ export function EventoForm({
   const [form, setForm] = useState<FormBloque>(FORM_VACIO);
   const [speakerId, setSpeakerId] = useState("");
   const [salonId, setSalonId] = useState("");
-  const [keynoteIdx, setKeynoteIdx] = useState(0);
   const [guardando, setGuardando] = useState(false);
 
   const set = <K extends keyof FormBloque>(k: K, v: FormBloque[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  const aplicarSpeaker = (sp: SpeakerAceptado) => {
+  const aplicarSpeaker = (sp: SpeakerAceptado, comoKeynote = false) => {
     setSpeakerId(sp.id);
     setForm((f) => ({
       ...f,
       title: sp.talkTitle,
       description: sp.talkAbstract || "",
-      track: sp.track || "general",
+      track: comoKeynote ? KEYNOTE_TRACK : sp.track || "general",
       level: (["100", "200", "300", "400"].includes(sp.audienceLevel) ? sp.audienceLevel : "") as FormBloque["level"],
       language: (["es", "en", "bilingual"].includes(sp.language) ? sp.language : "es") as FormBloque["language"],
       speaker: sp.name,
       speakerSlug: sp.slug,
-      sessionType: "presencial",
-    }));
-  };
-
-  const aplicarKeynote = (kn: Keynote) => {
-    setForm((f) => ({
-      ...f,
-      title: kn.talkTitle || "Keynote",
-      speaker: `${kn.firstName} ${kn.lastName}`,
-      speakerSlug: "",
-      description: [kn.role, kn.company].filter(Boolean).join(" · "),
-      track: "general",
-      level: "",
       sessionType: "presencial",
     }));
   };
@@ -138,7 +123,8 @@ export function EventoForm({
     e.preventDefault();
     setGuardando(true);
     try {
-      const esSesionNueva = tipo === "session" && nuevo;
+      // La keynote se agenda igual que una sesión: queda ligada a la ficha del speaker.
+      const esSesionNueva = (tipo === "session" || tipo === "keynote") && nuevo;
       const cuerpo = {
         ...form,
         ...(esSesionNueva && speakerId ? { speakerId, roomId: salonId || undefined } : {}),
@@ -228,10 +214,13 @@ export function EventoForm({
               type="button"
               onClick={() => {
                 setTipo(key);
-                if (key === "keynote" && keynotes.length > 0) {
-                  setKeynoteIdx(0);
-                  aplicarKeynote(keynotes[0]);
-                }
+                // Keynote fuerza el track «keynote»; al salir de ahí vuelve al del speaker.
+                const sp = speakers.find((x) => x.id === speakerId);
+                setForm((f) => {
+                  if (key === "keynote") return { ...f, track: KEYNOTE_TRACK };
+                  if (f.track !== KEYNOTE_TRACK) return f;
+                  return { ...f, track: key === "session" && sp?.track ? sp.track : "general" };
+                });
               }}
               className={`flex min-h-11 items-center justify-center gap-2 border-2 px-2 py-2 font-mono text-xs font-bold transition-all ${
                 tipo === key
@@ -248,7 +237,7 @@ export function EventoForm({
 
       <form onSubmit={guardar} className="flex flex-col gap-4">
         {/* ── Sesión ─────────────────────────────────────────────────────── */}
-        {tipo === "session" && nuevo && (
+        {(tipo === "session" || tipo === "keynote") && nuevo && (
           <>
             <label className="flex flex-col gap-1.5">
               <span className="font-mono text-sm text-surface-200">Speaker aceptado *</span>
@@ -256,7 +245,7 @@ export function EventoForm({
                 value={speakerId}
                 onChange={(e) => {
                   const sp = speakers.find((s) => s.id === e.target.value);
-                  if (sp) aplicarSpeaker(sp);
+                  if (sp) aplicarSpeaker(sp, tipo === "keynote");
                   else setSpeakerId(e.target.value);
                 }}
                 required
@@ -283,40 +272,9 @@ export function EventoForm({
               <Aviso tone="info" className="mb-0">
                 Se rellenó desde su ficha: <strong className="text-surface-100">{form.title || "sin título"}</strong>.
                 {" "}Track, nivel e idioma salen de ahí también.
+                {tipo === "keynote" && " Se marcará como Keynote en la agenda pública."}
               </Aviso>
             )}
-          </>
-        )}
-
-        {/* ── Keynote ────────────────────────────────────────────────────── */}
-        {tipo === "keynote" && nuevo && (
-          <>
-            <label className="flex flex-col gap-1.5">
-              <span className="font-mono text-sm text-surface-200">Keynote *</span>
-              <select
-                value={keynoteIdx}
-                onChange={(e) => {
-                  const i = Number(e.target.value);
-                  setKeynoteIdx(i);
-                  if (keynotes[i]) aplicarKeynote(keynotes[i]);
-                }}
-                className="min-h-11 w-full border-2 border-surface-600 bg-surface-900 px-4 py-2.5 font-mono text-sm text-surface-100 outline-none transition-colors focus:border-aws-orange"
-              >
-                {keynotes.map((kn, i) => (
-                  <option key={i} value={i}>
-                    {kn.firstName} {kn.lastName}{kn.company ? ` — ${kn.company}` : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            {salon(false)}
-            {horas}
-
-            <Aviso tone="warn" className="mb-0">
-              Se rellenó desde la lista de keynotes: <strong className="text-surface-100">{form.title}</strong>
-              {form.speaker ? ` · ${form.speaker}` : ""}.
-            </Aviso>
           </>
         )}
 
@@ -364,7 +322,7 @@ export function EventoForm({
         )}
 
         {/* Imágenes: sólo para lo que no es una sesión de speaker */}
-        {(tipo === "keynote" || tipo === "free" || editando) && !editandoSesion && (
+        {(tipo === "free" || editando) && !editandoSesion && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <ImageUpload label="Imagen en la agenda" value={form.imageUrl} onChange={(u) => set("imageUrl", u)} folder="agenda" aspectRatio="square" />
             <ImageUpload label="Imagen del detalle" value={form.cardImageUrl} onChange={(u) => set("cardImageUrl", u)} folder="agenda" aspectRatio="wide" />

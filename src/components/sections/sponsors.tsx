@@ -28,8 +28,20 @@ function LogoRow({
   if (!items.length) return null;
 
   const h =
-    size === "lead" ? "h-16 md:h-24" : size === "mid" ? "h-10 md:h-14" : "h-7 md:h-9";
-  const gap = size === "lead" ? "gap-10 md:gap-16" : "gap-8 md:gap-12";
+    size === "lead"
+      ? "h-[calc(4rem*var(--logo-scale))] md:h-[calc(6rem*var(--logo-scale))]"
+      : size === "mid"
+        ? "h-[calc(3.5rem*var(--logo-scale))] md:h-[calc(5rem*var(--logo-scale))]"
+        : "h-[calc(1.75rem*var(--logo-scale))] md:h-[calc(2.25rem*var(--logo-scale))]";
+  const gap =
+    size === "lead"
+      ? "gap-10 md:gap-16"
+      : size === "mid"
+        ? "gap-x-6 gap-y-10 md:gap-x-20"
+        : "gap-8 md:gap-12";
+  // En `mid` cada logo vive en una celda de ancho fijo para que queden
+  // repartidos uno junto al otro y no pegados al centro.
+  const cell = size === "mid" ? "w-36 justify-center md:w-64" : "";
 
   return (
     <ScrollReveal delay={delay} from="scale">
@@ -40,7 +52,7 @@ function LogoRow({
             href={s.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center transition-transform duration-300 hover:-translate-y-1"
+            className={`group inline-flex items-center transition-transform duration-300 hover:-translate-y-1 ${cell}`}
             aria-label={s.name}
           >
             {/* `brightness-0` fuerza el logo a tinta plana: sobre el bloque
@@ -48,7 +60,8 @@ function LogoRow({
             <img
               src={`${basePath}${s.logo}`}
               alt={s.name}
-              className={`${h} w-auto object-contain brightness-0 transition-opacity duration-300 group-hover:opacity-70`}
+              style={{ "--logo-scale": s.scale ?? 1 } as React.CSSProperties}
+              className={`${h} w-auto max-w-full object-contain brightness-0 transition-opacity duration-300 group-hover:opacity-70`}
             />
           </a>
         ))}

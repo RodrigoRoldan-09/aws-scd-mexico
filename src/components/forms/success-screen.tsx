@@ -60,6 +60,8 @@ export function SuccessScreen({
   extra,
   rows,
   preview,
+  copyOverride,
+  tone = "vivid",
 }: {
   kind: ShareKind | "volunteer";
   /** Modalidad presencial. */
@@ -75,6 +77,10 @@ export function SuccessScreen({
    * presencial, la credencial de un voluntario.
    */
   preview?: React.ReactNode;
+  /** Textos propios de la pantalla; lo que no se indique sale de `success_<tipo>_*`. */
+  copyOverride?: Partial<{ kicker: string; heading: string; lead: string; shareText: string }>;
+  /** `soft` baja la saturación del fondo rosa (usado en actividades). */
+  tone?: "vivid" | "soft";
 }) {
   const t = useTranslations("Forms");
   const withCard = kind !== "volunteer";
@@ -88,6 +94,7 @@ export function SuccessScreen({
     heading: t(`success_${copyKind}_heading`),
     lead: t(`success_${copyKind}_lead`),
     shareText: kind === "volunteer" ? "" : t(`success_${copyKind}_share`),
+    ...copyOverride,
   };
 
   const card = useShareCard({
@@ -112,7 +119,10 @@ export function SuccessScreen({
   };
 
   return (
-    <main className="form-block flex min-h-screen flex-col overflow-x-hidden bg-hack-block pt-20 sm:pt-28">
+    <main
+      className="form-block flex min-h-screen flex-col overflow-x-hidden bg-hack-block pt-20 sm:pt-28"
+      style={tone === "soft" ? ({ "--color-hack-block": "#A872AE" } as React.CSSProperties) : undefined}
+    >
       <div className="mx-auto w-full max-w-5xl flex-1 px-4 sm:px-5 pb-20">
         {/* El avión entra girando: es lo primero que se mueve al cargar, y
             sigue el ratón de arriba abajo. */}
