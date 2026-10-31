@@ -325,6 +325,14 @@ export function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Actividades v2 (standalone) */}
+            <a
+              href={localePath(locale, "/actividades")}
+              className="rounded-[6px] px-2.5 py-1 font-mono text-xs text-[#B4B2A9] transition-colors hover:text-[#C143BC]"
+            >
+              {t("activities")}
+            </a>
+
             {/* Sponsors (pestaña dedicada) */}
             <a
               href={localePath(locale, "/sponsors")}

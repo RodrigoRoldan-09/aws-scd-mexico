@@ -14,7 +14,15 @@
     "register": "Register",
     "cfp": "CFP",
     "register_closed": "Coming soon",
-    "coming_soon": "Coming soon"
+    "coming_soon": "Coming soon",
+    "activities": "Activities"
+  },
+  "ActivitiesCTA": {
+    "eyebrow": "// limited seats",
+    "title": "Workshops, Hackathon & Special Activities",
+    "desc": "Build with Claude, compete in the AWS hackathon, or prep your next career move with CV and LinkedIn reviews and mock interviews. Seats are limited.",
+    "ctaBrowse": "Browse activities",
+    "ctaRegister": "Register now"
   },
   "Strip": {
     "event": "AWS STUDENT COMMUNITY DAY MEXICO-CDMX 2026",

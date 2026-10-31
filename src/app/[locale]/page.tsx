@@ -5,6 +5,7 @@ import { TalaveraGreca } from "@/components/effects/talavera-greca";
 import { About } from "@/components/sections/about";
 import { WhyAttend } from "@/components/sections/why-attend";
 import { Tracks } from "@/components/sections/tracks";
+import { ActivitiesCta } from "@/components/sections/activities-cta";
 import { Agenda } from "@/components/sections/agenda-section";
 import { Venue } from "@/components/sections/venue";
 import { Sponsors } from "@/components/sections/sponsors";
@@ -33,6 +34,7 @@ export default async function HomePage({
 
       <WhyAttend />
       <Tracks />
+      <ActivitiesCta />
 
       <TalaveraGreca variant="cyan" height={20} />
       <Strip k="cfp" tone="ink" duration={36} reverse />

@@ -151,6 +151,14 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               >
                 Contacto
               </a>
+              <span className="text-[#2C2550]">·</span>
+              <a
+                href={localePath(locale, "/actividades")}
+                onClick={onClose}
+                className="font-mono text-sm text-[#B4B2A9] hover:text-[#C143BC] transition-colors"
+              >
+                {t("activities")}
+              </a>
             </div>
 
             {sections.map((section) => (
