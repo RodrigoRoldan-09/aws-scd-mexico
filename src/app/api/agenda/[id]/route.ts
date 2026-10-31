@@ -50,7 +50,8 @@ export async function PUT(
 
     // Sync time + room back to the linked SpeakerProfile
     if (event.speakerId) {
-      const scheduledAt = new Date(`${EVENT_DAY}T${startTime}:00-03:00`);
+      // CDMX es UTC-6 todo el año (sin horario de verano desde 2022).
+      const scheduledAt = new Date(`${EVENT_DAY}T${startTime}:00-06:00`);
       await SpeakerProfile.findByIdAndUpdate(event.speakerId, {
         scheduledAt,
         roomId: roomId || null,

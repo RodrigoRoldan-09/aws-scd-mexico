@@ -73,8 +73,8 @@ export function ActivityRegistrationConfirmationEmail({
 
       {leaderName ? (
         <Paragraph>
-          {leaderName} te inscribió como integrante del equipo{" "}
-          {team ? `«${team}»` : "tu equipo"} en <strong>{activityTitleEs}</strong>.
+          {leaderName} te inscribió como integrante{" "}
+          {team ? `del equipo «${team}»` : "de su equipo"} en <strong>{activityTitleEs}</strong>.
         </Paragraph>
       ) : (
         <Paragraph>
@@ -100,7 +100,7 @@ export function ActivityRegistrationConfirmationEmail({
       {leaderName ? (
         <Paragraph>
           {leaderName} registered you as a member of{" "}
-          {team ? `team "${team}"` : "your team"} for <strong>{titleEn}</strong>.
+          {team ? `team "${team}"` : "their team"} for <strong>{titleEn}</strong>.
         </Paragraph>
       ) : (
         <Paragraph>

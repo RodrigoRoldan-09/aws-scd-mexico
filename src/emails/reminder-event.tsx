@@ -11,6 +11,7 @@ import {
   Heading,
   Kicker,
   Paragraph,
+  SponsorLogos,
   Steps,
 } from "./_kit";
 
@@ -185,6 +186,8 @@ export function ReminderEventEmail({
 
       <Kicker>para que te vaya bien · tips for the day</Kicker>
       <Steps items={tipItems} />
+
+      <SponsorLogos />
     </EmailLayout>
   );
 }

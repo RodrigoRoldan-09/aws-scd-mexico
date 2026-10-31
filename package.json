@@ -14,7 +14,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "create-admin": "node scripts/create-admin.mjs",
-    "seed:faq": "node scripts/seed-faq.mjs"
+    "seed:faq": "node scripts/seed-faq.mjs",
+    "seed:activities": "node scripts/seed-activities.mjs",
+    "seed:agenda": "node scripts/seed-agenda.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1045.0",

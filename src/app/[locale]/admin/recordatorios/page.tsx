@@ -18,6 +18,7 @@ import {
   REMINDER_CARDS, KEYNOTE_TYPES,
   type CampaignType, type CampaignDoc, type StatsData,
 } from "./_shared";
+import { BackfillPanel } from "./_backfill-panel";
 
 export default function RecordatoriosPage() {
   const { toast } = useToast();
@@ -260,6 +261,9 @@ export default function RecordatoriosPage() {
           </div>
         </div>
       </div>
+
+      {/* ── Automáticos + confirmaciones pendientes ── */}
+      {isAdmin && <BackfillPanel />}
 
       {/* ── Recordatorios del evento ── */}
       <section className="mb-10">

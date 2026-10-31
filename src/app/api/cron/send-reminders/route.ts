@@ -9,6 +9,7 @@ import { SpeakerProfile } from "@/models/speaker-profile";
 import { VolunteerSubmission } from "@/models/volunteer-submission";
 import { User } from "@/models/user";
 import { SITE_URL } from "@/lib/constants";
+import { REMINDER_DATES, REMINDER_EVENT_DATE } from "@/lib/reminder-schedule";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -16,8 +17,7 @@ export const maxDuration = 300;
 const APP_URL = SITE_URL;
 
 // Fechas (America/Mexico_City) en las que sale el recordatorio automático.
-const REMINDER_DATES = ["2026-10-22", "2026-10-24", "2026-10-28", "2026-10-31", "2026-11-02", "2026-11-03"];
-const EVENT_DATE = "2026-11-04";
+const EVENT_DATE = REMINDER_EVENT_DATE;
 
 /**
  * Recordatorios automáticos del evento. Lo llama EventBridge Scheduler (destino HTTP)
@@ -79,9 +79,11 @@ async function handleCron(request: NextRequest) {
 
     // (5) Envío — emails va 1:1 con recipients (mismo orden)
     const subject =
-      daysLeft === 1
-        ? "Falta 1 día · 1 day to go — AWS Student Community Day México 2026"
-        : `Faltan ${daysLeft} días · ${daysLeft} days to go — AWS Student Community Day México 2026`;
+      daysLeft <= 0
+        ? "¡Es hoy! · It's today! — AWS Student Community Day México 2026"
+        : daysLeft === 1
+          ? "Es mañana · It's tomorrow — AWS Student Community Day México 2026"
+          : `Faltan ${daysLeft} días · ${daysLeft} days to go — AWS Student Community Day México 2026`;
 
     const emails: Parameters<typeof sendEmailBatch>[0] = [];
     for (const r of recipients) {

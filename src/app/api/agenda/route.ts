@@ -85,7 +85,8 @@ export async function POST(request: NextRequest) {
 
     // Sync the linked SpeakerProfile when scheduling a session
     if (speakerId) {
-      const scheduledAt = new Date(`${EVENT_DAY}T${startTime}:00-03:00`);
+      // CDMX es UTC-6 todo el año (sin horario de verano desde 2022).
+      const scheduledAt = new Date(`${EVENT_DAY}T${startTime}:00-06:00`);
       await SpeakerProfile.findByIdAndUpdate(speakerId, {
         scheduledAt,
         sessionId: event._id,

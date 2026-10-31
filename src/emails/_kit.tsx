@@ -537,6 +537,68 @@ export function BigStat({ value, label }: { value: string; label: string }) {
   );
 }
 
+/**
+ * Sponsors oficiales del evento. Los PNG viven en
+ * public/images/emails/sponsors/ (logos blancos sobre fondo oscuro, ~3:1).
+ * Para agregar o quitar un sponsor basta con editar este arreglo.
+ */
+export const SPONSORS: { name: string; file: string }[] = [
+  { name: "AWS", file: "aws.jpeg" },
+  { name: "EPAM", file: "epam.jpeg" },
+  { name: "ASUS", file: "asus.jpeg" },
+  { name: "Aldea JIMZ", file: "aldea.jpeg" },
+];
+
+/** Fila de logos de sponsors. Tabla de una fila: es lo único que Outlook respeta. */
+export function SponsorLogos() {
+  const cellWidth = `${Math.floor(100 / SPONSORS.length)}%`;
+  return (
+    <Section style={{ margin: "24px 0 8px" }}>
+      <Text
+        style={{
+          margin: "0 0 12px",
+          fontFamily: MONO,
+          fontSize: "11px",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+          color: C.muted,
+          textAlign: "center",
+        }}
+      >
+        Sponsors oficiales · Official sponsors
+      </Text>
+      <table
+        role="presentation"
+        width="100%"
+        cellPadding={0}
+        cellSpacing={0}
+        style={{ borderCollapse: "collapse", borderTop: `1px solid ${C.line}` }}
+      >
+        <tbody>
+          <tr>
+            {SPONSORS.map((s) => (
+              <td
+                key={s.file}
+                width={cellWidth}
+                align="center"
+                valign="middle"
+                style={{ padding: "16px 8px" }}
+              >
+                <Img
+                  src={`${APP_URL}/images/emails/sponsors/${s.file}`}
+                  alt={s.name}
+                  width="110"
+                  style={{ display: "block", width: "100%", maxWidth: "110px", height: "auto" }}
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </Section>
+  );
+}
+
 /** Bloque de imagen con marco, para QR, mapas y GIFs de cuenta regresiva. */
 export function Framed({
   src,

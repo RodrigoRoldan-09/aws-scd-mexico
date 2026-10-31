@@ -17,7 +17,10 @@ const SAMPLE_SIZE = 10;
  * Reenvía el correo de confirmación de registro a quienes nunca lo recibieron
  * (emailStatus distinto de "sent").
  * - GET, o POST sin cuerpo / {dryRun:true}: solo cuenta y muestra una muestra.
- * - POST {dryRun:false, confirm:"SEND"}: envía de verdad.
+ * - POST {dryRun:false, confirm:"SEND"}: envía de verdad (tanda de ?limit=N).
+ * - includeSkipped (body: true / GET: ?includeSkipped=1): incluye los registros
+ *   marcados "skipped" (manuales sin correo). Por defecto se excluyen.
+ * La respuesta del envío trae `remaining` para seguir mandando por tandas.
  */
 function parseLimit(request: NextRequest): number {
   const raw = request.nextUrl.searchParams.get("limit");
@@ -34,20 +37,34 @@ function authError(e: unknown): NextResponse | null {
   return null;
 }
 
-async function findEligible(limit: number) {
-  const filter = { emailStatus: { $ne: "sent" as const } };
-  const [scanned, eligibleDocs] = await Promise.all([
+/**
+ * Elegibles = nunca recibieron su confirmación. Por defecto se EXCLUYEN los
+ * "skipped": son registros manuales donde un admin eligió no mandar correo.
+ * Solo entran si se pide explícitamente includeSkipped.
+ */
+async function findEligible(limit: number, includeSkipped = false) {
+  const excluded: ("sent" | "skipped")[] = includeSkipped ? ["sent"] : ["sent", "skipped"];
+  const filter = { emailStatus: { $nin: excluded }, email: { $nin: [null, ""] } };
+  const [scanned, totalEligible, byStatus, eligibleDocs] = await Promise.all([
     Registration.countDocuments({}),
+    Registration.countDocuments(filter),
+    Registration.aggregate<{ _id: string | null; count: number }>([
+      { $group: { _id: "$emailStatus", count: { $sum: 1 } } },
+    ]),
     Registration.find(filter).sort({ createdAt: 1 }).limit(limit).exec(),
   ]);
-  return { scanned, eligibleDocs };
+  const statusCounts = Object.fromEntries(byStatus.map((s) => [s._id ?? "sin_estado", s.count]));
+  return { scanned, totalEligible, statusCounts, eligibleDocs };
 }
 
-async function dryRun(limit: number) {
-  const { scanned, eligibleDocs } = await findEligible(limit);
+async function dryRun(limit: number, includeSkipped: boolean) {
+  const { scanned, totalEligible, statusCounts, eligibleDocs } = await findEligible(limit, includeSkipped);
   return NextResponse.json({
     dryRun: true,
     scanned,
+    totalEligible,
+    statusCounts,
+    includeSkipped,
     eligible: eligibleDocs.length,
     sample: eligibleDocs.slice(0, SAMPLE_SIZE).map((r) => ({
       email: r.email,
@@ -63,7 +80,7 @@ export async function GET(request: NextRequest) {
   try {
     await requireAuth(["admin"]);
     await connectDB();
-    return await dryRun(parseLimit(request));
+    return await dryRun(parseLimit(request), request.nextUrl.searchParams.get("includeSkipped") === "1");
   } catch (e) {
     const res = authError(e);
     if (res) return res;
@@ -100,10 +117,11 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const limit = parseLimit(request);
 
-    if (!wantsRealSend) return await dryRun(limit);
+    const includeSkipped = body?.includeSkipped === true;
+    if (!wantsRealSend) return await dryRun(limit, includeSkipped);
 
     // Envío real: mismo loop que email-queue.ts
-    const { scanned, eligibleDocs } = await findEligible(limit);
+    const { scanned, totalEligible, eligibleDocs } = await findEligible(limit, includeSkipped);
     const eligible = eligibleDocs.length;
     let sent = 0;
     let failed = 0;
@@ -162,7 +180,9 @@ export async function POST(request: NextRequest) {
       details: `sent ${sent} / failed ${failed} de ${eligible} elegibles`,
     });
 
-    return NextResponse.json({ scanned, eligible, sent, failed });
+    // remaining: los que siguen pendientes tras esta tanda (los fallidos cuentan,
+    // porque quedan en "failed" y vuelven a ser elegibles).
+    return NextResponse.json({ scanned, eligible, sent, failed, remaining: totalEligible - sent });
   } catch (e) {
     const res = authError(e);
     if (res) return res;
