@@ -8,6 +8,9 @@ import { verifyCaptcha } from "@/lib/captcha";
 import { normalizeEmail } from "@/lib/normalize";
 import { ensureGeneralRegistration } from "@/lib/activity-hybrid-registration";
 import { doTimesOverlap } from "@/lib/activity-schedule";
+import { render } from "@react-email/components";
+import { sendEmail, EMAIL_FROM } from "@/lib/resend";
+import { ActivityApplicationReceivedEmail } from "@/emails/activity-application-received";
 
 export async function POST(request: NextRequest) {
   try {
@@ -225,6 +228,30 @@ export async function POST(request: NextRequest) {
       globalCustomAnswers: globAnswers,
       activityCustomAnswers: actAnswers,
     });
+
+    // Acuse de postulación en segundo plano: un fallo de correo nunca cambia la respuesta.
+    try {
+      const html = await render(
+        ActivityApplicationReceivedEmail({
+          name: hybrid.registration.firstName,
+          priorities: application.priorities.map((p) => ({
+            rank: p.priority,
+            title: p.activityTitle,
+            timeRange: `${p.startTime}–${p.endTime}`,
+          })),
+        }),
+      );
+      void sendEmail({
+        from: EMAIL_FROM,
+        to: email,
+        subject: "Recibimos tu postulación · We received your application",
+        html,
+      }).catch((e) => {
+        console.error("[ActivityApply] Error enviando acuse de postulación:", e);
+      });
+    } catch (e) {
+      console.error("[ActivityApply] Error preparando acuse de postulación:", e);
+    }
 
     return NextResponse.json(
       {

@@ -6,6 +6,9 @@ import { ActivityApplication } from "@/models/activity-application";
 import { ActivityRegistration } from "@/models/activity-registration";
 import { doTimesOverlap } from "@/lib/activity-schedule";
 import { createLog } from "@/lib/log";
+import { render } from "@react-email/components";
+import { sendEmail, EMAIL_FROM } from "@/lib/resend";
+import { ActivityAssignmentEmail } from "@/emails/activity-assignment";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -195,6 +198,31 @@ export async function POST(request: NextRequest, context: RouteContext) {
       targetId: String(application._id),
       details: `Asignado a "${targetActivity.title}" (${targetActivity.slug}). Prioridad: ${assignedPriorityRank ?? "Asignación directa / Fuera de lista"}. Notas: ${adminNotes || "N/A"}`,
     });
+
+    // Aviso de asignación en segundo plano: un fallo de correo nunca cambia la respuesta.
+    try {
+      const titleEn = targetActivity.titleEn || targetActivity.title;
+      const html = await render(
+        ActivityAssignmentEmail({
+          name: application.firstName,
+          activityTitleEs: targetActivity.title,
+          activityTitleEn: titleEn,
+          timeRange: `${targetActivity.startTime}–${targetActivity.endTime}`,
+          room: targetActivity.roomName || undefined,
+          qrCode: application.qrCode,
+        }),
+      );
+      void sendEmail({
+        from: EMAIL_FROM,
+        to: application.email,
+        subject: `Tu actividad fue asignada: ${targetActivity.title} · Your activity has been assigned: ${titleEn}`,
+        html,
+      }).catch((e) => {
+        console.error("[ActivityAssign] Error enviando aviso de asignación:", e);
+      });
+    } catch (e) {
+      console.error("[ActivityAssign] Error preparando aviso de asignación:", e);
+    }
 
     return NextResponse.json({
       ok: true,

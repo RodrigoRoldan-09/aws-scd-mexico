@@ -7,6 +7,10 @@ import { verifyCaptcha } from "@/lib/captcha";
 import { normalizeEmail } from "@/lib/normalize";
 import { ensureGeneralRegistration } from "@/lib/activity-hybrid-registration";
 import { doTimesOverlap } from "@/lib/activity-schedule";
+import { render } from "@react-email/components";
+import { sendEmailBatch, EMAIL_FROM } from "@/lib/resend";
+import { ActivityRegistrationConfirmationEmail } from "@/emails/activity-registration-confirmation";
+import { EVT } from "@/emails/_kit";
 
 export async function POST(
   request: NextRequest,
@@ -249,6 +253,57 @@ export async function POST(
       },
       customAnswers: customAnswers || {},
     });
+
+    // Correos de confirmación (líder + integrantes) en segundo plano: un fallo
+    // de correo nunca cambia la respuesta de la inscripción.
+    try {
+      const titleEn = activity.titleEn || activity.title;
+      const timeRange = `${activity.startTime}–${activity.endTime}`;
+      const room = activity.roomName || undefined;
+      const typeLabelEs = activity.type === "hackathon" ? "Hackatón" : "Workshop";
+      const typeLabelEn = activity.type === "hackathon" ? "Hackathon" : "Workshop";
+      const qrCode = hybrid.qrCode;
+      const leaderFirstName = hybrid.registration.firstName;
+      const teamName = String(team?.teamName || "").trim();
+      const subject = `Inscripción confirmada: ${activity.title} · Registration confirmed: ${titleEn}`;
+
+      const recipientsList: { email: string; firstName: string; isLeader: boolean }[] = [
+        { email, firstName: leaderFirstName, isLeader: true },
+        ...(isTeam
+          ? teamMembers.map((m: { email: string; firstName: string }) => ({
+              email: m.email,
+              firstName: m.firstName,
+              isLeader: false,
+            }))
+          : []),
+      ];
+
+      const emails: Parameters<typeof sendEmailBatch>[0] = [];
+      for (const r of recipientsList) {
+        const html = await render(
+          ActivityRegistrationConfirmationEmail({
+            name: r.firstName,
+            activityTitleEs: activity.title,
+            activityTitleEn: titleEn,
+            dateLong: EVT.dateLong,
+            timeRange,
+            room,
+            typeLabelEs,
+            typeLabelEn,
+            qrCode,
+            leaderName: r.isLeader ? undefined : leaderFirstName,
+            teamName: r.isLeader ? undefined : teamName,
+          }),
+        );
+        emails.push({ from: EMAIL_FROM, to: r.email, subject, html });
+      }
+
+      void sendEmailBatch(emails).catch((e) => {
+        console.error("[ActivityRegister] Error enviando correos de confirmación:", e);
+      });
+    } catch (e) {
+      console.error("[ActivityRegister] Error preparando correos de confirmación:", e);
+    }
 
     return NextResponse.json(
       {
