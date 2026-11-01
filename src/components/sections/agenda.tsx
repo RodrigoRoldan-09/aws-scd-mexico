@@ -67,6 +67,8 @@ function renderWithLinks(text: string): React.ReactNode {
   });
 }
 
+/** Logos de empresa (no retratos): se muestran completos en vez de recortados. */
+function isLogo(url: string) { return /\/images\/logos\/|\/(asus|epam|aldea|anthropic)[^/]*$/i.test(url); }
 function getTrackColor(track: string) { return trackColors[track] || DEFAULT_TRACK_COLOR; }
 function getTrackLabel(track: string) { return trackLabels[track] || (track.charAt(0).toUpperCase() + track.slice(1)); }
 
@@ -81,19 +83,27 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
       onClick={onClick}
       className={`group block h-full w-full text-left rounded-xl border overflow-hidden transition-all duration-200 hover:brightness-110 hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] active:scale-[0.99] cursor-pointer ${colors}`}
     >
-      <div className="flex h-full min-h-[88px]">
+      <div className="flex h-full min-h-[88px] items-start gap-3 p-2.5">
         {photoUrl && (
-          <div className="shrink-0 w-[72px] overflow-hidden">
+          // Cuadro fijo: todas las fotos miden lo mismo sin importar la duración de la sesión.
+          // Los logos de empresa se muestran completos (contain) sobre fondo claro.
+          <div
+            className={`mt-0.5 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15 ${
+              isLogo(photoUrl) ? "bg-white p-1.5" : "bg-[#0E0E1A]"
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photoUrl}
               alt={event.speaker || "Speaker"}
-              className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+              className={`h-full w-full transition-transform duration-300 group-hover:scale-105 ${
+                isLogo(photoUrl) ? "object-contain" : "object-cover object-top"
+              }`}
               loading="lazy"
             />
           </div>
         )}
-        <div className="flex-1 min-w-0 px-3 py-2.5 flex flex-col justify-center gap-1">
+        <div className="flex-1 min-w-0 flex flex-col justify-center gap-1">
           {esKeynote && (
             <span className="inline-flex w-fit items-center gap-1 rounded-[3px] bg-amber-400 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-[#0E0E1A]">
               <Star className="h-2.5 w-2.5" fill="currentColor" aria-hidden="true" />
