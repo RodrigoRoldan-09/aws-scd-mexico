@@ -18,6 +18,8 @@ type Route = {
 const staticRoutes: Route[] = [
   { es: "",                 en: "/en",                 priorityEs: 1.0,  priorityEn: 0.95, changeFrequency: "weekly"  },
   { es: "/registro",        en: "/en/registro",        priorityEs: 0.95, priorityEn: 0.9,  changeFrequency: "weekly"  },
+  { es: "/agenda",          en: "/en/agenda",          priorityEs: 0.9,  priorityEn: 0.85, changeFrequency: "daily"   },
+  { es: "/actividades",     en: "/en/actividades",     priorityEs: 0.9,  priorityEn: 0.85, changeFrequency: "daily"   },
   { es: "/speakers",        en: "/en/speakers",        priorityEs: 0.85, priorityEn: 0.8,  changeFrequency: "weekly"  },
   { es: "/directorio",      en: "/en/directorio",      priorityEs: 0.8,  priorityEn: 0.75, changeFrequency: "daily"   },
   { es: "/voluntarios",     en: "/en/voluntarios",     priorityEs: 0.75, priorityEn: 0.7,  changeFrequency: "weekly"  },

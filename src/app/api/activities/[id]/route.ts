@@ -41,7 +41,16 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       maxCapacity,
       formConfig,
       order,
+      externalRegistrationUrl,
     } = body;
+
+    if (externalRegistrationUrl !== undefined) {
+      const url = String(externalRegistrationUrl ?? "").trim();
+      if (url && !/^https?:\/\/\S+$/i.test(url)) {
+        return NextResponse.json({ error: "externalRegistrationUrl debe ser una URL http(s) o vacío" }, { status: 400 });
+      }
+      activity.externalRegistrationUrl = url;
+    }
 
     if (slug !== undefined) {
       const cleanSlug = String(slug).trim().toLowerCase();

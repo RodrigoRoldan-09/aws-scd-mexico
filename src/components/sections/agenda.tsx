@@ -354,7 +354,13 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
     return acc;
   }, {});
 
-  const rooms = [...new Set(events.map((e) => e.room))];
+  // Orden fijo de escenarios; cualquier salón no listado va al final, en orden de aparición.
+  const ROOM_ORDER = ["Main Stage", "Builders Stage", "Cloud Arena", "Kiro Zone", "Launch Pad · Career Zone"];
+  const roomRank = (r: string) => {
+    const i = ROOM_ORDER.indexOf(r);
+    return i === -1 ? ROOM_ORDER.length : i;
+  };
+  const rooms = [...new Set(events.map((e) => e.room))].sort((a, b) => roomRank(a) - roomRank(b));
   const sortedSlots = Object.keys(timeSlots).sort((a, b) => slotMin(a) - slotMin(b));
 
   // Duración: un evento ocupa todas las franjas dentro de [inicio, fin).

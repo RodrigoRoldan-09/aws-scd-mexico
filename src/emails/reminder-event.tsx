@@ -13,7 +13,10 @@ import {
   Paragraph,
   SponsorLogos,
   Steps,
+  APP_URL,
+  DetailBox,
 } from "./_kit";
+import type { ReminderAnnouncement } from "@/lib/reminder-schedule";
 
 export interface ReminderEventEmailProps {
   name?: string;
@@ -22,7 +25,31 @@ export interface ReminderEventEmailProps {
   /** Días que faltan para el evento (0 = hoy). */
   daysLeft: number;
   tips?: string[];
+  /** Anuncio especial del día (ver REMINDER_ANNOUNCEMENTS). */
+  announcement?: ReminderAnnouncement;
 }
+
+/** Keynotes que se destacan en los recordatorios (horarios de la agenda oficial, Main Stage). */
+const KEYNOTES = [
+  {
+    name: "Ale Bricio",
+    role: "AWS LATAM Community Manager",
+    talk: "Hackea tu propia carrera: cómo crear tu propia suerte",
+    time: "12:30 – 1:00 PM",
+  },
+  {
+    name: "Nicolle Wallentin",
+    role: "Head of Talent Acquisition, AWS Devices & Services, Ads (AIGC) & Entertainment, LATAM",
+    talk: "Everything you wanted to know about Recruiting but you are afraid to ask",
+    time: "1:40 – 2:10 PM",
+  },
+  {
+    name: "Nelly Andrade",
+    role: "Head of DevEx LATAM, AWS",
+    talk: "Side Projects a los que por fin hice Deploy",
+    time: "2:15 – 2:45 PM",
+  },
+];
 
 // 4 nov 2026, 9:00–18:00 CDMX (UTC-6) = 15:00–00:00 UTC
 const CALENDAR_URL =
@@ -69,6 +96,7 @@ export function ReminderEventEmail({
   qrImageUrl,
   daysLeft,
   tips,
+  announcement,
 }: ReminderEventEmailProps) {
   const firstName = name ? name.split(" ")[0] : "";
   const customTips = tips?.length ? tips : null;
@@ -93,6 +121,22 @@ export function ReminderEventEmail({
           ? "Nos vemos muy pronto. Acá va todo lo que necesitas para llegar sin apuros."
           : "Vamos preparando todo. Guarda estos datos y agenda el evento para que no se te pase."}
       </Paragraph>
+
+      {announcement === "agenda" && (
+        <Callout title="ya está la agenda oficial">
+          Ya puedes consultar la agenda completa de <strong>Main Stage</strong> y{" "}
+          <strong>Builders Stage</strong>: horarios, charlas y speakers. Estas charlas no
+          requieren registro previo; solo llega con tu pase.
+        </Callout>
+      )}
+
+      {announcement === "registrations" && (
+        <Callout title="ya abrieron los registros">
+          Ya puedes registrarte a los <strong>workshops, el Hackathon Build for Good y las
+          actividades</strong> de todos los escenarios: Cloud Arena, Kiro Zone y Launch Pad ·
+          Career Zone. Los cupos son limitados.
+        </Callout>
+      )}
 
       {doorsCallout && (
         <Callout title="apertura de puertas 7:30 AM · acceso rápido con QR">
@@ -127,6 +171,22 @@ export function ReminderEventEmail({
           ? "See you very soon. Here's everything you need to get there without a rush."
           : "Let's get ready. Save these details and add the event to your calendar so you don't miss it."}
       </Paragraph>
+
+      {announcement === "agenda" && (
+        <Callout title="the official schedule is out">
+          The full schedule for <strong>Main Stage</strong> and <strong>Builders Stage</strong>{" "}
+          is now available: times, talks and speakers. These talks don&apos;t require
+          registration; just bring your pass.
+        </Callout>
+      )}
+
+      {announcement === "registrations" && (
+        <Callout title="registrations are open">
+          You can now register for the <strong>workshops, the Build for Good Hackathon and the
+          activities</strong> on every stage: Cloud Arena, Kiro Zone and Launch Pad · Career
+          Zone. Spots are limited.
+        </Callout>
+      )}
 
       {doorsCallout && (
         <Callout title="doors open 7:30 AM · fast QR check-in">
@@ -164,6 +224,27 @@ export function ReminderEventEmail({
       strip={strip}
     >
       <BilingualSections es={es} en={en} />
+
+      {announcement === "agenda" && (
+        <HardButton href={`${APP_URL}/agenda`}>Ver la agenda oficial · See the schedule</HardButton>
+      )}
+      {announcement === "registrations" && (
+        <HardButton href={`${APP_URL}/actividades`}>
+          Registrarme a actividades · Register for activities
+        </HardButton>
+      )}
+
+      <Kicker>keynotes · main stage</Kicker>
+      {KEYNOTES.map((k) => (
+        <DetailBox
+          key={k.name}
+          rows={[
+            { label: k.time, value: k.name },
+            { label: "Charla · Talk", value: k.talk },
+            { label: "Rol · Role", value: k.role },
+          ]}
+        />
+      ))}
 
       {qrImageUrl && (
         <>

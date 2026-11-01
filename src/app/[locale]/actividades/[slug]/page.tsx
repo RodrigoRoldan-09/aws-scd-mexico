@@ -47,6 +47,11 @@ export default async function ActivitySlugPage({ params }: Props) {
     notFound();
   }
 
+  // Registro externo (p. ej. Claude Build Day en Luma): no hay formulario en el sitio.
+  if (activity.externalRegistrationUrl) {
+    redirect(activity.externalRegistrationUrl);
+  }
+
   // Las actividades (`type: "activity"`) se registran en el formulario unificado por prioridad.
   if (activity.type === "activity") {
     redirect(

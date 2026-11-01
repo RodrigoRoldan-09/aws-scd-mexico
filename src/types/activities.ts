@@ -36,6 +36,8 @@ export interface PublicActivityDTO {
   registeredCount: number;
   spotsLeft: number;
   isSoldOut: boolean;
+  /** Registro externo (p. ej. Luma). Vacío = se registra en el sitio. */
+  externalRegistrationUrl: string;
   formConfig: IActivityFormConfig;
   order: number;
 }

@@ -51,6 +51,7 @@ export function toPublicActivityDTO(raw: Raw): PublicActivityDTO {
     registeredCount,
     spotsLeft,
     isSoldOut: registeredCount >= maxCapacity,
+    externalRegistrationUrl: str(raw.externalRegistrationUrl),
     order: num(raw.order),
     formConfig: {
       requireLaptop: !!fc.requireLaptop,

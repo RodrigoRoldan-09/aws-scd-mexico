@@ -53,6 +53,8 @@ export interface IActivity extends Document {
   isOpen: boolean;
   maxCapacity: number;
   registeredCount: number;
+  /** Si tiene valor, el registro es externo (p. ej. Luma) y no se acepta en el sitio. */
+  externalRegistrationUrl: string;
   formConfig: IActivityFormConfig;
   order: number;
   createdAt: Date;
@@ -144,6 +146,7 @@ const activitySchema = new Schema<IActivity>(
     isOpen: { type: Boolean, default: true, index: true },
     maxCapacity: { type: Number, required: true, min: 1 },
     registeredCount: { type: Number, default: 0, min: 0 },
+    externalRegistrationUrl: { type: String, default: "", trim: true },
     formConfig: { type: formConfigSchema, default: () => ({}) },
     order: { type: Number, default: 0 },
   },

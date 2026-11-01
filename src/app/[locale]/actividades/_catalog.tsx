@@ -303,7 +303,25 @@ export function ActivitiesCatalogClient({
                     </div>
                   </div>
 
-                  {/* Barra de cupo y CTA */}
+                  {/* Registro externo (p. ej. Luma): sin cupo propio, el botón sale del sitio */}
+                  {act.externalRegistrationUrl ? (
+                    <div className="mt-6 border-t border-[#2C2550] pt-4">
+                      <p className="mb-3 font-mono text-xs text-[#B4B2A9]">
+                        {isEn
+                          ? "Registration for this activity is handled on Luma."
+                          : "El registro de esta actividad es en Luma."}
+                      </p>
+                      <a
+                        href={act.externalRegistrationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex w-full items-center justify-center gap-2 rounded-[4px] border-2 border-[#C143BC] bg-[#C143BC] px-4 py-3 font-mono text-xs sm:text-sm font-bold text-[#0E0E1A] shadow-[0_0_20px_rgba(193,67,188,0.35)] transition-all hover:bg-[#D970D7]"
+                      >
+                        <span>{isEn ? "Register on Luma" : "Registro en Luma"}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
+                  ) : (
                   <div className="mt-6 border-t border-[#2C2550] pt-4">
                     <div className="mb-2 flex items-center justify-between font-mono text-xs">
                       <span
@@ -358,6 +376,7 @@ export function ActivitiesCatalogClient({
                       </Link>
                     )}
                   </div>
+                  )}
                 </motion.article>
               );
             })}

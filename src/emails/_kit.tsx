@@ -545,7 +545,7 @@ export function BigStat({ value, label }: { value: string; label: string }) {
 export const SPONSORS: { name: string; file: string }[] = [
   { name: "AWS", file: "aws.jpeg" },
   { name: "EPAM", file: "epam.jpeg" },
-  { name: "ASUS", file: "asus.jpeg" },
+  { name: "Notion", file: "notion.jpeg" },
   { name: "Aldea JIMZ", file: "aldea.jpeg" },
 ];
 

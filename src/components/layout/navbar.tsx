@@ -93,8 +93,8 @@ export function Navbar() {
     },
     {
       title: "Agenda",
-      description: "Horarios y tracks presenciales en el IPN",
-      href: resolveHref("#agenda"),
+      description: "Agenda oficial de todos los escenarios",
+      href: localePath(locale, "/agenda"),
       icon: Calendar,
     },
     {

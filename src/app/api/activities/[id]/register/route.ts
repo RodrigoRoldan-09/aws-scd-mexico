@@ -50,6 +50,17 @@ export async function POST(
       );
     }
 
+    // 0. Registro externo (p. ej. Luma): no se acepta en el sitio.
+    if (activity.externalRegistrationUrl) {
+      return NextResponse.json(
+        {
+          error: "EXTERNAL_REGISTRATION",
+          message: `Esta actividad se registra en ${activity.externalRegistrationUrl}`,
+        },
+        { status: 400 },
+      );
+    }
+
     // 1. Tipo permitido: Solo workshop o hackathon
     if (activity.type === "activity") {
       return NextResponse.json(

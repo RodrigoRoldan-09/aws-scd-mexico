@@ -50,7 +50,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         { label: "Acerca de", href: resolveHref("#about"), icon: Info },
         { label: "Call for Speakers (CFP)", href: localePath(locale, "/speakers"), icon: Mic },
         { label: "Speakers", href: localePath(locale, "/directorio"), icon: Users },
-        { label: "Agenda", href: resolveHref("#agenda"), icon: Calendar },
+        { label: "Agenda", href: localePath(locale, "/agenda"), icon: Calendar },
         { label: "Comunidades", href: localePath(locale, "/comunidades"), icon: Rocket },
         { label: "Sponsors & Contacto", href: localePath(locale, "/sponsors"), icon: HeartHandshake },
       ],
