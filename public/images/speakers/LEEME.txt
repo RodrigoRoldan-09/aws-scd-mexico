@@ -1,0 +1,3 @@
+Fotos de speakers para la agenda.
+Nombre: nombre-apellido en minúsculas, sin acentos (p. ej. nicolle-wallentin.jpg).
+JPG o PNG, cuadradas, ~600x600 px, menos de 300 KB.

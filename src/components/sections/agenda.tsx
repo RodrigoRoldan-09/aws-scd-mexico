@@ -378,6 +378,9 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
       let span = 0;
       for (let k = i; k < sortedSlots.length; k++) {
         if (slotMin(sortedSlots[k]) >= end) break;
+        // Nunca se estira sobre otra sesión que empieza en el mismo salón (p. ej. la
+        // inauguración 9:50–10:05 no debe tapar un workshop que arranca a las 10:00).
+        if (k > i && (timeSlots[sortedSlots[k]] ?? []).some((o) => o.room === ev.room)) break;
         span++;
       }
       span = Math.max(1, span);
