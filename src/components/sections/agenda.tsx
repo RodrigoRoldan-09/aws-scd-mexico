@@ -99,9 +99,13 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
               Keynote
             </span>
           )}
-          <p className="font-mono text-[13px] font-bold leading-snug line-clamp-3">{event.title}</p>
+          {/* Hora de inicio y fin: las filas son por hora de inicio, así que la tarjeta dice cuándo termina */}
+          <span className="font-mono text-[10px] font-bold tracking-wider opacity-80">
+            {event.startTime}{event.endTime ? ` – ${event.endTime}` : ""}
+          </span>
+          <p className="font-mono text-[13px] font-bold leading-snug">{event.title}</p>
           {event.speaker && (
-            <p className="font-mono text-[11px] opacity-60 line-clamp-1">{event.speaker}</p>
+            <p className="font-mono text-[11px] opacity-60 line-clamp-2">{event.speaker}</p>
           )}
         </div>
       </div>
@@ -486,7 +490,7 @@ export function AgendaView({ events }: { events: AgendaEvent[] }) {
                   </div>
                   <div className="flex flex-col gap-2.5">
                     {timeSlots[slot]
-                      .sort((a, b) => a.room.localeCompare(b.room))
+                      .sort((a, b) => roomRank(a.room) - roomRank(b.room))
                       .map((event) => (
                         <div key={event._id}>
                           <p className="mb-1 pl-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-[#C143BC]/70">
