@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { render } from "@react-email/components";
 import { connectDB } from "@/lib/db";
-import { sendEmail, MARKETING_EMAIL_FROM } from "@/lib/resend";
+// Directo por Resend: SES está en sandbox (solo correos verificados, 200/día), así
+// que intentarlo primero solo duplica el tiempo de cada envío.
+import { sendEmailRawResend, MARKETING_EMAIL_FROM } from "@/lib/resend";
 import { gatherBroadRecipients, type BroadRecipient } from "@/lib/campaign-audience";
 import { ReminderEventEmail } from "@/emails/reminder-event";
 import { Registration } from "@/models/registration";
@@ -22,6 +24,9 @@ const EVENT_DATE = REMINDER_EVENT_DATE;
 // minuto y, como cada persona se marca justo al enviarse, nadie recibe doble.
 const TIME_BUDGET_MS = 18_000;
 const CONCURRENCY = 5;
+// Resend permite 10 req/s: 5 por tanda con tandas de al menos 600 ms ≈ 8/s.
+const MIN_CHUNK_MS = 600;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * Recordatorios automáticos del evento. Lo llama EventBridge (API destination)
@@ -89,6 +94,17 @@ async function handleCron(request: NextRequest) {
   }
 
   try {
+    // ?testTo=correo → manda solo UN correo de prueba a esa dirección; no marca a nadie.
+    const testTo = request.nextUrl.searchParams.get("testTo");
+    if (testTo) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testTo)) {
+        return NextResponse.json({ error: "testTo inválido" }, { status: 400 });
+      }
+      const html = await render(ReminderEventEmail({ name: "Prueba", daysLeft, announcement }));
+      const res = await sendEmailRawResend({ from: MARKETING_EMAIL_FROM, to: testTo, subject: `[PRUEBA] ${subjectFor(daysLeft)}`, html });
+      return NextResponse.json({ test: true, to: testTo, date, daysLeft, announcement: announcement ?? null, id: res.id, error: res.error });
+    }
+
     await connectDB();
     const campaignId = `auto_reminder_${date}`;
     const pending = await gatherBroadRecipients(campaignId);
@@ -115,13 +131,15 @@ async function handleCron(request: NextRequest) {
     let processed = 0;
     for (let i = 0; i < pending.length; i += CONCURRENCY) {
       if (Date.now() - started > TIME_BUDGET_MS) break;
+      const chunkStart = Date.now();
       const chunk = pending.slice(i, i + CONCURRENCY);
       const results = await Promise.all(
         chunk.map(async (r) => {
           try {
             const qrImageUrl = r.qrCode ? `${APP_URL}/api/pass-qr/${r.qrCode}` : undefined;
             const html = await render(ReminderEventEmail({ name: r.name, qrImageUrl, daysLeft, announcement }));
-            const res = await sendEmail({ from: MARKETING_EMAIL_FROM, to: r.email, subject, html });
+            const res = await sendEmailRawResend({ from: MARKETING_EMAIL_FROM, to: r.email, subject, html });
+            if (res.error) console.error(`[cron/send-reminders] Resend rechazó ${r.email}: ${res.error}`);
             return !res.error;
           } catch (e) {
             console.error(`[cron/send-reminders] Error con ${r.email}:`, e);
@@ -134,6 +152,8 @@ async function handleCron(request: NextRequest) {
       sent += ok.length;
       failed += chunk.length - ok.length;
       processed += chunk.length;
+      const wait = MIN_CHUNK_MS - (Date.now() - chunkStart);
+      if (wait > 0) await sleep(wait);
     }
 
     return NextResponse.json({
