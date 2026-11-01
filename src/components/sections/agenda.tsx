@@ -73,7 +73,8 @@ function getTrackLabel(track: string) { return trackLabels[track] || (track.char
 function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void }) {
   const colors = getTrackColor(event.track);
   const esKeynote = event.track === "keynote";
-  const photoUrl = event.speakerPhoto || event.imageUrl || null;
+  // La imagen puesta en la sesión (admin o seed) manda sobre la del perfil del speaker.
+  const photoUrl = event.imageUrl || event.speakerPhoto || null;
   return (
     <button
       type="button"
