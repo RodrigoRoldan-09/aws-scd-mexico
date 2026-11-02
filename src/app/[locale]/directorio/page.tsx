@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import {
-  DEFAULT_DUR_MS, useDebounce,
+  useDebounce,
   SESSION_LABEL, LANG_LABEL, LEVEL_LABEL,
   hhmmToMs, msToKey, normSessionType, normName, roomRank,
   type AgendaEventItem, type DirItem,
@@ -184,18 +184,7 @@ export default function DirectorioPage() {
       });
     });
 
-    // Perfiles públicos que no están en la agenda oficial: al final, sin horario.
-    profiles.forEach((p) => {
-      if (used.has(p._id)) return;
-      const startMs = p.scheduledAt ? new Date(p.scheduledAt).getTime() : Infinity;
-      const endMs = Number.isFinite(startMs) ? startMs + DEFAULT_DUR_MS : Infinity;
-      items.push({
-        kind: "profile", id: `p-${p._id}`, profile: p,
-        track: p.track, sessionType: p.sessionType, language: p.language, level: p.audienceLevel, room: p.room,
-        startMs, endMs, startKey: Number.isFinite(startMs) ? msToKey(startMs) : "Sin horario",
-        text: [p.name, p.talkTitle, p.role, p.tagline, p.countryCity, p.room, TRACK_LABEL[p.track]].filter(Boolean).join(" ").toLowerCase(),
-      });
-    });
+    // Solo se muestra lo que está en la agenda oficial: los perfiles sin sesión no aparecen.
     return items;
   }, [profiles, agenda]);
 
