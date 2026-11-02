@@ -17,7 +17,7 @@ import {
 import {
   DEFAULT_DUR_MS, useDebounce,
   SESSION_LABEL, LANG_LABEL, LEVEL_LABEL,
-  hhmmToMs, msToKey, normSessionType,
+  hhmmToMs, msToKey, normSessionType, normName, roomRank,
   type AgendaEventItem, type DirItem,
 } from "./_shared";
 import {
@@ -135,34 +135,47 @@ export default function DirectorioPage() {
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
   }, [debouncedSearch, filters, ready]);
 
-  // Lista unificada: sesiones de speakers + actividades de la agenda sin speaker.
-  const agendaBySlug = useMemo(() => {
-    const m = new Map<string, { startMs: number; endMs: number }>();
-    agenda.forEach((e) => {
-      if (e.speakerSlug) m.set(e.speakerSlug, { startMs: hhmmToMs(e.startTime), endMs: hhmmToMs(e.endTime) });
-    });
-    return m;
-  }, [agenda]);
-
-  const profileSlugs = useMemo(() => new Set(profiles.map((p) => p.slug)), [profiles]);
-
+  // Lista unificada: la AGENDA OFICIAL manda (horario, escenario y foto). Si una
+  // sesión tiene perfil de speaker (por slug o por nombre), se muestra la tarjeta
+  // del perfil con esos datos; si no, la tarjeta de sesión. Las plenarias que se
+  // repiten en cada escenario (bienvenida, inauguración) se muestran una sola vez.
   const allItems = useMemo<DirItem[]>(() => {
     const items: DirItem[] = [];
-    profiles.forEach((p) => {
-      const ag = agendaBySlug.get(p.slug);
-      const startMs = ag?.startMs ?? (p.scheduledAt ? new Date(p.scheduledAt).getTime() : Infinity);
-      const endMs = ag?.endMs ?? (Number.isFinite(startMs) ? startMs + DEFAULT_DUR_MS : Infinity);
-      items.push({
-        kind: "profile", id: `p-${p._id}`, profile: p,
-        track: p.track, sessionType: p.sessionType, language: p.language, level: p.audienceLevel, room: p.room,
-        startMs, endMs, startKey: Number.isFinite(startMs) ? msToKey(startMs) : "Sin horario",
-        text: [p.name, p.talkTitle, p.role, p.tagline, p.countryCity, p.room, TRACK_LABEL[p.track]].filter(Boolean).join(" ").toLowerCase(),
+    const bySlug = new Map(profiles.map((p) => [p.slug, p]));
+    const used = new Set<string>();
+    const findProfile = (e: AgendaEventItem) => {
+      const s = e.speakerSlug ? bySlug.get(e.speakerSlug) : undefined;
+      if (s) return s;
+      const sp = normName(e.speaker);
+      if (!sp) return undefined;
+      return profiles.find((p) => {
+        const pn = normName(p.name);
+        return !used.has(p._id) && !!pn && (sp === pn || (sp.split(" ").length > 1 && pn.includes(sp)));
       });
-    });
-    agenda.forEach((e) => {
-      if (e.speakerSlug && profileSlugs.has(e.speakerSlug)) return; // ya se muestra como tarjeta de speaker
+    };
+
+    const seen = new Set<string>();
+    const ordered = [...agenda].sort(
+      (a, b) => hhmmToMs(a.startTime) - hhmmToMs(b.startTime) || roomRank(a.room) - roomRank(b.room),
+    );
+    ordered.forEach((e) => {
+      const plenaryKey = `${normName(e.title.replace(/\(main\)/i, ""))}|${e.startTime}`;
+      if (seen.has(plenaryKey)) return;
+      seen.add(plenaryKey);
       const startMs = hhmmToMs(e.startTime);
       const endMs = hhmmToMs(e.endTime);
+      const p = findProfile(e);
+      if (p && !used.has(p._id)) {
+        used.add(p._id);
+        const profile: PublicProfile = { ...p, room: e.room, photo: e.imageUrl || p.photo };
+        items.push({
+          kind: "profile", id: `p-${p._id}`, profile,
+          track: p.track, sessionType: p.sessionType, language: p.language, level: p.audienceLevel, room: e.room,
+          startMs, endMs, startKey: msToKey(startMs),
+          text: [p.name, p.talkTitle, p.role, p.tagline, p.countryCity, e.room, e.title, TRACK_LABEL[p.track]].filter(Boolean).join(" ").toLowerCase(),
+        });
+        return;
+      }
       items.push({
         kind: "event", id: `e-${e._id}`, event: e,
         track: e.track, sessionType: normSessionType(e.sessionType), language: e.language, level: e.level, room: e.room,
@@ -170,8 +183,21 @@ export default function DirectorioPage() {
         text: [e.title, e.speaker, e.room, e.description, TRACK_LABEL[e.track]].filter(Boolean).join(" ").toLowerCase(),
       });
     });
+
+    // Perfiles públicos que no están en la agenda oficial: al final, sin horario.
+    profiles.forEach((p) => {
+      if (used.has(p._id)) return;
+      const startMs = p.scheduledAt ? new Date(p.scheduledAt).getTime() : Infinity;
+      const endMs = Number.isFinite(startMs) ? startMs + DEFAULT_DUR_MS : Infinity;
+      items.push({
+        kind: "profile", id: `p-${p._id}`, profile: p,
+        track: p.track, sessionType: p.sessionType, language: p.language, level: p.audienceLevel, room: p.room,
+        startMs, endMs, startKey: Number.isFinite(startMs) ? msToKey(startMs) : "Sin horario",
+        text: [p.name, p.talkTitle, p.role, p.tagline, p.countryCity, p.room, TRACK_LABEL[p.track]].filter(Boolean).join(" ").toLowerCase(),
+      });
+    });
     return items;
-  }, [profiles, agenda, agendaBySlug, profileSlugs]);
+  }, [profiles, agenda]);
 
   // Conteos sobre la lista completa sin filtrar
   const trackCounts = useMemo(() => countBy(allItems, (i) => i.track), [allItems]);
@@ -206,7 +232,7 @@ export default function DirectorioPage() {
     return [...g.entries()]
       .sort(([, a], [, b]) => a.sortMs - b.sortMs)
       .map(([key, v]) => {
-        v.items.sort((a, b) => (a.room ?? "").localeCompare(b.room ?? ""));
+        v.items.sort((a, b) => roomRank(a.room) - roomRank(b.room));
         return [key, v.items] as [string, DirItem[]];
       });
   }, [filteredItems]);
@@ -301,12 +327,11 @@ export default function DirectorioPage() {
 
           {fetched && (
             <p className="mt-3 font-mono text-sm text-[#8B84A0]">
-              {profiles.length === 0
+              {allItems.length === 0
                 ? "Próximamente"
                 : (() => {
-                    const total = profiles.reduce((n, p) => n + 1 + (p.coSpeakers?.length ?? 0), 0);
-                    const sessions = profiles.length;
-                    return `${total} speaker${total !== 1 ? "s" : ""} · ${sessions} sesión${sessions !== 1 ? "es" : ""} confirmada${sessions !== 1 ? "s" : ""}`;
+                    const stages = new Set(allItems.map((i) => i.room).filter(Boolean)).size;
+                    return `Agenda oficial · ${allItems.length} sesiones · ${stages} escenarios`;
                   })()}
             </p>
           )}

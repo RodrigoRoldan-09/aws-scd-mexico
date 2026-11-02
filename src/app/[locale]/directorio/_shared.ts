@@ -66,6 +66,8 @@ export interface AgendaEventItem {
   speaker?: string;
   speakerSlug?: string;
   speakerPhoto?: string;
+  /** Foto/logo oficial puesta en la sesión (manda sobre la del perfil). */
+  imageUrl?: string;
   description?: string;
   startTime: string;
   endTime: string;
@@ -75,6 +77,33 @@ export interface AgendaEventItem {
   level?: string;
   language?: string;
   cta?: string;
+}
+
+/** Orden fijo de escenarios (igual que en la agenda pública). */
+export const ROOM_ORDER = ["Main Stage", "Builders Stage", "Cloud Arena", "Kiro Zone", "Launch Pad · Career Zone"];
+export function roomRank(room?: string | null): number {
+  const i = ROOM_ORDER.indexOf(room ?? "");
+  return i === -1 ? ROOM_ORDER.length : i;
+}
+
+/** Normaliza nombres para empatar perfiles con sesiones (sin acentos ni mayúsculas). */
+export function normName(v?: string | null): string {
+  return String(v || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+/**
+ * Logos de empresa: se muestran completos sobre su fondo. Claude es oscuro
+ * sobre blanco; los de sponsors (ASUS, EPAM, Aldea) son blancos sobre negro.
+ */
+export function logoBg(url: string): "light" | "dark" | null {
+  if (/\/claude[^/]*$/i.test(url)) return "light";
+  if (/\/images\/(logos|emails\/sponsors)\/|\/asus[^/]*$/i.test(url)) return "dark";
+  return null;
 }
 
 export type DirItem =

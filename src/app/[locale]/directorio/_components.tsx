@@ -14,9 +14,17 @@ import {
   Clock, ExternalLink, CalendarClock,
 } from "lucide-react";
 import {
-  SESSION_LABEL, AG_SESSION_LABEL, LANG_LABEL, LEVEL_COLORS,
+  SESSION_LABEL, AG_SESSION_LABEL, LANG_LABEL, LEVEL_COLORS, logoBg,
   type AgendaEventItem,
 } from "./_shared";
+
+/** Botón de la sesión según a dónde lleva su enlace. */
+function ctaLabel(href: string): string {
+  if (/luma\.com/i.test(href)) return "Registro en Luma";
+  if (/registro-actividades/.test(href)) return "Registrarme en el formulario";
+  if (/^\/actividades\//.test(href)) return "Registrarme";
+  return "Más información";
+}
 
 // Componente de filtros
 export function FilterSection({
@@ -212,7 +220,14 @@ export function DirectoryCard({ profile, locale, appUrl, isLive }: { profile: Pu
               <img
                 src={profile.photo}
                 alt={profile.name}
-                className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                // Los logos (ASUS, EPAM…) se ven completos sobre su fondo; las fotos, recortadas.
+                className={`h-full w-full transition-transform duration-500 group-hover:scale-[1.04] ${
+                  logoBg(profile.photo) === "dark"
+                    ? "bg-black object-contain p-4"
+                    : logoBg(profile.photo) === "light"
+                      ? "bg-white object-contain p-4"
+                      : "object-cover object-top"
+                }`}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2C2550] to-[#0E0E1A]">
@@ -319,8 +334,12 @@ export function DirectoryCard({ profile, locale, appUrl, isLive }: { profile: Pu
 
 // Tarjeta de actividad (eventos sin speaker)
 export function AgendaSessionCard({ event, startLabel, endLabel, isLive }: { event: AgendaEventItem; startLabel: string; endLabel: string; isLive?: boolean }) {
+  const locale = useLocale();
   const trackColor = TRACK_COLORS[event.track] ?? TRACK_COLORS.general;
   const sessionLabel = event.sessionType ? AG_SESSION_LABEL[event.sessionType] : undefined;
+  const photo = event.imageUrl || event.speakerPhoto || "";
+  const bg = photo ? logoBg(photo) : null;
+  const external = !!event.cta && /^https?:\/\//i.test(event.cta);
   return (
     <motion.div
       className={`group relative overflow-hidden rounded-[16px] border bg-[#1E1838] transition-all duration-300 ${
@@ -355,11 +374,31 @@ export function AgendaSessionCard({ event, startLabel, endLabel, isLive }: { eve
           </div>
         </div>
 
-        <h3 className="font-display text-base font-bold text-[#E6E4DA] leading-snug">{event.title}</h3>
-        {event.speaker && <p className="-mt-1 font-mono text-sm text-[#C143BC]">{event.speaker}</p>}
+        <div className="flex items-start gap-4">
+          {photo && (
+            // Mismo cuadro fijo que la agenda: todas las fotos del mismo tamaño.
+            <div
+              className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/15 ${
+                bg === "light" ? "bg-white p-1.5" : bg === "dark" ? "bg-black p-1.5" : "bg-[#0E0E1A]"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo}
+                alt={event.speaker || event.title}
+                className={`h-full w-full ${bg ? "object-contain" : "object-cover object-top"}`}
+                loading="lazy"
+              />
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-base font-bold text-[#E6E4DA] leading-snug">{event.title}</h3>
+            {event.speaker && <p className="mt-1 font-mono text-sm text-[#C143BC]">{event.speaker}</p>}
+          </div>
+        </div>
 
         {event.description && (
-          <p className="font-mono text-xs leading-relaxed text-surface-400 line-clamp-2">{event.description}</p>
+          <p className="whitespace-pre-line font-mono text-xs leading-relaxed text-surface-400 line-clamp-4">{event.description}</p>
         )}
 
         <div className="flex flex-wrap items-center gap-3 font-mono text-[12px] text-surface-400">
@@ -375,14 +414,23 @@ export function AgendaSessionCard({ event, startLabel, endLabel, isLive }: { eve
         </div>
 
         {event.cta && (
-          <a
-            href={event.cta}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-[6px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-3 py-1.5 font-mono text-xs font-semibold text-[#C143BC] transition-colors hover:bg-[#C143BC] hover:text-[#0E0E1A]"
-          >
-            Más información <ExternalLink className="h-3 w-3" />
-          </a>
+          external ? (
+            <a
+              href={event.cta}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-[6px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-3 py-1.5 font-mono text-xs font-semibold text-[#C143BC] transition-colors hover:bg-[#C143BC] hover:text-[#0E0E1A]"
+            >
+              {ctaLabel(event.cta)} <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : (
+            <Link
+              href={localePath(locale, event.cta)}
+              className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-[6px] border border-[#C143BC]/40 bg-[#C143BC]/10 px-3 py-1.5 font-mono text-xs font-semibold text-[#C143BC] transition-colors hover:bg-[#C143BC] hover:text-[#0E0E1A]"
+            >
+              {ctaLabel(event.cta)} <ArrowRight className="h-3 w-3" />
+            </Link>
+          )
         )}
       </div>
     </motion.div>

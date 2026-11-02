@@ -24,6 +24,13 @@ export const sponsors: Sponsor[] = [
     tier: "gold",
   },
   {
+    id: "notion",
+    name: "Notion",
+    logo: "/images/logos/notion-logo.png",
+    url: "https://www.notion.com",
+    tier: "gold",
+  },
+  {
     id: "aldea",
     name: "Aldea JIMZ",
     logo: "/images/logos/aldea-logo.png",
