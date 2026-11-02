@@ -21,6 +21,11 @@ interface AgendaSession {
   speakerId?: string;
   sessionType?: string;
   speaker?: string;
+  activityId?: string;
+  activitySlug?: string;
+  isActivity?: boolean;
+  activityType?: "workshop" | "hackathon" | "activity";
+  maxCapacity?: number;
 }
 
 function playNote(ctx: AudioContext, freq: number, start: number, dur: number, type: OscillatorType = "sine", vol = 0.15) {
@@ -84,8 +89,9 @@ export default function SalasPage() {
     Promise.all([
       fetch("/api/agenda").then((r) => r.json()).catch(() => ({})),
       fetch("/api/rooms").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/activities?admin=1").then((r) => r.json()).catch(() => ({})),
     ])
-      .then(([agendaData, roomsData]) => {
+      .then(([agendaData, roomsData, activitiesData]) => {
         const loadedRooms: RoomOption[] = (
           ((roomsData.rooms || []) as { _id?: string; id?: string; name?: string; capacity?: number }[])
         )
@@ -96,20 +102,89 @@ export default function SalasPage() {
           }))
           .filter((r) => r.name);
 
-        // Cualquier bloque que no sea estrictamente virtual
-        const events = (((agendaData.events || []) as AgendaSession[]) || [])
+        const rawActivities = ((activitiesData.activities || []) as {
+          _id: string;
+          slug: string;
+          title: string;
+          type: "workshop" | "hackathon" | "activity";
+          roomName?: string;
+          roomId?: string;
+          startTime?: string;
+          endTime?: string;
+          maxCapacity?: number;
+          agendaEventId?: string;
+          speakerName?: string;
+        }[]);
+
+        // Indexar actividades por agendaEventId y por título normalizado
+        const actByAgendaId = new Map<string, (typeof rawActivities)[0]>();
+        const actByTitle = new Map<string, (typeof rawActivities)[0]>();
+        rawActivities.forEach((act) => {
+          if (act.agendaEventId) actByAgendaId.set(String(act.agendaEventId), act);
+          if (act.title) actByTitle.set(act.title.trim().toLowerCase(), act);
+        });
+
+        // Bloques de la agenda (que no sean virtuales)
+        const matchedActivityIds = new Set<string>();
+        const events: AgendaSession[] = (
+          ((agendaData.events || []) as (AgendaSession & { speaker?: string })[]) || []
+        )
           .filter((e) => e.sessionType !== "online")
+          .map((e) => {
+            const matchedAct =
+              actByAgendaId.get(String(e._id)) ||
+              actByTitle.get((e.title || "").trim().toLowerCase());
+            if (matchedAct) {
+              matchedActivityIds.add(String(matchedAct._id));
+              return {
+                ...e,
+                activityId: String(matchedAct._id),
+                activitySlug: matchedAct.slug,
+                isActivity: true,
+                activityType: matchedAct.type,
+                maxCapacity: matchedAct.maxCapacity,
+              };
+            }
+            return e;
+          })
           .sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
 
-        // Incluir cualquier sala encontrada en los eventos que no esté en el catálogo
+        // Agregar actividades que no estaban en la agenda pero tienen horario y sala
+        rawActivities.forEach((act) => {
+          if (!matchedActivityIds.has(String(act._id))) {
+            events.push({
+              _id: String(act._id),
+              title: act.title,
+              room: (act.roomName || "").trim() || "Sin sala asignada",
+              startTime: act.startTime || "",
+              speaker: act.speakerName || "",
+              activityId: String(act._id),
+              activitySlug: act.slug,
+              isActivity: true,
+              activityType: act.type,
+              maxCapacity: act.maxCapacity,
+            });
+          }
+        });
+
+        // Asegurar que todas las salas encontradas estén en loadedRooms
         const known = new Set(loadedRooms.map((r) => r.name.toLowerCase()));
         events.forEach((e) => {
           const roomName = (e.room || "").trim();
           if (roomName && !known.has(roomName.toLowerCase())) {
-            loadedRooms.push({ id: `manual-${roomName}`, name: roomName });
+            loadedRooms.push({ id: `manual-${roomName}`, name: roomName, capacity: e.maxCapacity });
             known.add(roomName.toLowerCase());
           }
         });
+        rawActivities.forEach((act) => {
+          const roomName = (act.roomName || "").trim();
+          if (roomName && !known.has(roomName.toLowerCase())) {
+            loadedRooms.push({ id: `manual-${roomName}`, name: roomName, capacity: act.maxCapacity });
+            known.add(roomName.toLowerCase());
+          }
+        });
+
+        events.sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
 
         setRooms(loadedRooms);
         setAllSessions(events);
@@ -155,11 +230,36 @@ export default function SalasPage() {
         sessionId: selectedSession._id,
         sessionTitle: selectedSession.title,
         room: selectedSession.room,
+        activityId: selectedSession.activityId,
+        activitySlug: selectedSession.activitySlug,
       }),
     });
     const data = await res.json() as {
-      found?: boolean; alreadyScanned?: boolean; firstName?: string; lastName?: string; scannedAt?: string; role?: string;
+      found?: boolean;
+      alreadyScanned?: boolean;
+      notRegistered?: boolean;
+      activityTitle?: string;
+      message?: string;
+      firstName?: string;
+      lastName?: string;
+      scannedAt?: string;
+      role?: string;
     };
+
+    // Validación estricta: No tiene registro previo para esta actividad
+    if (data.notRegistered || res.status === 403) {
+      playSound("not_found");
+      const name = `${data.firstName ?? ""} ${data.lastName ?? ""}`.trim();
+      return {
+        outcome: "error",
+        primary: "Acceso denegado",
+        name: name || undefined,
+        secondary:
+          data.message ||
+          `No cuenta con registro previo en ${data.activityTitle || selectedSession.title}`,
+        role: data.role,
+      };
+    }
 
     if (!res.ok || !data.found) {
       playSound("not_found");
@@ -300,7 +400,10 @@ export default function SalasPage() {
             {selectedRoom !== "all" ? (
               availableOptions.map((s) => (
                 <option key={s._id} value={s._id}>
-                  {s.startTime ? `${s.startTime} · ` : ""}{s.title}{s.speaker ? ` (${s.speaker})` : ""}
+                  {s.startTime ? `${s.startTime} · ` : ""}{s.title}
+                  {s.isActivity
+                    ? ` [${s.activityType === "hackathon" ? "Hackatón" : s.activityType === "workshop" ? "Workshop" : "Actividad"} · Requiere registro]`
+                    : s.speaker ? ` (${s.speaker})` : ""}
                 </option>
               ))
             ) : (
@@ -314,7 +417,10 @@ export default function SalasPage() {
                       <option value={`room-${r.id}`}>{r.name} · Acceso general</option>
                       {roomBlocks.map((s) => (
                         <option key={s._id} value={s._id}>
-                          {s.startTime ? `${s.startTime} · ` : ""}{s.title}{s.speaker ? ` (${s.speaker})` : ""}
+                          {s.startTime ? `${s.startTime} · ` : ""}{s.title}
+                          {s.isActivity
+                            ? ` [${s.activityType === "hackathon" ? "Hackatón" : s.activityType === "workshop" ? "Workshop" : "Actividad"} · Requiere registro]`
+                            : s.speaker ? ` (${s.speaker})` : ""}
                         </option>
                       ))}
                     </optgroup>
@@ -327,6 +433,9 @@ export default function SalasPage() {
                       .map((s) => (
                         <option key={s._id} value={s._id}>
                           {s.startTime ? `${s.startTime} · ` : ""}{s.title}
+                          {s.isActivity
+                            ? ` [${s.activityType === "hackathon" ? "Hackatón" : s.activityType === "workshop" ? "Workshop" : "Actividad"} · Requiere registro]`
+                            : s.speaker ? ` (${s.speaker})` : ""}
                         </option>
                       ))}
                   </optgroup>
@@ -337,11 +446,24 @@ export default function SalasPage() {
         </div>
 
         {selectedSession && (
-          <div className="mt-2 flex items-center justify-between border-t border-surface-700 pt-2.5">
-            <span className="font-mono text-xs text-surface-400 truncate max-w-[220px]">
-              {selectedSession.room}{selectedSession.title !== "Acceso general" ? ` · ${selectedSession.title}` : " · Acceso general"}
-            </span>
-            <span className="font-mono text-sm font-bold text-aws-orange shrink-0">{localCount} registradas</span>
+          <div className="mt-2 flex flex-col gap-1 border-t border-surface-700 pt-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs text-surface-400 truncate max-w-[220px]">
+                {selectedSession.room}{selectedSession.title !== "Acceso general" ? ` · ${selectedSession.title}` : " · Acceso general"}
+              </span>
+              <span className="font-mono text-sm font-bold text-aws-orange shrink-0">
+                {localCount} escaneados
+                {selectedSession.maxCapacity ? ` / cap. ${selectedSession.maxCapacity}` : ""}
+              </span>
+            </div>
+            {selectedSession.isActivity && (
+              <div className="flex items-center gap-1.5 font-mono text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-1 mt-1">
+                <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+                <span>
+                  Control estricto: solo ingresan asistentes con inscripción confirmada a este {selectedSession.activityType === "hackathon" ? "hackatón" : "workshop"}.
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
