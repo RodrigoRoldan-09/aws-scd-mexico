@@ -1,11 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Camera, CameraOff, ShieldAlert, ScanLine, Search } from "lucide-react";
 import { ScanStatus, type ScanResult } from "../_scan-status";
 import { ScanManual } from "../_scan-manual";
+
+interface RoomOption {
+  id: string;
+  name: string;
+  capacity?: number;
+}
 
 interface AgendaSession {
   _id: string;
@@ -14,6 +20,7 @@ interface AgendaSession {
   startTime: string;
   speakerId?: string;
   sessionType?: string;
+  speaker?: string;
 }
 
 function playNote(ctx: AudioContext, freq: number, start: number, dur: number, type: OscillatorType = "sine", vol = 0.15) {
@@ -61,7 +68,9 @@ function extractShortId(raw: string): string {
 export default function SalasPage() {
   const { toast } = useToast();
   const [mode, setMode] = useState<"scan" | "manual">("scan");
-  const [sessions, setSessions] = useState<AgendaSession[]>([]);
+  const [rooms, setRooms] = useState<RoomOption[]>([]);
+  const [allSessions, setAllSessions] = useState<AgendaSession[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<string>("all");
   const [selectedSession, setSelectedSession] = useState<AgendaSession | null>(null);
   const [scanning, setScanning] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -72,22 +81,72 @@ export default function SalasPage() {
   const html5QrRef = useRef<unknown>(null);
 
   useEffect(() => {
-    fetch("/api/agenda")
-      .then((r) => r.json())
-      .then((d) => {
-        // No mostrar charlas virtuales (online) — solo las que tienen sala física
-        const talkSessions = (d.events as AgendaSession[])
-          .filter((e) => e.speakerId && e.sessionType !== "online")
-          .sort((a, b) => a.startTime.localeCompare(b.startTime));
-        setSessions(talkSessions);
+    Promise.all([
+      fetch("/api/agenda").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/rooms").then((r) => r.json()).catch(() => ({})),
+    ])
+      .then(([agendaData, roomsData]) => {
+        const loadedRooms: RoomOption[] = (
+          ((roomsData.rooms || []) as { _id?: string; id?: string; name?: string; capacity?: number }[])
+        )
+          .map((r) => ({
+            id: String(r._id || r.id || ""),
+            name: (r.name || "").trim(),
+            capacity: r.capacity,
+          }))
+          .filter((r) => r.name);
+
+        // Cualquier bloque que no sea estrictamente virtual
+        const events = (((agendaData.events || []) as AgendaSession[]) || [])
+          .filter((e) => e.sessionType !== "online")
+          .sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
+
+        // Incluir cualquier sala encontrada en los eventos que no esté en el catálogo
+        const known = new Set(loadedRooms.map((r) => r.name.toLowerCase()));
+        events.forEach((e) => {
+          const roomName = (e.room || "").trim();
+          if (roomName && !known.has(roomName.toLowerCase())) {
+            loadedRooms.push({ id: `manual-${roomName}`, name: roomName });
+            known.add(roomName.toLowerCase());
+          }
+        });
+
+        setRooms(loadedRooms);
+        setAllSessions(events);
       })
-      .catch(() => toast("Error al cargar sesiones", "error"));
+      .catch(() => toast("Error al cargar salas y bloques", "error"));
   }, [toast]);
+
+  // Lista de opciones a mostrar según la sala elegida
+  const availableOptions = useMemo<AgendaSession[]>(() => {
+    if (selectedRoom !== "all") {
+      const roomObj = rooms.find((r) => r.name.toLowerCase() === selectedRoom.toLowerCase());
+      const roomBlocks = allSessions.filter(
+        (s) => (s.room || "").trim().toLowerCase() === selectedRoom.toLowerCase()
+      );
+      const general: AgendaSession = {
+        _id: `room-${roomObj?.id || selectedRoom}`,
+        title: "Acceso general",
+        room: selectedRoom,
+        startTime: "",
+      };
+      return [general, ...roomBlocks];
+    }
+
+    const generalEntries: AgendaSession[] = rooms.map((r) => ({
+      _id: `room-${r.id}`,
+      title: "Acceso general",
+      room: r.name,
+      startTime: "",
+    }));
+
+    return [...generalEntries, ...allSessions];
+  }, [selectedRoom, rooms, allSessions]);
 
   // Registra la asistencia (compartido por cámara y manual). Hace el sonido y el
   // conteo, y devuelve el resultado para mostrarlo.
   const submit = useCallback(async (shortId: string): Promise<ScanResult> => {
-    if (!selectedSession) return { outcome: "error", primary: "Selecciona una sesión" };
+    if (!selectedSession) return { outcome: "error", primary: "Selecciona una sala o sesión" };
     const res = await fetch("/api/scanner/attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -126,7 +185,7 @@ export default function SalasPage() {
   }, [submit]);
 
   const startScanner = async () => {
-    if (!selectedSession) { toast("Selecciona una sesión primero", "error"); return; }
+    if (!selectedSession) { toast("Selecciona una sala o sesión primero", "error"); return; }
     if (!scannerRef.current) return;
     setCameraError(null);
 
@@ -195,29 +254,94 @@ export default function SalasPage() {
         </div>
       </div>
 
-      {/* Selector de sesión */}
-      <div className="mb-4 border-2 border-surface-600 bg-surface-800 p-4">
-        <label className="mb-2 block font-mono text-[10px] uppercase tracking-widest text-surface-400">Sesión activa</label>
-        <select
-          value={selectedSession?._id ?? ""}
-          onChange={(e) => {
-            const s = sessions.find((s) => s._id === e.target.value) ?? null;
-            setSelectedSession(s);
-            if (scanning) stopScanner();
-            setResult(null);
-            setLocalCount(0);
-          }}
-          className="w-full border-2 border-surface-600 bg-surface-900 px-3 py-2.5 font-mono text-sm text-surface-100 focus:outline-none"
-        >
-          <option value="">— Selecciona una sesión —</option>
-          {sessions.map((s) => (
-            <option key={s._id} value={s._id}>{s.startTime}{" · "}{s.room}{" · "}{s.title}</option>
-          ))}
-        </select>
+      {/* Selector de sala y bloque/sesión */}
+      <div className="mb-4 border-2 border-surface-600 bg-surface-800 p-4 space-y-3">
+        <div>
+          <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-surface-400">
+            Sala / Salón
+          </label>
+          <select
+            value={selectedRoom}
+            onChange={(e) => {
+              const rName = e.target.value;
+              setSelectedRoom(rName);
+              if (scanning) stopScanner();
+              setResult(null);
+              setLocalCount(0);
+              setSelectedSession(null);
+            }}
+            className="w-full border-2 border-surface-600 bg-surface-900 px-3 py-2.5 font-mono text-sm text-surface-100 focus:outline-none focus:border-aws-orange"
+          >
+            <option value="all">— Todas las salas —</option>
+            {rooms.map((r) => (
+              <option key={r.id} value={r.name}>
+                {r.name}{r.capacity ? ` (cap. ${r.capacity})` : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-surface-400">
+            Bloque o Sesión activa
+          </label>
+          <select
+            value={selectedSession?._id ?? ""}
+            onChange={(e) => {
+              const s = availableOptions.find((opt) => opt._id === e.target.value) ?? null;
+              setSelectedSession(s);
+              if (scanning) stopScanner();
+              setResult(null);
+              setLocalCount(0);
+            }}
+            className="w-full border-2 border-surface-600 bg-surface-900 px-3 py-2.5 font-mono text-sm text-surface-100 focus:outline-none focus:border-aws-orange"
+          >
+            <option value="">— Selecciona un bloque o acceso general —</option>
+            {selectedRoom !== "all" ? (
+              availableOptions.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.startTime ? `${s.startTime} · ` : ""}{s.title}{s.speaker ? ` (${s.speaker})` : ""}
+                </option>
+              ))
+            ) : (
+              <>
+                {rooms.map((r) => {
+                  const roomBlocks = allSessions.filter(
+                    (s) => (s.room || "").trim().toLowerCase() === r.name.toLowerCase()
+                  );
+                  return (
+                    <optgroup key={r.id} label={`Sala: ${r.name}`}>
+                      <option value={`room-${r.id}`}>{r.name} · Acceso general</option>
+                      {roomBlocks.map((s) => (
+                        <option key={s._id} value={s._id}>
+                          {s.startTime ? `${s.startTime} · ` : ""}{s.title}{s.speaker ? ` (${s.speaker})` : ""}
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
+                {allSessions.filter((s) => !s.room).length > 0 && (
+                  <optgroup label="Sin sala asignada">
+                    {allSessions
+                      .filter((s) => !s.room)
+                      .map((s) => (
+                        <option key={s._id} value={s._id}>
+                          {s.startTime ? `${s.startTime} · ` : ""}{s.title}
+                        </option>
+                      ))}
+                  </optgroup>
+                )}
+              </>
+            )}
+          </select>
+        </div>
+
         {selectedSession && (
-          <div className="mt-3 flex items-center justify-between">
-            <span className="font-mono text-xs text-surface-400">{selectedSession.room}</span>
-            <span className="font-mono text-sm font-bold text-aws-orange">{localCount} registradas</span>
+          <div className="mt-2 flex items-center justify-between border-t border-surface-700 pt-2.5">
+            <span className="font-mono text-xs text-surface-400 truncate max-w-[220px]">
+              {selectedSession.room}{selectedSession.title !== "Acceso general" ? ` · ${selectedSession.title}` : " · Acceso general"}
+            </span>
+            <span className="font-mono text-sm font-bold text-aws-orange shrink-0">{localCount} registradas</span>
           </div>
         )}
       </div>
@@ -256,7 +380,7 @@ export default function SalasPage() {
                   ) : (
                     <>
                       <Camera className="h-10 w-10 text-surface-300" />
-                      <p className="font-mono text-xs text-surface-400">{selectedSession ? "Cámara desactivada" : "Selecciona una sesión para iniciar"}</p>
+                      <p className="font-mono text-xs text-surface-400">{selectedSession ? "Cámara desactivada" : "Selecciona una sala o sesión para iniciar"}</p>
                     </>
                   )}
                 </div>
@@ -288,7 +412,7 @@ export default function SalasPage() {
           actionLabel="Registrar asistencia"
           confirm={submit}
           disabled={!selectedSession}
-          disabledHint="Selecciona una sesión primero para registrar asistencia manual"
+          disabledHint="Selecciona una sala o sesión primero para registrar asistencia manual"
         />
       )}
     </div>

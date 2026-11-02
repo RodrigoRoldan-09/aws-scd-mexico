@@ -127,8 +127,9 @@ export function EventoForm({
       const esSesionNueva = (tipo === "session" || tipo === "keynote") && nuevo;
       const cuerpo = {
         ...form,
-        ...(esSesionNueva && speakerId ? { speakerId, roomId: salonId || undefined } : {}),
-        ...(editando?.speakerId ? { speakerId: editando.speakerId, roomId: salonId || undefined } : {}),
+        roomId: salonId || undefined,
+        ...(esSesionNueva && speakerId ? { speakerId } : {}),
+        ...(editando?.speakerId ? { speakerId: editando.speakerId } : {}),
       };
 
       const res = await fetch(editando ? `/api/agenda/${editando._id}` : "/api/agenda", {
@@ -169,14 +170,14 @@ export function EventoForm({
       <span className="font-mono text-sm text-surface-200">Salón *</span>
       {salones.length > 0 ? (
         <select
-          value={porId ? salonId : form.room}
-          onChange={(e) => (porId ? elegirSalon(e.target.value) : set("room", e.target.value))}
+          value={salonId || salones.find((x) => x.name === form.room)?.id || (porId ? "" : form.room)}
+          onChange={(e) => elegirSalon(e.target.value)}
           required
           className="min-h-11 w-full border-2 border-surface-600 bg-surface-900 px-4 py-2.5 font-mono text-sm text-surface-100 outline-none transition-colors focus:border-aws-orange"
         >
           <option value="">— Elige un salón —</option>
           {salones.map((r) => (
-            <option key={r.id} value={porId ? r.id : r.name}>
+            <option key={r.id} value={r.id}>
               {r.name}{r.capacity ? ` (cap. ${r.capacity})` : ""}
             </option>
           ))}
