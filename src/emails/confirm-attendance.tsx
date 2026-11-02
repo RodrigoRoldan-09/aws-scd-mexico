@@ -69,7 +69,7 @@ export function ConfirmAttendanceEmail({
       <DetailBox
         rows={[
           { label: "Fecha", value: EVT.dateLong },
-          { label: "Hora", value: `${EVT.time} — puertas 7:30 AM` },
+          { label: "Hora", value: `${EVT.time} — puertas 8:45 AM` },
           { label: "Lugar", value: EVT.venue },
           { label: "Dirección", value: EVT.address },
         ]}

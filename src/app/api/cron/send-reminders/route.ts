@@ -11,7 +11,12 @@ import { SpeakerProfile } from "@/models/speaker-profile";
 import { VolunteerSubmission } from "@/models/volunteer-submission";
 import { User } from "@/models/user";
 import { SITE_URL } from "@/lib/constants";
-import { REMINDER_ANNOUNCEMENTS, REMINDER_DATES, REMINDER_EVENT_DATE } from "@/lib/reminder-schedule";
+import {
+  REMINDER_ANNOUNCEMENTS,
+  REMINDER_DATES,
+  REMINDER_EVENT_DATE,
+  type ReminderAnnouncement,
+} from "@/lib/reminder-schedule";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -49,7 +54,9 @@ function daysBetween(from: string, to: string): number {
   return Math.round((b - a) / 86_400_000);
 }
 
-function subjectFor(daysLeft: number): string {
+function subjectFor(daysLeft: number, announcement?: ReminderAnnouncement): string {
+  if (announcement === "see-you-soon") return "¡Nos vemos muy pronto! · See you very soon! — AWS Student Community Day México 2026";
+  if (announcement === "live") return "¡Ya empezó! Te esperamos · It's on! We're waiting for you — AWS Student Community Day México 2026";
   if (daysLeft <= 0) return "¡Es hoy! · It's today! — AWS Student Community Day México 2026";
   if (daysLeft === 1) return "Es mañana · It's tomorrow — AWS Student Community Day México 2026";
   return `Faltan ${daysLeft} días · ${daysLeft} days to go — AWS Student Community Day México 2026`;
@@ -87,7 +94,11 @@ async function handleCron(request: NextRequest) {
   const daysLeft = daysBetween(date, EVENT_DATE);
   const force = request.nextUrl.searchParams.get("force") === "1";
   const dryRun = request.nextUrl.searchParams.get("dryRun") === "1";
-  const announcement = REMINDER_ANNOUNCEMENTS[date];
+  // ?slot=pm → segundo envío del día (p. ej. martes 9 PM), con su propia marca.
+  const rawSlot = request.nextUrl.searchParams.get("slot") || "";
+  const slot = /^[a-z0-9]{1,12}$/.test(rawSlot) ? rawSlot : "";
+  const scheduleKey = slot ? `${date}:${slot}` : date;
+  const announcement = REMINDER_ANNOUNCEMENTS[scheduleKey];
 
   if (!REMINDER_DATES.includes(date) && !force) {
     return NextResponse.json({ date, daysLeft, intended: false, sent: 0, failed: 0, remaining: 0, reason: "date-not-in-allowlist" });
@@ -101,14 +112,14 @@ async function handleCron(request: NextRequest) {
         return NextResponse.json({ error: "testTo inválido" }, { status: 400 });
       }
       const html = await render(ReminderEventEmail({ name: "Prueba", daysLeft, announcement }));
-      const res = await sendEmailRawResend({ from: MARKETING_EMAIL_FROM, to: testTo, subject: `[PRUEBA] ${subjectFor(daysLeft)}`, html });
+      const res = await sendEmailRawResend({ from: MARKETING_EMAIL_FROM, to: testTo, subject: `[PRUEBA] ${subjectFor(daysLeft, announcement)}`, html });
       return NextResponse.json({ test: true, to: testTo, date, daysLeft, announcement: announcement ?? null, id: res.id, error: res.error });
     }
 
     await connectDB();
-    const campaignId = `auto_reminder_${date}`;
+    const campaignId = `auto_reminder_${date}${slot ? `_${slot}` : ""}`;
     const pending = await gatherBroadRecipients(campaignId);
-    const subject = subjectFor(daysLeft);
+    const subject = subjectFor(daysLeft, announcement);
 
     if (dryRun) {
       const audience = await gatherBroadRecipients(campaignId, undefined, { skipSentFilter: true });

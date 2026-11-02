@@ -67,8 +67,16 @@ function renderWithLinks(text: string): React.ReactNode {
   });
 }
 
-/** Logos de empresa (no retratos): se muestran completos en vez de recortados. */
-function isLogo(url: string) { return /\/images\/logos\/|\/(asus|epam|aldea|anthropic)[^/]*$/i.test(url); }
+/**
+ * Logos de empresa (no retratos): se muestran completos en vez de recortados,
+ * sobre el fondo que corresponde a su versión. Claude es oscuro sobre blanco; los
+ * de sponsors (ASUS, EPAM, Aldea) son blancos sobre negro.
+ */
+function logoBg(url: string): "light" | "dark" | null {
+  if (/\/claude[^/]*$/i.test(url)) return "light";
+  if (/\/images\/(logos|emails\/sponsors)\/|\/asus[^/]*$/i.test(url)) return "dark";
+  return null;
+}
 function getTrackColor(track: string) { return trackColors[track] || DEFAULT_TRACK_COLOR; }
 function getTrackLabel(track: string) { return trackLabels[track] || (track.charAt(0).toUpperCase() + track.slice(1)); }
 
@@ -89,7 +97,7 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
           // Los logos de empresa se muestran completos (contain) sobre fondo claro.
           <div
             className={`mt-0.5 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/15 ${
-              isLogo(photoUrl) ? "bg-white p-1.5" : "bg-[#0E0E1A]"
+              logoBg(photoUrl) === "light" ? "bg-white p-1" : logoBg(photoUrl) === "dark" ? "bg-black p-1" : "bg-[#0E0E1A]"
             }`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -97,7 +105,7 @@ function EventCard({ event, onClick }: { event: AgendaEvent; onClick: () => void
               src={photoUrl}
               alt={event.speaker || "Speaker"}
               className={`h-full w-full transition-transform duration-300 group-hover:scale-105 ${
-                isLogo(photoUrl) ? "object-contain" : "object-cover object-top"
+                logoBg(photoUrl) ? "object-contain" : "object-cover object-top"
               }`}
               loading="lazy"
             />

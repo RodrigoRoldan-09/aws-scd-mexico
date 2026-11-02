@@ -49,7 +49,7 @@ export function RegistrationConfirmationEmail({ name }: RegistrationConfirmation
       <DetailBox
         rows={[
           { label: "Fecha", value: EVT.dateLong },
-          { label: "Hora", value: `${EVT.time} — puertas 7:30 AM` },
+          { label: "Hora", value: `${EVT.time} — puertas 8:45 AM` },
           { label: "Lugar", value: EVT.venue },
           { label: "Dirección", value: EVT.address },
           { label: "Costo", value: "Gratuito" },
@@ -81,7 +81,7 @@ export function RegistrationConfirmationEmail({ name }: RegistrationConfirmation
       <DetailBox
         rows={[
           { label: "Date", value: "Wednesday, November 4, 2026" },
-          { label: "Time", value: `${EVT.time} — doors 7:30 AM` },
+          { label: "Time", value: `${EVT.time} — doors 8:45 AM` },
           { label: "Venue", value: EVT.venue },
           { label: "Address", value: EVT.address },
           { label: "Cost", value: "Free" },

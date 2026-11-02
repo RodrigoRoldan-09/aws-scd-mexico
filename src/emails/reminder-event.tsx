@@ -100,27 +100,56 @@ export function ReminderEventEmail({
 }: ReminderEventEmailProps) {
   const firstName = name ? name.split(" ")[0] : "";
   const customTips = tips?.length ? tips : null;
-  const headline = reminderHeadline(daysLeft);
-  const soon = daysLeft <= 1;
+  const live = announcement === "live";
+  const seeYouSoon = announcement === "see-you-soon";
+  const headline = live
+    ? { es: "¡Ya empezó! Te esperamos.", en: "It's on! We're waiting for you." }
+    : seeYouSoon
+      ? { es: "¡Nos vemos muy pronto!", en: "See you very soon!" }
+      : reminderHeadline(daysLeft);
+  // El aviso de "llega temprano" no aplica cuando el evento ya empezó.
+  const soon = daysLeft <= 1 && !live;
   const doorsCallout = daysLeft >= 2 && daysLeft <= 6;
 
-  const strip =
-    daysLeft <= 0
+  const strip = live
+    ? "EN VIVO · LIVE NOW ·"
+    : seeYouSoon
+      ? "NOS VEMOS MAÑANA · SEE YOU TOMORROW ·"
+      : daysLeft <= 0
       ? "ES HOY · IT'S TODAY ·"
       : `FALTAN ${daysLeft} ${daysLeft === 1 ? "DÍA" : "DÍAS"} ·`;
 
   const es = (
     <>
-      <Kicker>cuenta regresiva</Kicker>
+      <Kicker>{live ? "en vivo" : "cuenta regresiva"}</Kicker>
       <Heading>
-        {firstName ? `${firstName}, ${headline.es.toLowerCase()}` : headline.es}
+        {firstName ? `${firstName}, ${headline.es.replace(/^(¡?)(.)/, (_, x: string, y: string) => x + y.toLowerCase())}` : headline.es}
       </Heading>
 
       <Paragraph>
-        {soon
+        {live
+          ? "Hoy es el AWS Student Community Day México 2026 y ya estamos en vivo."
+          : soon
           ? "Nos vemos muy pronto. Acá va todo lo que necesitas para llegar sin apuros."
           : "Vamos preparando todo. Guarda estos datos y agenda el evento para que no se te pase."}
       </Paragraph>
+
+      {seeYouSoon && (
+        <Callout title="mañana es el gran día">
+          Mañana miércoles 4 de noviembre te esperamos en el Centro Histórico y Cultural Juan de
+          Dios Bátiz. Las puertas abren a las <strong>8:45 AM</strong> y la bienvenida es a las{" "}
+          <strong>9:20 AM</strong>. Trae tu código QR en el celular y revisa la agenda para armar
+          tu día.
+        </Callout>
+      )}
+
+      {live && (
+        <Callout title="el evento ya empezó">
+          Las puertas abrieron a las 8:45 AM y ya arrancamos. Si todavía no llegas, ¡ven! Hay
+          charlas, workshops y actividades durante todo el día, hasta el show de danza de las{" "}
+          <strong>5:15 PM</strong>. Muestra tu código QR en la entrada.
+        </Callout>
+      )}
 
       {announcement === "agenda" && (
         <Callout title="ya está la agenda oficial">
@@ -139,16 +168,16 @@ export function ReminderEventEmail({
       )}
 
       {doorsCallout && (
-        <Callout title="apertura de puertas 7:30 AM · acceso rápido con QR">
-          ¡El hype está al máximo! Las puertas y mesas de registro abren desde las 7:30 AM.
+        <Callout title="apertura de puertas 8:45 AM · acceso rápido con QR">
+          ¡El hype está al máximo! Las puertas y mesas de registro abren desde las 8:45 AM.
           Llega temprano con tu código QR listo en el celular para realizar tu check-in ágil,
           recibir tu kit de bienvenida y asegurar los mejores lugares para la ceremonia de apertura.
         </Callout>
       )}
 
       {soon && (
-        <Callout title="llega temprano · puertas abren 7:30 AM">
-          Abrimos puertas y registro desde las 7:30 AM para arrancar a las 9:00 AM en punto.
+        <Callout title="llega temprano · puertas abren 8:45 AM">
+          Abrimos puertas y registro a las 8:45 AM y arrancamos a las 9:20 AM con la bienvenida.
           El check-in con mucha gente toma su rato — venir temprano con tu código QR a la mano
           te ahorra la fila y asegura tu lugar.
         </Callout>
@@ -159,7 +188,7 @@ export function ReminderEventEmail({
 
   const en = (
     <>
-      <Kicker>countdown</Kicker>
+      <Kicker>{live ? "live now" : "countdown"}</Kicker>
       <Heading>
         {firstName
           ? `${firstName}, ${headline.en.charAt(0).toLowerCase()}${headline.en.slice(1)}`
@@ -167,10 +196,29 @@ export function ReminderEventEmail({
       </Heading>
 
       <Paragraph>
-        {soon
+        {live
+          ? "Today is AWS Student Community Day Mexico 2026 and we're live."
+          : soon
           ? "See you very soon. Here's everything you need to get there without a rush."
           : "Let's get ready. Save these details and add the event to your calendar so you don't miss it."}
       </Paragraph>
+
+      {seeYouSoon && (
+        <Callout title="tomorrow is the big day">
+          Tomorrow, Wednesday November 4, we&apos;ll see you at the Centro Histórico y Cultural
+          Juan de Dios Bátiz. Doors open at <strong>8:45 AM</strong> and the welcome is at{" "}
+          <strong>9:20 AM</strong>. Bring your QR code on your phone and check the schedule to
+          plan your day.
+        </Callout>
+      )}
+
+      {live && (
+        <Callout title="the event has started">
+          Doors opened at 8:45 AM and we&apos;re already underway. If you&apos;re not here yet,
+          come! There are talks, workshops and activities all day long, until the dance show at{" "}
+          <strong>5:15 PM</strong>. Show your QR code at the entrance.
+        </Callout>
+      )}
 
       {announcement === "agenda" && (
         <Callout title="the official schedule is out">
@@ -189,16 +237,16 @@ export function ReminderEventEmail({
       )}
 
       {doorsCallout && (
-        <Callout title="doors open 7:30 AM · fast QR check-in">
-          The hype is at its peak! Doors and registration desks open at 7:30 AM. Arrive
+        <Callout title="doors open 8:45 AM · fast QR check-in">
+          The hype is at its peak! Doors and registration desks open at 8:45 AM. Arrive
           early with your QR code ready on your phone for a quick check-in, pick up your
           welcome kit and get the best seats for the opening ceremony.
         </Callout>
       )}
 
       {soon && (
-        <Callout title="arrive early · doors open 7:30 AM">
-          Doors and registration open at 7:30 AM so we can start at 9:00 AM sharp.
+        <Callout title="arrive early · doors open 8:45 AM">
+          Doors and registration open at 8:45 AM and we kick off at 9:20 AM with the welcome.
           Check-in with a big crowd takes a while — arriving early with your QR code at
           hand saves you the line and secures your spot.
         </Callout>
@@ -225,7 +273,7 @@ export function ReminderEventEmail({
     >
       <BilingualSections es={es} en={en} />
 
-      {announcement === "agenda" && (
+      {(announcement === "agenda" || seeYouSoon || live) && (
         <HardButton href={`${APP_URL}/agenda`}>Ver la agenda oficial · See the schedule</HardButton>
       )}
       {announcement === "registrations" && (
