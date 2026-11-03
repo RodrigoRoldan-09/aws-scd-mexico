@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Clock,
+  Download,
   ExternalLink,
   Laptop,
   Layers,
@@ -22,6 +23,7 @@ import {
   Cargando,
   Empty,
   HardButton,
+  HardLink,
   PageHead,
   Select,
   Stat,
@@ -38,6 +40,7 @@ import { UnifiedFormConfigModal } from "@/components/admin/unified-form-config-m
 import { Modal } from "@/components/ui/modal";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
+import { useAuth } from "@/contexts/auth-context";
 import type {
   ActivityApplicationAdminRow,
   ActivityRegistrationAdminRecord,
@@ -113,8 +116,10 @@ const inputCls =
   "w-full border-2 border-surface-600 bg-surface-900 px-3 py-2 font-mono text-xs text-surface-100 outline-none focus:border-[#D85A30]";
 
 export function AdminActividadesScreen() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const { confirm, dialog } = useConfirm();
+  const canAccess = user?.role === "admin" || user?.role === "organizer";
 
   const [activities, setActivities] = useState<PublicActivityDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -174,10 +179,14 @@ export function AdminActividadesScreen() {
   );
 
   useEffect(() => {
+    if (!canAccess) {
+      setLoading(false);
+      return;
+    }
     void fetchActivities();
     void fetchApplications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [canAccess]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -433,6 +442,14 @@ export function AdminActividadesScreen() {
     return <Tag tone="good">Actividad</Tag>;
   };
 
+  if (!canAccess) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="font-mono text-surface-400">No tienes acceso a esta sección</p>
+      </div>
+    );
+  }
+
   if (loading) return <Cargando />;
 
   return (
@@ -452,6 +469,16 @@ export function AdminActividadesScreen() {
             <HardButton tone="ghost" icon={Settings2} onClick={() => setUnifiedModalOpen(true)}>
               Formulario Unificado de Actividades
             </HardButton>
+            {canAccess && (
+              <HardLink
+                icon={Download}
+                href="/api/activities/export"
+                download="inscritos-actividades-workshops-aws-scd.csv"
+                tone="ghost"
+              >
+                Exportar inscritos
+              </HardLink>
+            )}
             <HardButton icon={Plus} onClick={openCreate}>
               Nueva actividad
             </HardButton>
@@ -1222,7 +1249,23 @@ export function AdminActividadesScreen() {
         ) : registrations.length === 0 ? (
           <Empty icon={Users}>Aún no hay participantes inscritos en esta actividad.</Empty>
         ) : (
-          <div className="flex flex-col gap-3 max-h-[65vh] overflow-y-auto pr-1">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-surface-700 pb-2.5">
+              <span className="font-mono text-xs text-surface-300">
+                Mostrando <strong className="text-surface-100">{registrations.length}</strong> participante(s)
+              </span>
+              {canAccess && regsModalActivity && (
+                <HardLink
+                  icon={Download}
+                  href={`/api/activities/export?activityId=${regsModalActivity._id}`}
+                  download={`inscritos-${regsModalActivity.slug}.csv`}
+                  className="!min-h-9 !py-1 text-xs"
+                >
+                  Exportar inscritos de esta actividad (CSV)
+                </HardLink>
+              )}
+            </div>
+            <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-1">
             {registrations.map((r) => (
               <div
                 key={r.id}
@@ -1295,6 +1338,7 @@ export function AdminActividadesScreen() {
                 )}
               </div>
             ))}
+            </div>
           </div>
         )}
       </Modal>

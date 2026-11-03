@@ -8,7 +8,7 @@ import { doTimesOverlap } from "@/lib/activity-schedule";
 
 export async function GET(request: NextRequest) {
   try {
-    await requireAuth(["admin", "organizer", "volunteer"]);
+    await requireAuth(["admin", "organizer"]);
     await connectDB();
 
     const { searchParams } = new URL(request.url);

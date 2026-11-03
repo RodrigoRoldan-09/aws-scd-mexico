@@ -12,7 +12,7 @@ interface RouteContext {
 
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    await requireAuth(["admin", "organizer", "volunteer"]);
+    await requireAuth(["admin", "organizer"]);
     await connectDB();
     const { id } = await context.params;
 
