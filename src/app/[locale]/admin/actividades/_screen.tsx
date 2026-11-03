@@ -472,6 +472,16 @@ export function AdminActividadesScreen() {
             {canAccess && (
               <HardLink
                 icon={Download}
+                href="/api/activities/export-xlsx"
+                download="inscritos-y-postulaciones-aws-scd.xlsx"
+                tone="ghost"
+              >
+                Exportar Excel (2 hojas)
+              </HardLink>
+            )}
+            {canAccess && (
+              <HardLink
+                icon={Download}
                 href="/api/activities/export"
                 download="inscritos-actividades-workshops-aws-scd.csv"
                 tone="ghost"
