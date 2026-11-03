@@ -191,11 +191,10 @@ export async function GET(request: NextRequest) {
     const globalFields = unifiedConfig.globalCustomFields || [];
 
     // 3. Consultar ActivityRegistration y ActivityApplication según filtros
-    type ActivityRegDoc = Awaited<ReturnType<typeof ActivityRegistration.find>>[0];
-    type ActivityAppDoc = Awaited<ReturnType<typeof ActivityApplication.find>>[0];
-
-    let registrations: ActivityRegDoc[] = [];
-    let applications: ActivityAppDoc[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let registrations: any[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let applications: any[] = [];
 
     if (specificActivity) {
       if (specificActivity.type === "activity") {
@@ -281,7 +280,7 @@ export async function GET(request: NextRequest) {
         horario: schedule,
         salon: room,
         speaker,
-        nivel,
+        nivel: level,
         estado: formatStatus(r.status),
         nombre: r.firstName || genReg?.firstName || "",
         apellido: r.lastName || genReg?.lastName || "",
@@ -357,7 +356,7 @@ export async function GET(request: NextRequest) {
         horario: schedule,
         salon: room,
         speaker,
-        nivel,
+        nivel: level,
         estado: formatStatus(a.status),
         nombre: a.firstName || genReg?.firstName || "",
         apellido: a.lastName || genReg?.lastName || "",
