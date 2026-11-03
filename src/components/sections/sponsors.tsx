@@ -22,7 +22,7 @@ function LogoRow({
   delay,
 }: {
   items: typeof sponsors;
-  size: "lead" | "mid" | "small";
+  size: "lead" | "mid" | "compact" | "small";
   delay: number;
 }) {
   if (!items.length) return null;
@@ -32,16 +32,25 @@ function LogoRow({
       ? "h-[calc(4rem*var(--logo-scale))] md:h-[calc(6rem*var(--logo-scale))]"
       : size === "mid"
         ? "h-[calc(3.5rem*var(--logo-scale))] md:h-[calc(5rem*var(--logo-scale))]"
-        : "h-[calc(1.75rem*var(--logo-scale))] md:h-[calc(2.25rem*var(--logo-scale))]";
+        : size === "compact"
+          ? "h-[calc(2.5rem*var(--logo-scale))] md:h-[calc(3.5rem*var(--logo-scale))]"
+          : "h-[calc(1.75rem*var(--logo-scale))] md:h-[calc(2.25rem*var(--logo-scale))]";
   const gap =
     size === "lead"
       ? "gap-10 md:gap-16"
       : size === "mid"
         ? "gap-x-6 gap-y-10 md:gap-x-20"
-        : "gap-8 md:gap-12";
-  // En `mid` cada logo vive en una celda de ancho fijo para que queden
+        : size === "compact"
+          ? "gap-x-6 gap-y-8 md:gap-x-16"
+          : "gap-8 md:gap-12";
+  // En `mid` y `compact` cada logo vive en una celda de ancho fijo para que queden
   // repartidos uno junto al otro y no pegados al centro.
-  const cell = size === "mid" ? "w-36 justify-center md:w-64" : "";
+  const cell =
+    size === "mid"
+      ? "w-36 justify-center md:w-64"
+      : size === "compact"
+        ? "w-32 justify-center md:w-56"
+        : "";
 
   return (
     <ScrollReveal delay={delay} from="scale">
@@ -76,7 +85,8 @@ export function Sponsors() {
   const { showSponsorsCta } = useEventConfig();
 
   const lead = sponsors.filter((s) => s.tier === "diamond" || s.tier === "platinum");
-  const mid = sponsors.filter((s) => s.tier === "gold");
+  const gold = sponsors.filter((s) => s.tier === "gold");
+  const bronze = sponsors.filter((s) => s.tier === "bronze");
   const small = sponsors.filter((s) => s.tier === "community");
 
   return (
@@ -91,12 +101,13 @@ export function Sponsors() {
 
       <div className="mt-14 space-y-14">
         <LogoRow items={lead} size="lead" delay={0.05} />
-        <LogoRow items={mid} size="mid" delay={0.12} />
-        <LogoRow items={small} size="small" delay={0.18} />
+        <LogoRow items={gold} size="mid" delay={0.12} />
+        <LogoRow items={bronze} size="compact" delay={0.18} />
+        <LogoRow items={small} size="small" delay={0.24} />
       </div>
 
       {showSponsorsCta && (
-        <ScrollReveal delay={0.25}>
+        <ScrollReveal delay={0.28}>
           <div className="mt-16 text-center">
             <HardButton
               tone="block"

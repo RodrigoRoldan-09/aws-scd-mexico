@@ -46,10 +46,10 @@ export const navGroups: NavGroup[] = [
   },
   {
     label: "Programa",
-    roles: ["admin", "organizer", "volunteer"],
+    roles: ["admin", "organizer"],
     items: [
       { href: "/admin/programa", label: "Programa", icon: Calendar, roles: ["admin", "organizer"] },
-      { href: "/admin/actividades", label: "Actividades & Talleres", icon: SlidersHorizontal, roles: ["admin", "organizer", "volunteer"] },
+      { href: "/admin/actividades", label: "Actividades & Talleres", icon: SlidersHorizontal, roles: ["admin", "organizer"] },
     ],
   },
   {
