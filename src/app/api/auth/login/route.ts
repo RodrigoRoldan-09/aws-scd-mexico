@@ -10,7 +10,8 @@ import { normalizeEmail } from "@/lib/normalize";
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = rateLimit(`login:${getIp(request)}`, 10, 15 * 60 * 1000);
+    // Día del evento: muchos voluntarios entran desde el mismo WiFi (misma IP).
+    const rl = rateLimit(`login:${getIp(request)}`, 60, 15 * 60 * 1000);
     if (!rl.ok) {
       return Response.json(
         { error: "Demasiados intentos. Intenta de nuevo en unos minutos." },
