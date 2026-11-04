@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Credenciales inválidas" }, { status: 401 });
     }
 
-    const sessionId = await createSession(user._id.toString());
+    const sessionId = await createSession(user._id.toString(), user.role);
     await setAuthCookie(user._id.toString(), sessionId);
     await User.findByIdAndUpdate(user._id, { lastLoginAt: new Date() });
 

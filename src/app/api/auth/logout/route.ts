@@ -1,7 +1,5 @@
 import { connectDB } from "@/lib/db";
-import { getAuthUser, clearAuthCookie } from "@/lib/auth";
-import { Session } from "@/models/session";
-import { User } from "@/models/user";
+import { getAuthUser, clearAuthCookie, endCurrentSession } from "@/lib/auth";
 import { createLog } from "@/lib/log";
 
 export async function POST() {
@@ -16,8 +14,7 @@ export async function POST() {
         action: "USER_LOGOUT",
         target: user.email,
       });
-      await Session.deleteMany({ userId: user._id.toString() });
-      await User.findByIdAndUpdate(user._id, { currentSessionId: null });
+      await endCurrentSession(user);
     }
     await clearAuthCookie();
     return Response.json({ ok: true });

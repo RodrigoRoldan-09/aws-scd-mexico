@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { User } from "@/models/user";
+import { Session } from "@/models/session";
 import { createLog } from "@/lib/log";
 
 // Editar rol y/o badges permitidos de un usuario (solo admin).
@@ -19,6 +20,7 @@ export async function PATCH(
     if (!user) return Response.json({ error: "No encontrado" }, { status: 404 });
 
     const updates: string[] = [];
+    const prevRole = user.role;
     if (typeof role === "string") {
       if (!["admin", "organizer", "volunteer", "badges"].includes(role)) {
         return Response.json({ error: "Rol inválido" }, { status: 400 });
@@ -35,6 +37,17 @@ export async function PATCH(
     }
 
     await user.save();
+
+    // Admin → otro rol: queda solo la sesión más reciente (un dispositivo a la vez).
+    if (prevRole === "admin" && user.role !== "admin") {
+      const userId = user._id.toString();
+      await Session.deleteMany(
+        user.currentSessionId
+          ? { userId, sessionId: { $ne: user.currentSessionId } }
+          : { userId },
+      );
+      updates.push("sesiones extra cerradas");
+    }
 
     await createLog({
       userId: actor._id.toString(), userName: actor.name, userRole: actor.role,

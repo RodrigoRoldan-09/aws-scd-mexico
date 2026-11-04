@@ -7,6 +7,7 @@ import { Session } from "@/models/session";
 const JWT_SECRET = process.env.JWT_SECRET!;
 const COOKIE_NAME = "aws-scd-token";
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
+export const ADMIN_MAX_SESSIONS = 10;
 
 interface JWTPayload {
   userId: string;
@@ -61,8 +62,9 @@ export async function getAuthUser(): Promise<IUser | null> {
   const user = await User.findById(payload.userId);
   if (!user) return null;
 
-  // Single-device enforcement
-  if (user.currentSessionId !== payload.sessionId) return null;
+  // Un dispositivo a la vez para roles no-admin. Los admin pueden tener hasta
+  // ADMIN_MAX_SESSIONS sesiones: basta con que exista su documento Session.
+  if (user.role !== "admin" && user.currentSessionId !== payload.sessionId) return null;
 
   return user;
 }
@@ -78,10 +80,13 @@ export async function requireAuth(roles?: string[]): Promise<IUser> {
   return user;
 }
 
-export async function createSession(userId: string): Promise<string> {
+export async function createSession(userId: string, role: IUser["role"]): Promise<string> {
   await connectDB();
 
-  await Session.deleteMany({ userId });
+  const isAdmin = role === "admin";
+
+  // No-admin: el nuevo inicio de sesión reemplaza al anterior.
+  if (!isAdmin) await Session.deleteMany({ userId });
 
   const sessionId = crypto.randomUUID();
 
@@ -89,9 +94,45 @@ export async function createSession(userId: string): Promise<string> {
     userId,
     sessionId,
     expiresAt: new Date(Date.now() + SESSION_DURATION_MS),
+    createdAt: new Date(),
   });
 
   await User.findByIdAndUpdate(userId, { currentSessionId: sessionId });
 
+  if (isAdmin) {
+    // Conserva las ADMIN_MAX_SESSIONS más recientes; las más antiguas (y las
+    // previas al campo createdAt, que ordenan al final) se cierran. Nunca bloquea.
+    const extra = await Session.find({ userId })
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(ADMIN_MAX_SESSIONS)
+      .select("_id")
+      .lean();
+    if (extra.length > 0) {
+      await Session.deleteMany({ _id: { $in: extra.map((d) => d._id) } });
+    }
+  }
+
   return sessionId;
+}
+
+// Cierra la sesión de este dispositivo. Admin: solo su sesión actual (las demás
+// siguen activas). Otros roles: igual que antes, todas las sesiones del usuario.
+export async function endCurrentSession(user: IUser): Promise<void> {
+  await connectDB();
+  const userId = user._id.toString();
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  const payload = token ? verifyToken(token) : null;
+
+  if (user.role === "admin" && payload) {
+    await Session.deleteOne({ sessionId: payload.sessionId, userId });
+    if (user.currentSessionId === payload.sessionId) {
+      await User.findByIdAndUpdate(user._id, { currentSessionId: null });
+    }
+    return;
+  }
+
+  await Session.deleteMany({ userId });
+  await User.findByIdAndUpdate(user._id, { currentSessionId: null });
 }
