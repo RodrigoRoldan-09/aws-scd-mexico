@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
       role: passport.role,
       sessionAttendance: passport.sessionAttendance ?? [],
       meals: passport.meals ?? {},
+      mechanicalBull: passport.mechanicalBull ?? null,
     });
   } catch (e) {
     const msg = (e as Error).message;

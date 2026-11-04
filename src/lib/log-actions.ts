@@ -39,6 +39,7 @@ export const LOG_ACTIONS: Record<string, Entry> = {
   ATTENDANCE_CONFIRMED: { label: "Asistencia confirmada", group: "evento" },
   SESSION_ATTENDANCE: { label: "Asistencia a sala", group: "evento" },
   MEAL_CLAIMED: { label: "Comida entregada", group: "evento" },
+  MECHANICAL_BULL_RIDE: { label: "Toro mecánico", group: "evento" },
   BADGE_GIVEN: { label: "Badge entregado", group: "evento" },
   BADGE_PRINTED: { label: "Escarapela impresa", group: "evento" },
   CERT_SENT: { label: "Certificado enviado", group: "evento" },

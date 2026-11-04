@@ -11,7 +11,7 @@ const up = (s: unknown) => String(s ?? "").trim().toUpperCase();
 const mail = (s: unknown) => String(s ?? "").trim();
 
 // Acciones operativas: marcan a un voluntario como "activo" (trabajó en el evento).
-const OPS = ["MEAL_CLAIMED", "SESSION_ATTENDANCE", "BADGE_GIVEN", "CHECK_IN", "BADGE_PRINTED", "REGISTRATION_MANUAL"];
+const OPS = ["MEAL_CLAIMED", "SESSION_ATTENDANCE", "BADGE_GIVEN", "CHECK_IN", "BADGE_PRINTED", "REGISTRATION_MANUAL", "MECHANICAL_BULL_RIDE"];
 const ONLINE = ["online", "virtual"];
 
 // Colores

@@ -54,6 +54,8 @@ export interface IPassport extends Document {
     lunch?: { claimedAt: Date; claimedBy: string };
     snack?: { claimedAt: Date; claimedBy: string };
   };
+  // Toro mecánico: una sola vez por persona (mismo formato que meals)
+  mechanicalBull?: { claimedAt?: Date; claimedBy?: string };
   createdAt: Date;
 }
 
@@ -113,6 +115,10 @@ const PassportSchema = new Schema<IPassport>(
         claimedAt: { type: Date },
         claimedBy: { type: String },
       },
+    },
+    mechanicalBull: {
+      claimedAt: { type: Date },
+      claimedBy: { type: String },
     },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: false } },

@@ -2,7 +2,7 @@ import {
   LayoutDashboard, Users, Mic2, Heart, ClipboardList, QrCode, FileText,
   Calendar, HelpCircle, Settings, Printer,
   Stamp, Mail, ImageIcon, MapPin, Utensils, Activity, FileSpreadsheet, Award,
-  SlidersHorizontal, Network,
+  SlidersHorizontal, Network, PartyPopper,
 } from "lucide-react";
 import type React from "react";
 
@@ -71,6 +71,7 @@ export const navGroups: NavGroup[] = [
       { href: "/admin/escaner/check-in", label: "Check-in", icon: QrCode, roles: ["admin", "organizer", "volunteer"] },
       { href: "/admin/escaner/salas", label: "Salas", icon: MapPin, roles: ["admin", "organizer", "volunteer"] },
       { href: "/admin/escaner/almuerzos", label: "Almuerzos", icon: Utensils, roles: ["admin", "organizer", "volunteer"] },
+      { href: "/admin/escaner/toro-mecanico", label: "Toro mecánico", icon: PartyPopper, roles: ["admin", "organizer", "volunteer"] },
       { href: "/admin/escaner/badges", label: "Dar badges", icon: Stamp, roles: ["admin", "organizer", "volunteer", "badges"] },
     ],
   },
