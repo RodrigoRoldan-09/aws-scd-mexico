@@ -85,8 +85,14 @@ export async function GET(
       .select("_id sponsorName logoUrl")
       .lean();
 
-    // Build public passport data (viewPin never sent to client)
-    const { viewPin: _vp, ...passportData } = passport.toObject();
+    // Build public passport data: solo lo que usa la página (sin viewPin, asistencia,
+    // comidas, ids internos ni datos de escarapela)
+    const p = passport.toObject();
+    const passportData = {
+      shortId: p.shortId, role: p.role, firstName: p.firstName, lastName: p.lastName,
+      company: p.company, jobTitle: p.jobTitle, photoUrl: p.photoUrl,
+      social: p.social, stats: p.stats, stamps: p.stamps,
+    };
     // Normalize stats.clicks Map → plain object for JSON
     if (passportData.stats?.clicks instanceof Map) {
       passportData.stats.clicks = Object.fromEntries(passportData.stats.clicks);

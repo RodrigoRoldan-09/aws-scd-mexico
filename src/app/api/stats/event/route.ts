@@ -4,6 +4,7 @@ import { Registration } from "@/models/registration";
 import { Passport } from "@/models/passport";
 import { SponsorPin } from "@/models/sponsor-pin";
 import { AgendaEvent } from "@/models/agenda-event";
+import { Activity } from "@/models/activity";
 
 // Métricas operativas del día del evento (check-ins, comidas, asistencia por
 // sesión, badges por sponsor, distribución de pasaporte) + leaderboard (solo admin).
@@ -25,6 +26,7 @@ export async function GET() {
       sponsors,
       sessions,
       leaderboard,
+      linkedActivities,
     ] = await Promise.all([
       Registration.countDocuments({}),
       Registration.countDocuments({ checkedIn: true }),
@@ -69,16 +71,24 @@ export async function GET() {
             { $limit: 20 },
           ])
         : Promise.resolve([]),
+      // El escáner de salas guarda sessionId = activity._id en sesiones con actividad ligada
+      Activity.find({ agendaEventId: { $ne: null } }).select("_id agendaEventId").lean<{ _id: unknown; agendaEventId?: unknown }[]>(),
     ]);
 
     // Asistencia por sesión: une el conteo con la lista de sesiones (incluye las de 0)
     const sessionCount = new Map<string, number>();
     for (const s of sessionAgg) sessionCount.set(String(s._id), s.count);
+    const activityIdsBySession = new Map<string, string[]>();
+    for (const a of linkedActivities) {
+      const key = String(a.agendaEventId);
+      activityIdsBySession.set(key, [...(activityIdsBySession.get(key) ?? []), String(a._id)]);
+    }
     const sessionAttendance = sessions.map((s) => ({
       title: s.title || "Sesión",
       room: s.room || "",
       startTime: s.startTime || "",
-      count: sessionCount.get(String(s._id)) ?? 0,
+      count: (sessionCount.get(String(s._id)) ?? 0)
+        + (activityIdsBySession.get(String(s._id)) ?? []).reduce((n, id) => n + (sessionCount.get(id) ?? 0), 0),
     }));
 
     // Badges por sponsor: incluye sponsors activos con 0 recolecciones

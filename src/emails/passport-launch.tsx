@@ -3,9 +3,10 @@ import { APP_URL, EmailLayout, Framed, HardButton, Heading, Kicker, Paragraph, S
 interface PassportLaunchEmailProps {
   name?: string;
   qrUrl: string;
+  passportUrl?: string;
 }
 
-export function PassportLaunchEmail({ name, qrUrl }: PassportLaunchEmailProps) {
+export function PassportLaunchEmail({ name, qrUrl, passportUrl }: PassportLaunchEmailProps) {
   const firstName = name ? name.split(" ")[0] : "";
 
   return (
@@ -23,7 +24,7 @@ export function PassportLaunchEmail({ name, qrUrl }: PassportLaunchEmailProps) {
 
       <Framed src={qrUrl} alt="Tu código QR" width={220} caption="Tu QR personal" />
 
-      <HardButton href={`${APP_URL}/pasaporte`}>Abrir mi pasaporte</HardButton>
+      <HardButton href={passportUrl || APP_URL}>Abrir mi pasaporte</HardButton>
 
       <Kicker>cómo funciona</Kicker>
       <Steps

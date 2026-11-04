@@ -467,7 +467,7 @@ export default function PasaportePage({ params }: { params: Promise<{ shortId: s
   /* MRZ */
   const pad = (s: string, n: number) => s.toUpperCase().replace(/[^A-Z0-9]/g, "<").padEnd(n, "<").slice(0, n);
   const mrz1 = `AWSSCD<<${pad(passport.lastName, 18)}<<${pad(passport.firstName, 10)}`;
-  const mrz2 = `${shortId.toUpperCase().padEnd(12, "<")}CHL261024${pad(passport.role, 9)}`;
+  const mrz2 = `${shortId.toUpperCase().padEnd(12, "<")}MEX261104${pad(passport.role, 9)}`;
 
   return (
     <>

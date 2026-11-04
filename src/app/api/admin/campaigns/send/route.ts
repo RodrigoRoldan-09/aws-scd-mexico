@@ -427,7 +427,7 @@ export async function POST(request: NextRequest) {
     // sin importar el rol. El passport se enlaza por linkedRegistrationId (= id de la
     // fuente: registro / voluntario / usuario; speakers van por su perfil).
     const passportShortIdBy = { byLinked: new Map<string, string>(), bySubmission: new Map<string, string>() };
-    if (type === "passport_guide") {
+    if (type === "passport_guide" || type === "day_of") {
       const passports = await Passport.find({}).select("shortId linkedRegistrationId").lean<{ shortId: string; linkedRegistrationId?: string }[]>();
       for (const p of passports) if (p.linkedRegistrationId) passportShortIdBy.byLinked.set(String(p.linkedRegistrationId), p.shortId);
       const profiles = await SpeakerProfile.find({ submissionId: { $ne: null } }).select("_id submissionId").lean<{ _id: unknown; submissionId?: unknown }[]>();
@@ -490,7 +490,7 @@ export async function POST(request: NextRequest) {
           })
         );
       } else if (type === "day_of") {
-        html = await render(PassportLaunchEmail({ name: r.name, qrUrl: qrUrl ?? "" }));
+        html = await render(PassportLaunchEmail({ name: r.name, qrUrl: qrUrl ?? "", passportUrl: passportUrlFor(r) }));
       } else if (type === "passport_guide") {
         html = await render(PassportGuideEmail({ name: r.name, passportUrl: passportUrlFor(r) }));
       } else if (type === "post_survey") {

@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
         PassportLaunchEmail({
           name: "Sebastián (prueba)",
           qrUrl: `${APP_URL}/api/passes/PREVIEW123`,
+          passportUrl: `${APP_URL}/pasaporte/PREVIEW123`,
         })
       );
     } else if (type === "volunteer_meeting") {

@@ -7,7 +7,7 @@ interface PassportGuideEmailProps {
 
 export function PassportGuideEmail({ name, passportUrl }: PassportGuideEmailProps) {
   const firstName = name ? name.split(" ")[0] : "";
-  const url = passportUrl || `${APP_URL}/pasaporte`;
+  const url = passportUrl || APP_URL; // /pasaporte sin id da 404
 
   return (
     <EmailLayout preview="Cómo sacarle todo el jugo a tu pasaporte" strip="GUÍA DEL PASAPORTE ·">

@@ -59,6 +59,7 @@ export async function GET(request: NextRequest) {
         PassportLaunchEmail({
           name: "Santiago García",
           qrUrl: `${APP_URL}/api/passes/PREVIEW123`,
+          passportUrl: `${APP_URL}/pasaporte/PREVIEW123`,
         })
       );
     } else if (type === "speaker_approval_inperson") {

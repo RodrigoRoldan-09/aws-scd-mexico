@@ -5,6 +5,8 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 
 const VIEW_WINDOW  = 24 * 60 * 60 * 1000; // 24 h
 const CLICK_WINDOW =  1 * 60 * 60 * 1000; // 1 h
+// Solo las redes que manda la página; otra clave (p. ej. "$x" o "a.b") rompería el Map stats.clicks
+const PLATFORMS = new Set(["builderCenter", "linkedin", "instagram", "x", "github", "tiktok"]);
 
 export async function POST(
   req: NextRequest,
@@ -22,7 +24,7 @@ export async function POST(
       await connectDB();
       await Passport.updateOne({ shortId }, { $inc: { "stats.views": 1 } });
 
-    } else if (event === "click" && platform) {
+    } else if (event === "click" && typeof platform === "string" && PLATFORMS.has(platform)) {
       const { ok } = rateLimit(`stats:click:${ip}:${shortId}:${platform}`, 50, CLICK_WINDOW);
       if (!ok) return Response.json({ ok: false, reason: "already_counted" });
 
