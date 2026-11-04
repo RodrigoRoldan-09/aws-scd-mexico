@@ -101,8 +101,14 @@ export function ReminderEventEmail({
   const firstName = name ? name.split(" ")[0] : "";
   const customTips = tips?.length ? tips : null;
   const live = announcement === "live";
-  const seeYouSoon = announcement === "see-you-soon";
-  const headline = live
+  const seeYouTomorrow = announcement === "see-you-tomorrow";
+  const startsSoon = announcement === "starts-soon";
+  const seeYouSoon = announcement === "see-you-soon" || seeYouTomorrow;
+  const headline = startsSoon
+    ? { es: "¡Empezamos en 2 horas!", en: "We start in 2 hours!" }
+    : seeYouTomorrow
+      ? { es: "¡Nos vemos mañana!", en: "See you tomorrow!" }
+      : live
     ? { es: "¡Ya empezó! Te esperamos.", en: "It's on! We're waiting for you." }
     : seeYouSoon
       ? { es: "¡Nos vemos muy pronto!", en: "See you very soon!" }
@@ -111,7 +117,9 @@ export function ReminderEventEmail({
   const soon = daysLeft <= 1 && !live;
   const doorsCallout = daysLeft >= 2 && daysLeft <= 6;
 
-  const strip = live
+  const strip = startsSoon
+    ? "EMPEZAMOS EN 2 HORAS · 2 HOURS TO GO ·"
+    : live
     ? "EN VIVO · LIVE NOW ·"
     : seeYouSoon
       ? "NOS VEMOS MAÑANA · SEE YOU TOMORROW ·"
@@ -135,11 +143,19 @@ export function ReminderEventEmail({
       </Paragraph>
 
       {seeYouSoon && (
-        <Callout title="mañana es el gran día">
+        <Callout title={seeYouTomorrow ? "estamos muy emocionados de tenerte" : "mañana es el gran día"}>
           Mañana miércoles 4 de noviembre te esperamos en el Centro Histórico y Cultural Juan de
           Dios Bátiz. Las puertas abren a las <strong>8:45 AM</strong> y la bienvenida es a las{" "}
           <strong>9:20 AM</strong>. Trae tu código QR en el celular y revisa la agenda para armar
           tu día.
+        </Callout>
+      )}
+
+      {startsSoon && (
+        <Callout title="hoy es el gran día">
+          En 2 horas abrimos el AWS Student Community Day México 2026. Las puertas abren a las{" "}
+          <strong>8:45 AM</strong> y la bienvenida es a las <strong>9:20 AM</strong> en el Centro
+          Histórico y Cultural Juan de Dios Bátiz. Trae tu código QR en el celular. ¡Te esperamos!
         </Callout>
       )}
 
@@ -204,11 +220,19 @@ export function ReminderEventEmail({
       </Paragraph>
 
       {seeYouSoon && (
-        <Callout title="tomorrow is the big day">
+        <Callout title={seeYouTomorrow ? "we can't wait to have you" : "tomorrow is the big day"}>
           Tomorrow, Wednesday November 4, we&apos;ll see you at the Centro Histórico y Cultural
           Juan de Dios Bátiz. Doors open at <strong>8:45 AM</strong> and the welcome is at{" "}
           <strong>9:20 AM</strong>. Bring your QR code on your phone and check the schedule to
           plan your day.
+        </Callout>
+      )}
+
+      {startsSoon && (
+        <Callout title="today is the big day">
+          In 2 hours we open AWS Student Community Day Mexico 2026. Doors open at{" "}
+          <strong>8:45 AM</strong> and the welcome is at <strong>9:20 AM</strong> at the Centro
+          Histórico y Cultural Juan de Dios Bátiz. Bring your QR code on your phone. See you there!
         </Callout>
       )}
 
@@ -273,7 +297,7 @@ export function ReminderEventEmail({
     >
       <BilingualSections es={es} en={en} />
 
-      {(announcement === "agenda" || seeYouSoon || live) && (
+      {(announcement === "agenda" || seeYouSoon || startsSoon || live) && (
         <HardButton href={`${APP_URL}/agenda`}>Ver la agenda oficial · See the schedule</HardButton>
       )}
       {announcement === "registrations" && (

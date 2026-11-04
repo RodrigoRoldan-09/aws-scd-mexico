@@ -126,4 +126,12 @@ export const communities: Community[] = [
     logo: "/images/comunidades/aws-ai-user-group-mexico.webp",
 
   },
+  {
+    id: "ieee-escom",
+    name: "Rama Estudiantil IEEE ESCOM IPN",
+    category: "Rama estudiantil IEEE",
+    description:
+      "Organización académica y profesional de estudiantes de la ESCOM del IPN, parte del Institute of Electrical and Electronics Engineers (IEEE). Promueve talleres, conferencias, congresos y hackathons sobre desarrollo de software, inteligencia artificial y sistemas embebidos; fomenta el liderazgo y la gestión de proyectos, y conecta a la comunidad estudiantil con profesionistas, investigadores y líderes de la industria.",
+    logo: "/images/comunidades/ieee-escom.jpg",
+  },
 ];

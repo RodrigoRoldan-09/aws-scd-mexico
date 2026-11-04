@@ -46,4 +46,18 @@ export const sponsors: Sponsor[] = [
     url: "https://tophunting.ai/",
     tier: "bronze",
   },
+  {
+    id: "hoky",
+    name: "Hoky",
+    logo: "/images/logos/hoky-logo.png",
+    url: "",
+    tier: "gold",
+  },
+  {
+    id: "momentum",
+    name: "Momentum",
+    logo: "/images/logos/momentum-logo.png",
+    url: "",
+    tier: "gold",
+  },
 ];

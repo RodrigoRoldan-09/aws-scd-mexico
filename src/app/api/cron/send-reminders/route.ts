@@ -56,6 +56,8 @@ function daysBetween(from: string, to: string): number {
 
 function subjectFor(daysLeft: number, announcement?: ReminderAnnouncement): string {
   if (announcement === "see-you-soon") return "¡Nos vemos muy pronto! · See you very soon! — AWS Student Community Day México 2026";
+  if (announcement === "see-you-tomorrow") return "¡Nos vemos mañana! Estamos muy emocionados de tenerte · See you tomorrow! — AWS Student Community Day México 2026";
+  if (announcement === "starts-soon") return "¡Empezamos en 2 horas! · We start in 2 hours! — AWS Student Community Day México 2026";
   if (announcement === "live") return "¡Ya empezó! Te esperamos · It's on! We're waiting for you — AWS Student Community Day México 2026";
   if (daysLeft <= 0) return "¡Es hoy! · It's today! — AWS Student Community Day México 2026";
   if (daysLeft === 1) return "Es mañana · It's tomorrow — AWS Student Community Day México 2026";

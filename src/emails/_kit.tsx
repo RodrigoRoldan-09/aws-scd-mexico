@@ -547,11 +547,18 @@ export const SPONSORS: { name: string; file: string }[] = [
   { name: "EPAM", file: "epam.jpeg" },
   { name: "Notion", file: "notion.jpeg" },
   { name: "Aldea JIMZ", file: "aldea.jpeg" },
+  { name: "TopHunting", file: "top-hunting.jpeg" },
+  { name: "Hoky", file: "hoky.jpeg" },
+  { name: "Momentum", file: "momentum.jpeg" },
 ];
 
 /** Fila de logos de sponsors. Tabla de una fila: es lo único que Outlook respeta. */
 export function SponsorLogos() {
-  const cellWidth = `${Math.floor(100 / SPONSORS.length)}%`;
+  // Filas de 4 para que los logos no queden diminutos en 600 px.
+  const PER_ROW = 4;
+  const rows: (typeof SPONSORS)[] = [];
+  for (let i = 0; i < SPONSORS.length; i += PER_ROW) rows.push(SPONSORS.slice(i, i + PER_ROW));
+  const cellWidth = `${Math.floor(100 / PER_ROW)}%`;
   return (
     <Section style={{ margin: "24px 0 8px" }}>
       <Text
@@ -575,24 +582,26 @@ export function SponsorLogos() {
         style={{ borderCollapse: "collapse", borderTop: `1px solid ${C.line}` }}
       >
         <tbody>
-          <tr>
-            {SPONSORS.map((s) => (
-              <td
-                key={s.file}
-                width={cellWidth}
-                align="center"
-                valign="middle"
-                style={{ padding: "16px 8px" }}
-              >
-                <Img
-                  src={`${APP_URL}/images/emails/sponsors/${s.file}`}
-                  alt={s.name}
-                  width="110"
-                  style={{ display: "block", width: "100%", maxWidth: "110px", height: "auto" }}
-                />
-              </td>
-            ))}
-          </tr>
+          {rows.map((row, ri) => (
+            <tr key={ri}>
+              {row.map((s) => (
+                <td
+                  key={s.file}
+                  width={cellWidth}
+                  align="center"
+                  valign="middle"
+                  style={{ padding: "16px 8px" }}
+                >
+                  <Img
+                    src={`${APP_URL}/images/emails/sponsors/${s.file}`}
+                    alt={s.name}
+                    width="110"
+                    style={{ display: "block", width: "100%", maxWidth: "110px", height: "auto" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </Section>

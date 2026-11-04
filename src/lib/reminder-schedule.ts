@@ -17,7 +17,7 @@ export const REMINDER_SEND_TIME_LABEL = "9:00 AM (CDMX) · 31 oct y 3 nov tambi�
  *  - "agenda": ya está publicada la agenda de Main Stage y Builders Stage.
  *  - "registrations": ya se puede registrar a las actividades de todos los escenarios.
  */
-export type ReminderAnnouncement = "agenda" | "registrations" | "see-you-soon" | "live";
+export type ReminderAnnouncement = "agenda" | "registrations" | "see-you-soon" | "see-you-tomorrow" | "starts-soon" | "live";
 /**
  * Clave: "AAAA-MM-DD" o "AAAA-MM-DD:slot". El slot llega como ?slot= desde la
  * regla de EventBridge y permite más de un envío el mismo día (cada uno con su
@@ -27,5 +27,7 @@ export const REMINDER_ANNOUNCEMENTS: Record<string, ReminderAnnouncement> = {
   "2026-10-31": "agenda",
   "2026-11-01": "registrations",
   "2026-11-03:pm": "see-you-soon", // martes 9 PM: último masivo antes del evento
+  "2026-11-03:nite": "see-you-tomorrow", // martes 11:30 PM: nos vemos mañana
+  "2026-11-04:am7": "starts-soon", // miércoles 7 AM: empieza en dos horas
   "2026-11-04": "live", // miércoles 9 AM: el evento ya empezó
 };
