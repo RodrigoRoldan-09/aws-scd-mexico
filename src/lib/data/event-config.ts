@@ -96,6 +96,21 @@ export const getPublicEventConfig = unstable_cache(
  * `connection()` es la forma que da Next para decir «de acá en adelante, en
  * cada petición»: se lee el reloj, así que esto no puede pre-renderizarse.
  */
+/**
+ * Ventanas extra en las que el registro de asistentes se abre solo, aunque el
+ * formulario esté cerrado en el admin. Offsets explícitos (CDMX = UTC-6).
+ * Se evalúa contra el reloj en cada petición, sin caché.
+ */
+export const ATTENDEE_EXTRA_WINDOWS: { start: string; end: string }[] = [
+  { start: "2026-11-03T22:30:00-06:00", end: "2026-11-03T23:30:00-06:00" },
+];
+
+export function isAttendeeWindowOpen(now = Date.now()): boolean {
+  return ATTENDEE_EXTRA_WINDOWS.some(
+    (w) => now >= new Date(w.start).getTime() && now < new Date(w.end).getTime(),
+  );
+}
+
 export async function isCfpOpen(): Promise<boolean> {
   await connection();
   return Date.now() <= new Date(CFP_DEADLINE).getTime();

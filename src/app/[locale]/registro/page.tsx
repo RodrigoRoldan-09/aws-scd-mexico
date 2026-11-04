@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { connectDB } from "@/lib/db";
 import { Form } from "@/models/form";
+import { isAttendeeWindowOpen } from "@/lib/data/event-config";
+import { connection } from "next/server";
 import { RegistroScreen } from "./_screen";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -14,6 +16,8 @@ export default async function RegistroPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Forms" });
 
+  // Se lee el reloj (ventana extra de registro): siempre por petición.
+  await connection();
   let isOpen = false;
   // Si la convocatoria de voluntarios está abierta, el formulario ofrece esa
   // puerta a quien va presencial. Se consulta acá y no en el navegador para no
@@ -25,10 +29,10 @@ export default async function RegistroPage({ params }: Props) {
       Form.findOne({ formType: "attendee" }).select("isOpen").lean<{ isOpen?: boolean }>(),
       Form.findOne({ formType: "volunteer" }).select("isOpen").lean<{ isOpen?: boolean }>(),
     ]);
-    isOpen = form ? !!form.isOpen : (process.env.NODE_ENV === "development");
+    isOpen = (form ? !!form.isOpen : (process.env.NODE_ENV === "development")) || isAttendeeWindowOpen();
     volunteersOpen = volunteerForm ? !!volunteerForm.isOpen : (process.env.NODE_ENV === "development");
   } catch {
-    isOpen = false;
+    isOpen = isAttendeeWindowOpen();
     volunteersOpen = false;
   }
 

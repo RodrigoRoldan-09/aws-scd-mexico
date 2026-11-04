@@ -7,7 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { EventConfigProvider } from "@/components/providers/event-config-provider";
-import { getPublicEventConfig, EMPTY_PUBLIC_CONFIG, isCfpOpen } from "@/lib/data/event-config";
+import { getPublicEventConfig, EMPTY_PUBLIC_CONFIG, isCfpOpen, isAttendeeWindowOpen } from "@/lib/data/event-config";
 import { EventJsonLd } from "@/components/seo/json-ld";
 import { BfcacheReset } from "@/components/effects/bfcache-reset";
 import type { Metadata } from "next";
@@ -152,7 +152,8 @@ export default async function LocaleLayout({ children, params }: Props) {
       getPublicEventConfig().catch(() => EMPTY_PUBLIC_CONFIG),
       isCfpOpen().catch(() => false),
     ]);
-    eventConfig = { ...desdeLaBase, cfpOpen };
+    // La ventana extra se evalúa fuera de la caché (isCfpOpen ya hizo la ruta dinámica).
+    eventConfig = { ...desdeLaBase, cfpOpen, attendeeOpen: desdeLaBase.attendeeOpen || isAttendeeWindowOpen() };
   } catch {
     eventConfig = { ...EMPTY_PUBLIC_CONFIG, cfpOpen: false };
   }

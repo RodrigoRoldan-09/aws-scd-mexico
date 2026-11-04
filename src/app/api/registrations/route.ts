@@ -14,6 +14,7 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 import { Passport } from "@/models/passport";
 import { verifyCaptcha } from "@/lib/captcha";
 import { notifyNewRegistration } from "@/lib/sns";
+import { isAttendeeWindowOpen } from "@/lib/data/event-config";
 
 export async function GET() {
   try {
@@ -70,7 +71,10 @@ export async function POST(request: NextRequest) {
     // La recepción se consulta igual, pero el formulario ya no aporta campos:
     // las preguntas son fijas. Un alta manual entra aunque esté cerrada.
     if (!manual) {
-      const form = await Form.findOne({ formType: "attendee", isOpen: true });
+      // Abierto en el admin, o dentro de una ventana extra (ATTENDEE_EXTRA_WINDOWS).
+      const form = isAttendeeWindowOpen()
+        ? await Form.findOne({ formType: "attendee" })
+        : await Form.findOne({ formType: "attendee", isOpen: true });
       if (!form) {
         return Response.json({ error: "El registro no está disponible" }, { status: 404 });
       }
