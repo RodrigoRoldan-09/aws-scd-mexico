@@ -9,9 +9,6 @@ import { ActivityApplication } from "@/models/activity-application";
 import { Registration } from "@/models/registration";
 import { createLog } from "@/lib/log";
 
-function escapeRegex(str: string) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,12 +47,9 @@ export async function POST(request: NextRequest) {
         }
       }
     }
-    if (!activity && sessionTitle && !sessionTitle.startsWith("Acceso general")) {
-      const cleanTitle = sessionTitle.trim();
-      activity = await Activity.findOne({
-        title: { $regex: new RegExp(`^${escapeRegex(cleanTitle)}$`, "i") },
-      });
-    }
+    // Ya no se resuelve por título: las actividades con registro se ligan a su
+    // sesión por agendaEventId. Por título, sesiones libres con nombre parecido
+    // (foto de LinkedIn) terminaban validándose contra una lista vacía.
 
     // 2. Si es una actividad con cupo/registro cerrado (workshop, hackatón o dinámica)
     if (activity) {

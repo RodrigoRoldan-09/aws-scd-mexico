@@ -116,12 +116,10 @@ export default function SalasPage() {
           speakerName?: string;
         }[]);
 
-        // Indexar actividades por agendaEventId y por título normalizado
+        // Indexar actividades por agendaEventId
         const actByAgendaId = new Map<string, (typeof rawActivities)[0]>();
-        const actByTitle = new Map<string, (typeof rawActivities)[0]>();
         rawActivities.forEach((act) => {
           if (act.agendaEventId) actByAgendaId.set(String(act.agendaEventId), act);
-          if (act.title) actByTitle.set(act.title.trim().toLowerCase(), act);
         });
 
         // Bloques de la agenda (que no sean virtuales)
@@ -131,9 +129,9 @@ export default function SalasPage() {
         )
           .filter((e) => e.sessionType !== "online")
           .map((e) => {
-            const matchedAct =
-              actByAgendaId.get(String(e._id)) ||
-              actByTitle.get((e.title || "").trim().toLowerCase());
+            // Solo por vínculo explícito: emparejar por título hacía que sesiones
+            // libres (p. ej. la foto de LinkedIn) se validaran contra una lista vacía.
+            const matchedAct = actByAgendaId.get(String(e._id));
             if (matchedAct) {
               matchedActivityIds.add(String(matchedAct._id));
               return {
@@ -149,23 +147,10 @@ export default function SalasPage() {
           })
           .sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
 
-        // Agregar actividades que no estaban en la agenda pero tienen horario y sala
-        rawActivities.forEach((act) => {
-          if (!matchedActivityIds.has(String(act._id))) {
-            events.push({
-              _id: String(act._id),
-              title: act.title,
-              room: (act.roomName || "").trim() || "Sin sala asignada",
-              startTime: act.startTime || "",
-              speaker: act.speakerName || "",
-              activityId: String(act._id),
-              activitySlug: act.slug,
-              isActivity: true,
-              activityType: act.type,
-              maxCapacity: act.maxCapacity,
-            });
-          }
-        });
+        // Ya no se agregan actividades sueltas: cada actividad con registro está
+        // ligada a su sesión de la agenda (Activity.agendaEventId). Las que no se
+        // ligan a propósito (Claude Build Day, que se registra en Luma, y la foto
+        // de LinkedIn, que es por orden de llegada) se escanean como acceso libre.
 
         // Asegurar que todas las salas encontradas estén en loadedRooms
         const known = new Set(loadedRooms.map((r) => r.name.toLowerCase()));
